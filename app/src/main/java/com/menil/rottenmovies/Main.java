@@ -49,6 +49,8 @@ public class Main extends Activity
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
         // e ovo cudo mi daje mogucnost mjenjanja Viewa na osnovu iznacene opcije
+        //this line of code does nothing
+
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
