@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-
 public class Main extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
@@ -21,13 +20,17 @@ public class Main extends Activity
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
-
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
-
     public static final String apiURL="http://api.rottentomatoes.com/api/public/v1.0/lists/movies/box_office.json?limit=16&country=us&apikey=pj2z7eyve6mfdtcx4vynk26y";
+
+///////////////////////////////////////////////////////////////////////////////
+    public void setActionBarTitle(String title){
+     // NEDOVRSENO
+     //   YOUR_CUSTOM_ACTION_BAR_TITLE.setText(title);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,18 +45,40 @@ public class Main extends Activity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
-}
-
+    }
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
-        // e ovo cudo mi daje mogucnost mjenjanja Viewa na osnovu iznacene opcije
-        //this line of code does nothing
+        // e ovo cudo mi daje mogucnost mjenjanja Viewa na osnovu oznacene opcije
+        // 3 days later... bra'o Menile, sad si se sjetio da pocnes citati svoje komentare!
 
-        FragmentManager fragmentManager = getFragmentManager();
+      /*  FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+                .commit();*/
+        Fragment fragment = new Fragment();
+        FragmentManager fragmentManager = getFragmentManager();
+
+        switch (position+1){//switch-case jer nisam imao nista pametnije
+            case 1:
+                fragment = new BoxOfficeFragment();
+                break;
+            case 2:
+                fragment = new InTheatersFragment();
+                break;
+            case 3:
+                fragment = new OpeningFragment();
+                break;
+            case 4:
+                fragment = new UpcomingFragment();
+                break;
+            case 5:
+                fragment = new FavouritesFragment();
+                break;
+            }
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, fragment)
                 .commit();
     }
 
@@ -84,7 +109,6 @@ public class Main extends Activity
         actionBar.setTitle(mTitle);
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
@@ -109,7 +133,6 @@ public class Main extends Activity
         }
         return super.onOptionsItemSelected(item);
     }
-
     /**
      * A placeholder fragment containing a simple view.
      */
@@ -137,7 +160,7 @@ public class Main extends Activity
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
+        Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
             return rootView;
         }
