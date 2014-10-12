@@ -45,6 +45,7 @@ public class Main extends Activity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
     }
 
     @Override
@@ -157,7 +158,7 @@ public class Main extends Activity
 
         public PlaceholderFragment() {
         }
-
+        //probaj ovdje izvuci argument iz fragmenta i switch caseom pozvat smao layout
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
         Bundle savedInstanceState) {
