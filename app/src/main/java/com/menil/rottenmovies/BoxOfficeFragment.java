@@ -8,9 +8,12 @@ import android.support.v4.app.NavUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -80,10 +83,10 @@ public class BoxOfficeFragment extends android.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-       // RelativeLayout r = (RelativeLayout) getView().findViewById(R.id.full_card);
-        //r.addView();
+      // GridView gridView=gridView.findViewById(R.id.gridview);
         return inflater.inflate(R.layout.fragment_main, container, false);
 
     }
+
 }
 
