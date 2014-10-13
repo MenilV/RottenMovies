@@ -10,7 +10,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@layout/bg_card"
+    android:background="@drawable/bg_card"
     android:layout_weight="1">
 
     <ImageView
@@ -18,15 +18,17 @@
         android:layout_alignParentTop="true"
         android:adjustViewBounds="true"
         android:contentDescription="@string/app_name"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="266dp"
         android:src="@drawable/dracula_tmb"
         android:layout_alignParentBottom="true"
         android:clickable="true"
-        android:longClickable="true"/>
+        android:longClickable="true"
+        android:scaleType="fitXY"
+        />
     <TextView
         android:id="@+id/full_card_title"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
         android:gravity="center"

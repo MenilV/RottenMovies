@@ -83,9 +83,11 @@ public class BoxOfficeFragment extends android.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-      // GridView gridView=gridView.findViewById(R.id.gridview);
-        return inflater.inflate(R.layout.fragment_main, container, false);
-
+        View view = inflater.inflate(R.layout.fragment_boxoffice, container, false);
+        GridView gridView = (GridView) view.findViewById(R.id.gridview);
+        gridView.setAdapter(new ImageAdapter(view.getContext()));
+        //return inflater.inflate(R.layout.fragment_main, container, false);
+        return view;
     }
 
 }
