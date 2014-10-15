@@ -15,6 +15,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -96,8 +97,12 @@ public class BoxOfficeFragment extends android.app.Fragment {
             JSONObject jsonObject = null;
             try {
                 jsonObject = new JSONObject(result);
+                JSONArray movies = jsonObject.getJSONArray("movies");
+                String synopsis = movies.getJSONObject(0).getString("synopsis");
+                result = synopsis;
+                /*jsonObject = new JSONObject(result);
                 String imageLinks = jsonObject.getString("synopsis");
-                result = imageLinks;
+                result = imageLinks;*/
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -111,9 +116,7 @@ public class BoxOfficeFragment extends android.app.Fragment {
 
         @Override
         protected void onPostExecute(String result) {
-            int x=20;
-            while(x-->0)
-            Toast.makeText(context, "Ovo je nesto" + result, Toast.LENGTH_LONG).show();
+            Toast.makeText(context, result, Toast.LENGTH_LONG).show();
 
         }
 
