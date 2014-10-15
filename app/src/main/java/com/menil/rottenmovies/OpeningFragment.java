@@ -9,10 +9,10 @@ import android.view.ViewGroup;
  * Created by menil on 08.10.2014.
  */
 public class OpeningFragment extends android.app.Fragment {
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            // Inflate the layout for this fragment
-            return inflater.inflate(R.layout.fragment_opening, container, false);
-        }
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_opening, container, false);
+    }
 }

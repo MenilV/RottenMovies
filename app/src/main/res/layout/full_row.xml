@@ -1,13 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- puni red kartica-->
+<?xml version="1.0" encoding="utf-8"?><!-- puni red kartica-->
 
-<LinearLayout
-xmlns:android="http://schemas.android.com/apk/res/android"
-android:id="@+id/linear_row"
-android:orientation="horizontal"
-android:layout_width="match_parent"
-android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linear_row"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
 
-<include layout="@layout/full_card"/>
-<include layout="@layout/full_card"/>
+    <include layout="@layout/full_card" />
+
+    <include layout="@layout/full_card" />
 </LinearLayout>

@@ -1,42 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/full_card"
-    android:layout_marginLeft="4dp"
-    android:layout_marginRight="4dp"
-    android:layout_marginBottom="2dp"
-    android:layout_marginTop="2dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:layout_marginBottom="2dp"
+    android:layout_marginLeft="4dp"
+    android:layout_marginRight="4dp"
+    android:layout_marginTop="2dp"
+    android:layout_weight="1"
     android:background="@drawable/bg_card"
-    android:layout_weight="1">
+    android:orientation="vertical"
+    android:paddingBottom="2dp"
+    android:paddingRight="0dp">
 
     <ImageView
         android:id="@+id/full_card_img"
-        android:layout_alignParentTop="true"
-        android:adjustViewBounds="true"
-        android:contentDescription="@string/app_name"
         android:layout_width="match_parent"
         android:layout_height="266dp"
-        android:src="@drawable/dracula_tmb"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
+        android:adjustViewBounds="true"
         android:clickable="true"
+
+        android:contentDescription="@string/app_name"
         android:longClickable="true"
         android:scaleType="fitXY"
-        />
+        android:src="@drawable/dracula_tmb"
+        android:layout_marginRight="1dp"
+        android:layout_marginLeft="1dp"
+        android:layout_marginBottom="1dp"/>
+
     <TextView
         android:id="@+id/full_card_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:gravity="center"
         android:layout_alignParentBottom="true"
+        android:background="@drawable/black_opacity_75"
+        android:gravity="center"
         android:text="@string/title_section1"
-        android:textColor="@android:color/black"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
         android:textSize="25sp"
-        android:background="@android:color/white"
-        android:alpha="0.9"/>
+
+        android:layout_margin="1dp"/>
 
 </RelativeLayout>

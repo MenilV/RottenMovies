@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 public class Main extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
+    public static final String apiURL = "http://api.rottentomatoes.com/api/public/v1.0/lists/movies/box_office.json?limit=16&country=us&apikey=pj2z7eyve6mfdtcx4vynk26y";
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -24,12 +25,11 @@ public class Main extends Activity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
-    public static final String apiURL="http://api.rottentomatoes.com/api/public/v1.0/lists/movies/box_office.json?limit=16&country=us&apikey=pj2z7eyve6mfdtcx4vynk26y";
 
-///////////////////////////////////////////////////////////////////////////////
-    public void setActionBarTitle(String title){
-     // NEDOVRSENO
-     //   YOUR_CUSTOM_ACTION_BAR_TITLE.setText(title);
+    ///////////////////////////////////////////////////////////////////////////////
+    public void setActionBarTitle(String title) {
+        // NEDOVRSENO
+        //   YOUR_CUSTOM_ACTION_BAR_TITLE.setText(title);
     }
 
     @Override
@@ -62,7 +62,7 @@ public class Main extends Activity
         Fragment fragment = new Fragment();
         FragmentManager fragmentManager = getFragmentManager();
 
-        switch (position+1){//switch-case jer nisam imao nista pametnije
+        switch (position + 1) {//switch-case jer nisam imao nista pametnije
             case 1:
                 fragment = new BoxOfficeFragment();
                 break;
@@ -78,7 +78,7 @@ public class Main extends Activity
             case 5:
                 fragment = new FavouritesFragment();
                 break;
-            }
+        }
         fragmentManager.beginTransaction()
                 .replace(R.id.container, fragment)
                 .commit();
@@ -135,6 +135,7 @@ public class Main extends Activity
         }
         return super.onOptionsItemSelected(item);
     }
+
     /**
      * A placeholder fragment containing a simple view.
      */
@@ -144,6 +145,9 @@ public class Main extends Activity
          * fragment.
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
+
+        public PlaceholderFragment() {
+        }
 
         /**
          * Returns a new instance of this fragment for the given section
@@ -157,12 +161,10 @@ public class Main extends Activity
             return fragment;
         }
 
-        public PlaceholderFragment() {
-        }
         //probaj ovdje izvuci argument iz fragmenta i switch caseom pozvat smao layout
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
-        Bundle savedInstanceState) {
+                                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
             return rootView;
         }
