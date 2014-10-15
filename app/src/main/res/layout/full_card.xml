@@ -20,29 +20,29 @@
         android:layout_height="266dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentTop="true"
+        android:layout_marginBottom="1dp"
+        android:layout_marginLeft="1dp"
+
+        android:layout_marginRight="1dp"
         android:adjustViewBounds="true"
         android:clickable="true"
-
         android:contentDescription="@string/app_name"
         android:longClickable="true"
         android:scaleType="fitXY"
-        android:src="@drawable/dracula_tmb"
-        android:layout_marginRight="1dp"
-        android:layout_marginLeft="1dp"
-        android:layout_marginBottom="1dp"/>
+        android:src="@drawable/dracula_tmb" />
 
     <TextView
         android:id="@+id/full_card_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_margin="1dp"
         android:background="@drawable/black_opacity_75"
         android:gravity="center"
         android:text="@string/title_section1"
         android:textAlignment="center"
         android:textColor="@android:color/white"
-        android:textSize="25sp"
 
-        android:layout_margin="1dp"/>
+        android:textSize="25sp" />
 
 </RelativeLayout>
