@@ -9,12 +9,17 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-/**
+import java.util.ArrayList;
+import java.util.List;
+
+/*
  * Created by menil on 13.10.2014.
  */
 public class ImageAdapter extends BaseAdapter {
 
     private Context mContext;
+    private List<Movie> listMovies= new ArrayList<Movie>();
+    int counter = 0;
     private Integer[] mThumbIds = {
             R.drawable.dracula_tmb, R.drawable.pic_tmb,
             R.drawable.buck, R.drawable.nesto_det,
@@ -23,8 +28,9 @@ public class ImageAdapter extends BaseAdapter {
             R.drawable.dracula_tmb, R.drawable.pic_tmb
     };
 
-    public ImageAdapter(Context c) {
+    public ImageAdapter(Context c, List<Movie> allMovies) {
         mContext = c;
+        listMovies=allMovies;
     }
 
     @Override
@@ -56,7 +62,17 @@ public class ImageAdapter extends BaseAdapter {
         imageView = (ImageView) convertView.findViewById(R.id.full_card_img);
         imageView.setImageResource(mThumbIds[position]);
         TextView textView = (TextView) convertView.findViewById(R.id.full_card_title);
-        textView.setText("Movie title");
+        //if (counter>0 && counter< 16){
+            //String title = allMovies.get(0).title;
+        //    String title = listMovies.get(counter).title;
+          //  counter++;
+            //textView.setText(title);
+        //}
+
+        //else
+        textView.setText("nesto");
+
+
         return convertView;
     }
 }
