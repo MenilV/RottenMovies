@@ -1,7 +1,5 @@
 package com.menil.rottenmovies;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
 
 /**
@@ -10,7 +8,6 @@ import java.util.List;
 public class Movies {
 
     public List<Movie> movies;
-
 
 
 }

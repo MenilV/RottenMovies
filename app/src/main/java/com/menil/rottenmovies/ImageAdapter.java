@@ -1,6 +1,10 @@
 package com.menil.rottenmovies;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,33 +13,30 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.menil.rottenmovies.R.id.full_card_img;
 
 /*
  * Created by menil on 13.10.2014.
  */
 public class ImageAdapter extends BaseAdapter {
 
-    private Context mContext;
-    private List<Movie> listMovies= new ArrayList<Movie>();
     int counter = 0;
-    private Integer[] mThumbIds = {
-            R.drawable.dracula_tmb, R.drawable.pic_tmb,
-            R.drawable.buck, R.drawable.nesto_det,
-            R.drawable.buck, R.drawable.nesto_det,
-            R.drawable.gone_girl, R.drawable.pic_tmb,
-            R.drawable.dracula_tmb, R.drawable.pic_tmb
-    };
+    private Context mContext;
+    private List<Movie> listMovies = new ArrayList<Movie>();
 
     public ImageAdapter(Context c, List<Movie> allMovies) {
         mContext = c;
-        listMovies=allMovies;
+        listMovies = allMovies;
     }
+
 
     @Override
     public int getCount() {
-        return mThumbIds.length;
+        return 0;
     }
 
     @Override
@@ -59,20 +60,42 @@ public class ImageAdapter extends BaseAdapter {
             convertView = view;
         }
 
-        imageView = (ImageView) convertView.findViewById(R.id.full_card_img);
-        imageView.setImageResource(mThumbIds[position]);
+        imageView = (ImageView) convertView.findViewById(full_card_img);
+
         TextView textView = (TextView) convertView.findViewById(R.id.full_card_title);
-        //if (counter>0 && counter< 16){
-            //String title = allMovies.get(0).title;
-        //    String title = listMovies.get(counter).title;
-          //  counter++;
-            //textView.setText(title);
-        //}
 
-        //else
-        textView.setText("nesto");
+        if (counter < 16) {
+            String title = listMovies.get(counter).title;
+            textView.setText(title);
+            new DownloadImageTask(imageView).execute(listMovies.get(counter).posters.detailed.replace("tmb", "det"));
+        }
 
-
+        counter++;
         return convertView;
+    }
+
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
+        }
     }
 }

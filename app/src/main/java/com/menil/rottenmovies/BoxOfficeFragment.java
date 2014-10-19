@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -16,7 +15,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -33,35 +31,44 @@ import java.util.List;
 public class BoxOfficeFragment extends android.app.Fragment {
 
     public List<Movie> allMovies = new ArrayList<Movie>();
+
+    View view;
+    GridView gridView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        //API KEY =pj2z7eyve6mfdtcx4vynk26y
+        //Box office URI:
         URI requestURI = URI.create("http://api.rottentomatoes.com/api/public/v1.0/lists/movies/box_office.json?limit=16&country=us&apikey=pj2z7eyve6mfdtcx4vynk26y");
-        //URI for Box Office
+        //In Theaters URI
+        //http://api.rottentomatoes.com/api/public/v1.0/lists/movies/in_theaters.json?page_limit=16&page=1&country=us&apikey=pj2z7eyve6mfdtcx4vynk26y
         //put later URI's for all needed info
 
+        // Inflate the layout for this fragment
+        view = inflater.inflate(R.layout.fragment_boxoffice, container, false);
+        gridView = (GridView) view.findViewById(R.id.gridview);
+
+        //gridView.setAdapter(new ImageAdapter(view.getContext(),allMovies));
         CallAPI task = new CallAPI(getActivity());
         task.execute(requestURI);
         //thread for getting data from the API
 
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_boxoffice, container, false);
-        GridView gridView = (GridView) view.findViewById(R.id.gridview);
-
-        gridView.setAdapter(new ImageAdapter(view.getContext(),allMovies));
 
         return view;
     }
 
-    public class CallAPI extends AsyncTask<URI, String, String> {
+    public class CallAPI extends AsyncTask<URI, String, List<Movie>> {
 
         private Context context;
 
         public CallAPI(Context c) {
-            context = c;
+            this.context = c;
+
         }
 
         @Override
-        protected String doInBackground(URI... urls) {
+        protected List<Movie> doInBackground(URI... urls) {
             DefaultHttpClient httpclient = new DefaultHttpClient(new BasicHttpParams());
             URI requestURI = urls[0];
             HttpGet httppost = new HttpGet(String.valueOf(requestURI));
@@ -69,33 +76,16 @@ public class BoxOfficeFragment extends android.app.Fragment {
             httppost.setHeader("Content-type", "text/javascript;charset=ISO-8859-1");
 
             InputStream inputStream = null;
-            String  result = null;
+            String result = null;
 
-
-            //Gson gson = new Gson();
-
-            /* matrix structure (rows):
-            * id: ...string
-            * title: ...string
-            * year: ...string
-            * mpa_rating: ...string
-            * runtime: ...string
-            * critics_concesus: ...string
-            * release_dates: ...object
-            * ratings: ...object
-            * synopsis: ...string
-            * posters: ... array
-            * */
-
-
-            BufferedReader reader=null;
+            BufferedReader reader = null;
             try {
                 HttpResponse response = httpclient.execute(httppost);
                 HttpEntity entity = response.getEntity();
 
                 inputStream = entity.getContent();
                 // json is UTF-8 by default
-                /*BufferedReader*/ reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"), 8);
+                reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"), 8);
                 StringBuilder sb = new StringBuilder();
 
                 String line = null;
@@ -121,27 +111,26 @@ public class BoxOfficeFragment extends android.app.Fragment {
                 Movies filmovi = gson.fromJson(jsonObject.toString(), Movies.class); // deserializes json into filmovi
 
 
-                allMovies= filmovi.movies;
+                allMovies = filmovi.movies;
                 result = allMovies.get(0).title;
 
-                for(Movie m : allMovies)
-                {
+                for (Movie m : allMovies) {
                     result = m.id;
                 }
 
-                } catch (JSONException e1) {
+            } catch (JSONException e1) {
                 e1.printStackTrace();
             }
 
             publishProgress(result);
-            return result;
+            return allMovies;
         }
 
         @Override
-        protected void onPostExecute(String result) {
+        protected void onPostExecute(List<Movie> allMovies) {
 
-            Toast.makeText(context, result, Toast.LENGTH_LONG).show();
-
+            gridView.setAdapter(new ImageAdapter(view.getContext(), allMovies));
+            // Toast.makeText(context, result, Toast.LENGTH_LONG).show();
         }
 
     }

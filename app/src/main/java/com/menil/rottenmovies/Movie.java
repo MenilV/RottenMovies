@@ -31,7 +31,8 @@ public class Movie {
     @SerializedName("synopsis")
     public String synopsis;
 
-    //public Posters posters;
+    @SerializedName("posters")
+    public Posters posters;
 
     //public Cast cast;
     //I will ignore abridged cast for now
