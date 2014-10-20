@@ -32,18 +32,24 @@ public class BoxOfficeFragment extends android.app.Fragment {
 
     public List<Movie> allMovies = new ArrayList<Movie>();
 
+
     View view;
     GridView gridView;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         //API KEY =pj2z7eyve6mfdtcx4vynk26y
-        //Box office URI:
-        URI requestURI = URI.create("http://api.rottentomatoes.com/api/public/v1.0/lists/movies/box_office.json?limit=16&country=us&apikey=pj2z7eyve6mfdtcx4vynk26y");
-        //In Theaters URI
-        //http://api.rottentomatoes.com/api/public/v1.0/lists/movies/in_theaters.json?page_limit=16&page=1&country=us&apikey=pj2z7eyve6mfdtcx4vynk26y
-        //put later URI's for all needed info
+        Bundle args = getArguments();
+
+        List<URI> requestURI = new ArrayList<URI>();
+        int option = args.getInt("position", 0);
+        requestURI.add(URI.create("http://api.rottentomatoes.com/api/public/v1.0/lists/movies/box_office.json?limit=16&country=us&apikey=pj2z7eyve6mfdtcx4vynk26y"));
+        requestURI.add(URI.create("http://api.rottentomatoes.com/api/public/v1.0/lists/movies/in_theaters.json?page_limit=16&page=1&country=us&apikey=pj2z7eyve6mfdtcx4vynk26y"));
+        requestURI.add(URI.create("http://api.rottentomatoes.com/api/public/v1.0/lists/movies/opening.json?limit=16&country=us&apikey=pj2z7eyve6mfdtcx4vynk26y"));
+        requestURI.add(URI.create("http://api.rottentomatoes.com/api/public/v1.0/lists/movies/upcoming.json?page_limit=16&page=1&country=us&apikey=pj2z7eyve6mfdtcx4vynk26y"));
+        //Upcoming Movies URI (different JSON)
 
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_boxoffice, container, false);
@@ -51,7 +57,7 @@ public class BoxOfficeFragment extends android.app.Fragment {
 
         //gridView.setAdapter(new ImageAdapter(view.getContext(),allMovies));
         CallAPI task = new CallAPI(getActivity());
-        task.execute(requestURI);
+        task.execute(requestURI.get(option));
         //thread for getting data from the API
 
 

@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
@@ -55,33 +56,19 @@ public class Main extends Activity
         // e ovo cudo mi daje mogucnost mjenjanja Viewa na osnovu oznacene opcije
         // 3 days later... bra'o Menile, sad si se sjetio da pocnes citati svoje komentare!
 
-      /*  FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-                .commit();*/
         Fragment fragment = new Fragment();
         FragmentManager fragmentManager = getFragmentManager();
+        Bundle args = new Bundle();
+        args.putInt("position", position+1);
 
-        switch (position + 1) {//switch-case jer nisam imao nista pametnije
-            case 1:
-                fragment = new BoxOfficeFragment();
-                break;
-            case 2:
-                fragment = new InTheatersFragment();
-                break;
-            case 3:
-                fragment = new OpeningFragment();
-                break;
-            case 4:
-                fragment = new UpcomingFragment();
-                break;
-            case 5:
-                fragment = new FavouritesFragment();
-                break;
-        }
+        fragment = new BoxOfficeFragment();
+        fragment.setArguments(args);
+
         fragmentManager.beginTransaction()
                 .replace(R.id.container, fragment)
                 .commit();
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.remove(fragment).commit();
     }
 
     public void onSectionAttached(int number) {

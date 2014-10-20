@@ -36,7 +36,7 @@ public class ImageAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return 0;
+        return listMovies.size();
     }
 
     @Override
