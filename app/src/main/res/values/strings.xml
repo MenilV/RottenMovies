@@ -9,10 +9,11 @@
     <string name="title_section5">Favourites</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="action_example">Example action</string>
+    <string name="action_refresh">Refresh</string>
     <string name="action_settings">Settings</string>
+    <string name="action_exit">Exit</string>
     <string name="title_activity_result">ResultActivity</string>
-    <string name="movie_title"></string>
+
     <string name="synopsis">GONE GIRL - directed by David Fincher and based upon the global bestseller by Gillian Flynn - unearths the secrets at the heart of a modern marriage. On the occasion of his fifth wedding anniversary, Nick Dunne (Ben Affleck) reports that his beautiful wife, Amy (Rosamund Pike), has gone missing. Under pressure from the police and a growing media frenzy, Nick\'s portrait of a blissful union begins to crumble. Soon his lies, deceits and strange behavior have everyone asking the same dark question: Did Nick Dunne kill his wife? © Fox</string>
 
 </resources>

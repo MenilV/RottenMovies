@@ -24,7 +24,7 @@ import static com.menil.rottenmovies.R.id.full_card_img;
  */
 public class ImageAdapter extends BaseAdapter {
 
-    int counter = 0;
+    private int counter = 0;
     private Context mContext;
     private List<Movie> listMovies = new ArrayList<Movie>();
 
@@ -51,17 +51,14 @@ public class ImageAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ImageView imageView = null;
-
+        ImageView imageView;
         if (convertView == null) {
             LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
             RelativeLayout view = (RelativeLayout) layoutInflater.inflate(R.layout.full_card, null);
             convertView = view;
         }
 
         imageView = (ImageView) convertView.findViewById(full_card_img);
-
         TextView textView = (TextView) convertView.findViewById(R.id.full_card_title);
 
         if (counter < 16) {

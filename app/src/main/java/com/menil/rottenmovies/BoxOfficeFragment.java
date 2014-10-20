@@ -1,6 +1,5 @@
 package com.menil.rottenmovies;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -32,7 +31,7 @@ public class BoxOfficeFragment extends android.app.Fragment {
 
     public List<Movie> allMovies = new ArrayList<Movie>();
 
-
+    int option = 0;
     View view;
     GridView gridView;
 
@@ -44,34 +43,34 @@ public class BoxOfficeFragment extends android.app.Fragment {
         Bundle args = getArguments();
 
         List<URI> requestURI = new ArrayList<URI>();
-        int option = args.getInt("position", 0);
-        requestURI.add(URI.create("http://api.rottentomatoes.com/api/public/v1.0/lists/movies/box_office.json?limit=16&country=us&apikey=pj2z7eyve6mfdtcx4vynk26y"));
-        requestURI.add(URI.create("http://api.rottentomatoes.com/api/public/v1.0/lists/movies/in_theaters.json?page_limit=16&page=1&country=us&apikey=pj2z7eyve6mfdtcx4vynk26y"));
-        requestURI.add(URI.create("http://api.rottentomatoes.com/api/public/v1.0/lists/movies/opening.json?limit=16&country=us&apikey=pj2z7eyve6mfdtcx4vynk26y"));
-        requestURI.add(URI.create("http://api.rottentomatoes.com/api/public/v1.0/lists/movies/upcoming.json?page_limit=16&page=1&country=us&apikey=pj2z7eyve6mfdtcx4vynk26y"));
+        option = args.getInt("position");
+        if (option > 4)//prevent coming to favourites fragment
+            option = 4;
+        /*
+        Box Office
+        In Theaters
+        Opening movies
+        Upcoming movies
+         */
+        String[] uriTopics = {"box_office", "in_theaters", "opening", "upcoming"};
+        String startURI = "http://api.rottentomatoes.com/api/public/v1.0/lists/movies/";
+        String endURI = ".json?limit=16&country=us&apikey=pj2z7eyve6mfdtcx4vynk26y";
+        for (String topic : uriTopics)
+            requestURI.add(URI.create(startURI + topic + endURI));
         //Upcoming Movies URI (different JSON)
 
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_boxoffice, container, false);
         gridView = (GridView) view.findViewById(R.id.gridview);
 
-        //gridView.setAdapter(new ImageAdapter(view.getContext(),allMovies));
-        CallAPI task = new CallAPI(getActivity());
+        CallAPI task = new CallAPI();
         task.execute(requestURI.get(option));
         //thread for getting data from the API
-
 
         return view;
     }
 
     public class CallAPI extends AsyncTask<URI, String, List<Movie>> {
-
-        private Context context;
-
-        public CallAPI(Context c) {
-            this.context = c;
-
-        }
 
         @Override
         protected List<Movie> doInBackground(URI... urls) {
@@ -84,7 +83,7 @@ public class BoxOfficeFragment extends android.app.Fragment {
             InputStream inputStream = null;
             String result = null;
 
-            BufferedReader reader = null;
+            BufferedReader reader;
             try {
                 HttpResponse response = httpclient.execute(httppost);
                 HttpEntity entity = response.getEntity();
@@ -94,9 +93,9 @@ public class BoxOfficeFragment extends android.app.Fragment {
                 reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"), 8);
                 StringBuilder sb = new StringBuilder();
 
-                String line = null;
+                String line;
                 while ((line = reader.readLine()) != null) {
-                    sb.append(line + "\n");
+                    sb.append(line).append("\n");
                 }
                 result = sb.toString();
             } catch (Exception e) {
@@ -109,7 +108,7 @@ public class BoxOfficeFragment extends android.app.Fragment {
                 }
             }
 
-            JSONObject jsonObject = null;
+            JSONObject jsonObject;
             try {
 
                 Gson gson = new Gson();
@@ -134,9 +133,7 @@ public class BoxOfficeFragment extends android.app.Fragment {
 
         @Override
         protected void onPostExecute(List<Movie> allMovies) {
-
             gridView.setAdapter(new ImageAdapter(view.getContext(), allMovies));
-            // Toast.makeText(context, result, Toast.LENGTH_LONG).show();
         }
 
     }

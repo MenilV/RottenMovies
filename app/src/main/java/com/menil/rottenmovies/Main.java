@@ -4,20 +4,15 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
 
 public class Main extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
-    public static final String apiURL = "http://api.rottentomatoes.com/api/public/v1.0/lists/movies/box_office.json?limit=16&country=us&apikey=pj2z7eyve6mfdtcx4vynk26y";
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -27,11 +22,12 @@ public class Main extends Activity
      */
     private CharSequence mTitle;
 
-    ///////////////////////////////////////////////////////////////////////////////
-    public void setActionBarTitle(String title) {
-        // NEDOVRSENO
-        //   YOUR_CUSTOM_ACTION_BAR_TITLE.setText(title);
-    }
+   /* public void setActionBarTitle(String title) {
+        ActionBar actionBar = getActionBar();
+        assert actionBar != null;
+        actionBar.setTitle(title);
+        actionBar.setSubtitle(title);
+    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +55,7 @@ public class Main extends Activity
         Fragment fragment = new Fragment();
         FragmentManager fragmentManager = getFragmentManager();
         Bundle args = new Bundle();
-        args.putInt("position", position+1);
+        args.putInt("position", position);
 
         fragment = new BoxOfficeFragment();
         fragment.setArguments(args);
@@ -67,11 +63,11 @@ public class Main extends Activity
         fragmentManager.beginTransaction()
                 .replace(R.id.container, fragment)
                 .commit();
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.remove(fragment).commit();
+        // FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        //fragmentTransaction.remove(fragment).commit();
     }
 
-    public void onSectionAttached(int number) {
+    /*public void onSectionAttached(int number) {
         switch (number) {
             case 1:
                 mTitle = getString(R.string.title_section1);
@@ -89,10 +85,11 @@ public class Main extends Activity
                 mTitle = getString(R.string.title_section5);
                 break;
         }
-    }
+    }*/
 
     public void restoreActionBar() {
         ActionBar actionBar = getActionBar();
+        assert actionBar != null;
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(mTitle);
@@ -117,29 +114,26 @@ public class Main extends Activity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        return id == R.id.action_settings || super.onOptionsItemSelected(item);
     }
 
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
+    /*public static class PlaceholderFragment extends Fragment {
+
+         // The fragment argument representing the section number for this
+         //fragment.
+
         private static final String ARG_SECTION_NUMBER = "section_number";
 
         public PlaceholderFragment() {
         }
 
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
+
+         // Returns a new instance of this fragment for the given section
+         // number.
+
         public static PlaceholderFragment newInstance(int sectionNumber) {
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
@@ -152,8 +146,8 @@ public class Main extends Activity
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            return rootView;
+
+            return inflater.inflate(R.layout.fragment_main, container, false);
         }
 
         @Override
@@ -162,6 +156,6 @@ public class Main extends Activity
             ((Main) activity).onSectionAttached(
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
-    }
+    }*/
 
 }
