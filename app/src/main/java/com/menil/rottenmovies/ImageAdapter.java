@@ -17,7 +17,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.menil.rottenmovies.R.id.full_card_img;
 
 /*
  * Created by menil on 13.10.2014.
@@ -32,7 +31,6 @@ public class ImageAdapter extends BaseAdapter {
         mContext = c;
         listMovies = allMovies;
     }
-
 
     @Override
     public int getCount() {
@@ -52,13 +50,15 @@ public class ImageAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ImageView imageView;
+        RelativeLayout view = null;
         if (convertView == null) {
             LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            RelativeLayout view = (RelativeLayout) layoutInflater.inflate(R.layout.full_card, null);
+            view = (RelativeLayout) layoutInflater.inflate(R.layout.full_card, null);
             convertView = view;
         }
 
-        imageView = (ImageView) convertView.findViewById(full_card_img);
+
+        imageView = (ImageView) convertView.findViewById(R.id.full_card_img);
         TextView textView = (TextView) convertView.findViewById(R.id.full_card_title);
 
         if (counter < 16) {

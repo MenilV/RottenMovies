@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 
 public class Main extends Activity
@@ -21,13 +23,6 @@ public class Main extends Activity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
-
-   /* public void setActionBarTitle(String title) {
-        ActionBar actionBar = getActionBar();
-        assert actionBar != null;
-        actionBar.setTitle(title);
-        actionBar.setSubtitle(title);
-    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,35 +52,17 @@ public class Main extends Activity
         Bundle args = new Bundle();
         args.putInt("position", position);
 
-        fragment = new BoxOfficeFragment();
-        fragment.setArguments(args);
-
+        if (position == 4)
+            fragment = new FavouritesFragment();
+        else {
+            fragment = new BoxOfficeFragment();
+            fragment.setArguments(args);
+        }
         fragmentManager.beginTransaction()
                 .replace(R.id.container, fragment)
                 .commit();
-        // FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        //fragmentTransaction.remove(fragment).commit();
-    }
 
-    /*public void onSectionAttached(int number) {
-        switch (number) {
-            case 1:
-                mTitle = getString(R.string.title_section1);
-                break;
-            case 2:
-                mTitle = getString(R.string.title_section2);
-                break;
-            case 3:
-                mTitle = getString(R.string.title_section3);
-                break;
-            case 4:
-                mTitle = getString(R.string.title_section4);
-                break;
-            case 5:
-                mTitle = getString(R.string.title_section5);
-                break;
-        }
-    }*/
+    }
 
     public void restoreActionBar() {
         ActionBar actionBar = getActionBar();

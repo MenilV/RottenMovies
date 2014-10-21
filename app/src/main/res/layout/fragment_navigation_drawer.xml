@@ -3,8 +3,13 @@
     android:id="@+id/navigation_drawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/selector"
+    android:background="@drawable/gridview_background2"
+
     android:choiceMode="singleChoice"
     android:divider="@android:color/transparent"
     android:dividerHeight="0dp"
-    tools:context=".NavigationDrawerFragment" />
+    android:listSelector="#399322"
+    android:duplicateParentState="true"
+    android:drawSelectorOnTop="true"
+    tools:context=".NavigationDrawerFragment" >
+    </ListView>

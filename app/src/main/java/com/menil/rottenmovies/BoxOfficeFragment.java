@@ -1,11 +1,15 @@
 package com.menil.rottenmovies;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -114,14 +118,7 @@ public class BoxOfficeFragment extends android.app.Fragment {
                 Gson gson = new Gson();
                 jsonObject = new JSONObject(result);
                 Movies filmovi = gson.fromJson(jsonObject.toString(), Movies.class); // deserializes json into filmovi
-
-
                 allMovies = filmovi.movies;
-                result = allMovies.get(0).title;
-
-                for (Movie m : allMovies) {
-                    result = m.id;
-                }
 
             } catch (JSONException e1) {
                 e1.printStackTrace();
