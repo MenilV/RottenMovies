@@ -25,6 +25,7 @@
         android:layout_marginRight="1dp"
         android:adjustViewBounds="true"
         android:clickable="true"
+        android:focusable="true"
         android:contentDescription="@string/app_name"
         android:longClickable="true"
         android:scaleType="fitXY"

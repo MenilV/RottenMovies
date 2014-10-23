@@ -13,6 +13,8 @@ public class FavouritesFragment extends android.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        Bundle bundle = getArguments();
+        //bundle.get
         return inflater.inflate(R.layout.fragment_favourites, container, false);
     }
 }

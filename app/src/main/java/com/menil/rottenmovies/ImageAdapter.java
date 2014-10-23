@@ -1,17 +1,24 @@
 package com.menil.rottenmovies;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -67,6 +74,21 @@ public class ImageAdapter extends BaseAdapter {
             new DownloadImageTask(imageView).execute(listMovies.get(counter).posters.detailed.replace("tmb", "det"));
         }
 
+
+
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(mContext, "Kliknuto je! :D", Toast.LENGTH_LONG).show();
+                Fragment fragment = new FavouritesFragment();
+                FragmentActivity fragmentActivity = new FragmentActivity();
+                //ovdje treba pokrenuti Favourites (details) fragment
+                //fragmentActivity.getFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
+                //Bundle args = new Bundle();
+
+
+            }
+        });
         counter++;
         return convertView;
     }
