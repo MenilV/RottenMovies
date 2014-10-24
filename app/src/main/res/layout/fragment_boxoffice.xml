@@ -6,10 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gridview_background2"
-
     android:clickable="true"
     android:longClickable="true"
-
     android:columnWidth="130dp"
     android:gravity="center"
     android:horizontalSpacing="10dp"

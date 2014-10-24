@@ -24,10 +24,12 @@ public class Main extends Activity
      */
     private CharSequence mTitle;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -52,7 +54,7 @@ public class Main extends Activity
         Bundle args = new Bundle();
         args.putInt("position", position);
 
-        if (position == 4)
+        if (position == 3)
             fragment = new FavouritesFragment();
         else {
             fragment = new BoxOfficeFragment();

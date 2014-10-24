@@ -1,5 +1,8 @@
 package com.menil.rottenmovies;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -39,6 +42,12 @@ public class BoxOfficeFragment extends android.app.Fragment {
     View view;
     GridView gridView;
 
+    public void setFragmentDetail (Bundle args){
+        Fragment fragmentDetail = new Fragment();
+        fragmentDetail.setArguments(args);
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.container, fragmentDetail).commit();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,7 +57,7 @@ public class BoxOfficeFragment extends android.app.Fragment {
 
         List<URI> requestURI = new ArrayList<URI>();
         option = args.getInt("position");
-        if (option > 4)//prevent coming to favourites fragment
+        if (option > 4 || option <1)//prevent coming to favourites fragment
             option = 4;
         /*
         Box Office
@@ -103,7 +112,7 @@ public class BoxOfficeFragment extends android.app.Fragment {
                 }
                 result = sb.toString();
             } catch (Exception e) {
-                // Oops
+                e.printStackTrace();
             } finally {
                 try {
                     if (inputStream != null) inputStream.close();

@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,8 @@ import android.widget.Toast;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.menil.rottenmovies.BoxOfficeFragment;
 
 
 /*
@@ -58,8 +61,9 @@ public class ImageAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ImageView imageView;
         RelativeLayout view = null;
+        LayoutInflater layoutInflater= null;
         if (convertView == null) {
-            LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = (RelativeLayout) layoutInflater.inflate(R.layout.full_card, null);
             convertView = view;
         }
@@ -80,8 +84,10 @@ public class ImageAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Toast.makeText(mContext, "Kliknuto je! :D", Toast.LENGTH_LONG).show();
-                Fragment fragment = new FavouritesFragment();
-                FragmentActivity fragmentActivity = new FragmentActivity();
+                Bundle args = new Bundle();
+
+
+
                 //ovdje treba pokrenuti Favourites (details) fragment
                 //fragmentActivity.getFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
                 //Bundle args = new Bundle();
