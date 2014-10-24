@@ -60,8 +60,8 @@ public class ImageAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ImageView imageView;
-        RelativeLayout view = null;
-        LayoutInflater layoutInflater= null;
+        RelativeLayout view;
+        LayoutInflater layoutInflater;
         if (convertView == null) {
             layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = (RelativeLayout) layoutInflater.inflate(R.layout.full_card, null);
@@ -84,7 +84,7 @@ public class ImageAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Toast.makeText(mContext, "Kliknuto je! :D", Toast.LENGTH_LONG).show();
-                Bundle args = new Bundle();
+               // Bundle args = new Bundle();
 
 
 

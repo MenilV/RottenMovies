@@ -8,8 +8,7 @@ import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
+
 
 
 public class Main extends Activity
@@ -29,6 +28,7 @@ public class Main extends Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
@@ -58,8 +58,9 @@ public class Main extends Activity
             fragment = new FavouritesFragment();
         else {
             fragment = new BoxOfficeFragment();
-            fragment.setArguments(args);
         }
+            fragment.setArguments(args);
+
         fragmentManager.beginTransaction()
                 .replace(R.id.container, fragment)
                 .commit();
