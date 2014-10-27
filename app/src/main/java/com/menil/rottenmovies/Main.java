@@ -49,18 +49,33 @@ public class Main extends Activity
         // e ovo cudo mi daje mogucnost mjenjanja Viewa na osnovu oznacene opcije
         // 3 days later... bra'o Menile, sad si se sjetio da pocnes citati svoje komentare!
 
-        Fragment fragment = new Fragment();
+        Fragment fragment;
         FragmentManager fragmentManager = getFragmentManager();
         Bundle args = new Bundle();
         args.putInt("position", position);
 
-        if (position == 4)
+        switch(position){
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+                fragment = new BoxOfficeFragment();
+                break;
+            case 5:
+                fragment = new FavouritesFragment();
+                break;
+            default:
+                fragment = new HomeFragment();
+                break;
+        }
+        fragment.setArguments(args);
+        /*if (position == 4)
             fragment = new FavouritesFragment();
         else {
             fragment = new BoxOfficeFragment();
         }
             fragment.setArguments(args);
-
+*/
         fragmentManager.beginTransaction()
                 .replace(R.id.container, fragment)
                 .commit();

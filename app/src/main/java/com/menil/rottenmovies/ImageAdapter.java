@@ -72,11 +72,11 @@ public class ImageAdapter extends BaseAdapter {
         imageView = (ImageView) convertView.findViewById(R.id.full_card_img);
         TextView textView = (TextView) convertView.findViewById(R.id.full_card_title);
 
-        if (counter < 16) {
+        //if (counter < 16) {
             String title = listMovies.get(counter).title;
             textView.setText(title);
             new DownloadImageTask(imageView).execute(listMovies.get(counter).posters.detailed.replace("tmb", "det"));
-        }
+       // }
 
 
 

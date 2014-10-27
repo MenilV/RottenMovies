@@ -9,8 +9,8 @@ import java.util.List;
  */
 public class Movies {
 
-    @SerializedName("total")
-    private String total;
+    //@SerializedName("total")
+    //private String total;
 
     public List<Movie> movies;
 

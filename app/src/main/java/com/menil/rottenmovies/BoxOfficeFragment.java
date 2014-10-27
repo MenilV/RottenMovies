@@ -58,8 +58,6 @@ public class BoxOfficeFragment extends android.app.Fragment {
 
         List<URI> requestURI = new ArrayList<URI>();
         option = args.getInt("position");
-        if (option > 4)//prevent coming to favourites fragment
-            option = 4;
         /*
         Box Office
         In Theaters
@@ -68,7 +66,7 @@ public class BoxOfficeFragment extends android.app.Fragment {
          */
         String[] uriTopics = {"box_office", "in_theaters", "opening", "upcoming"};
         String startURI = "http://api.rottentomatoes.com/api/public/v1.0/lists/movies/";
-        String endURI = ".json?limit=16&country=us&apikey=pj2z7eyve6mfdtcx4vynk26y";
+        String endURI = ".json?limit=16&country=us&apikey=pj2z7eyve6mfdtcx4vynk26y";//currently 16 movies
         for (String topic : uriTopics)
             requestURI.add(URI.create(startURI + topic + endURI));
         //Upcoming Movies URI (different JSON)
@@ -149,5 +147,3 @@ public class BoxOfficeFragment extends android.app.Fragment {
     }
 
 }
-
-
