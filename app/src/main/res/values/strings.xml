@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">Rotten Movies</string>
+    <string name="title_section0">Home</string>
     <string name="title_section1">Box Office</string>
     <string name="title_section2">In Theaters</string>
     <string name="title_section3">Opening Movies</string>

@@ -4,11 +4,12 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
-
+import android.widget.ImageView;
 
 
 public class Main extends Activity
@@ -28,7 +29,6 @@ public class Main extends Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
@@ -54,7 +54,7 @@ public class Main extends Activity
         Bundle args = new Bundle();
         args.putInt("position", position);
 
-        if (position == 3)
+        if (position == 4)
             fragment = new FavouritesFragment();
         else {
             fragment = new BoxOfficeFragment();
@@ -65,6 +65,7 @@ public class Main extends Activity
                 .replace(R.id.container, fragment)
                 .commit();
 
+       // ImageView imageView = (ImageView) findViewById(R.id.full_card_img);
     }
 
     public void restoreActionBar() {

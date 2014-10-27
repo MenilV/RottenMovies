@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -126,6 +127,9 @@ public class BoxOfficeFragment extends android.app.Fragment {
 
                 Gson gson = new Gson();
                 jsonObject = new JSONObject(result);
+                //if (urls[0].toString().contains("upcoming"))
+                    //String total = gson.fromJson(jsonObject.toString(), Movies.class.);
+                //{ }
                 Movies filmovi = gson.fromJson(jsonObject.toString(), Movies.class); // deserializes json into filmovi
                 allMovies = filmovi.movies;
 

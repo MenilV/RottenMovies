@@ -84,10 +84,7 @@ public class ImageAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Toast.makeText(mContext, "Kliknuto je! :D", Toast.LENGTH_LONG).show();
-               // Bundle args = new Bundle();
-
-
-
+                // Bundle args = new Bundle();
                 //ovdje treba pokrenuti Favourites (details) fragment
                 //fragmentActivity.getFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
                 //Bundle args = new Bundle();
