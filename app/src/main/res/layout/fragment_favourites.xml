@@ -44,93 +44,80 @@
             android:scaleType="fitXY"
             android:src="@drawable/dracula_tmb" />
 
-        <ScrollView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_margin="4dp">
+        <LinearLayout
+            android:id="@+id/detail_layout_runtime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
-                android:text="@string/synopsis"
-                android:textColor="@android:color/black"
-                android:textSize="15sp" />
-        </ScrollView>
+                android:gravity="start"
+                android:text="year: "
+                android:editable="false"
+                android:textSize="25sp" />
+            <TextView
+                android:id="@+id/detail_year"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:text="yearEditable"
+                android:textSize="25sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:text="cast: "
+                android:editable="false"
+                android:textSize="25sp" />
+            <TextView
+                android:id="@+id/detail_cast"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:text="castEditable"
+                android:textSize="25sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:text="Runtime: "
+                android:editable="false"
+                android:textSize="25sp" />
+            <TextView
+                android:id="@+id/detail_runtime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:text="runtimeEditable"
+                android:textSize="25sp" />
+        </LinearLayout>
+
+
+
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/detail_layout_runtime"
+    <TextView
+        android:id="@+id/synopsis"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:padding="3dp"
+        android:background="@drawable/bg_card"
+        android:text="@string/synopsis"
+        android:textColor="@android:color/black"
+        android:textSize="15sp" />
+
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
+        android:layout_margin="4dp"
+        android:padding="3dp"
+        android:text="rating"
         android:background="@drawable/bg_card"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="start"
-            android:text="Runtime: "
-            android:editable="false"
-            android:textSize="25sp" />
-        <TextView
-            android:id="@+id/detail_runtime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="start"
-            android:text="runtimeEditable"
-            android:textSize="25sp" />
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/detail_layout_year"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:background="@drawable/bg_card"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="start"
-            android:text="Year: "
-            android:textSize="25sp" />
-        <TextView
-            android:id="@+id/detail_year"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="start"
-            android:text="yearEditable"
-            android:textSize="25sp" />
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/detail_layout_cast"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:background="@drawable/bg_card"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="start"
-            android:text="Cast: "
-            android:textSize="25sp" />
-        <TextView
-            android:id="@+id/detail_cast"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="start"
-            android:text="castEditable "
-            android:textSize="25sp" />
-    </LinearLayout>
-        <GridLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            </GridLayout>
+        android:textSize="25sp"/>
 
 </LinearLayout>
 </ScrollView>

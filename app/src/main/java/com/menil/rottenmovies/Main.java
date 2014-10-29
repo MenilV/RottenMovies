@@ -4,24 +4,16 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
 
 
 public class Main extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
-    /**
-     * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
-     */
     private NavigationDrawerFragment mNavigationDrawerFragment;
-    /**
-     * Used to store the last screen title. For use in {@link #restoreActionBar()}.
-     */
     private CharSequence mTitle;
 
 
@@ -29,7 +21,6 @@ public class Main extends Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -40,7 +31,6 @@ public class Main extends Activity
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
         //this does nothing
-
     }
 
     @Override
@@ -49,38 +39,39 @@ public class Main extends Activity
         // e ovo cudo mi daje mogucnost mjenjanja Viewa na osnovu oznacene opcije
         // 3 days later... bra'o Menile, sad si se sjetio da pocnes citati svoje komentare!
 
+
         Fragment fragment;
         FragmentManager fragmentManager = getFragmentManager();
         Bundle args = new Bundle();
         args.putInt("position", position);
 
         switch(position){
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-                fragment = new BoxOfficeFragment();
+            case 0://home fragment
+            case 1://box office fragment
+                fragment = new HomeFragment();
                 break;
-            case 5:
+                //fragment = new BoxOfficeFragment();
+                //break;
+            case 2://in theaters
+            case 3://opening
+                fragment = new OthersFragment();
+                break;
+            case 4://upcoming (currently displaying detail view) !fix api deserialization
+            case 5://favourites (currently displaying detail view) !fix on long click event
                 fragment = new FavouritesFragment();
                 break;
             default:
-                fragment = new HomeFragment();
+                fragment= new HomeFragment();
                 break;
         }
         fragment.setArguments(args);
-        /*if (position == 4)
-            fragment = new FavouritesFragment();
-        else {
-            fragment = new BoxOfficeFragment();
-        }
-            fragment.setArguments(args);
-*/
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, fragment)
-                .commit();
+        switchContent(fragment);
 
-       // ImageView imageView = (ImageView) findViewById(R.id.full_card_img);
+    }
+    public void switchContent(Fragment fragment) {
+
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.container, fragment).commit();
     }
 
     public void restoreActionBar() {
@@ -112,46 +103,4 @@ public class Main extends Activity
         int id = item.getItemId();
         return id == R.id.action_settings || super.onOptionsItemSelected(item);
     }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    /*public static class PlaceholderFragment extends Fragment {
-
-         // The fragment argument representing the section number for this
-         //fragment.
-
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        public PlaceholderFragment() {
-        }
-
-
-         // Returns a new instance of this fragment for the given section
-         // number.
-
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        //probaj ovdje izvuci argument iz fragmenta i switch caseom pozvat smao layout
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-
-            return inflater.inflate(R.layout.fragment_main, container, false);
-        }
-
-        @Override
-        public void onAttach(Activity activity) {
-            super.onAttach(activity);
-            ((Main) activity).onSectionAttached(
-                    getArguments().getInt(ARG_SECTION_NUMBER));
-        }
-    }*/
-
 }
