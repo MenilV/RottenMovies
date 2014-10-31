@@ -4,14 +4,13 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gridview_background2">
+    android:background="@drawable/gridview_background">
 
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/app_name"
         android:textSize="35sp"
-        android:textColor="#FFF"
         android:gravity="center"
         android:layout_marginTop="10sp"/>
     <Space
@@ -22,7 +21,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/title_section0"
-        android:textColor="#FFF"
         android:layout_gravity="center"/>
 
     <Space
@@ -39,7 +37,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Share"
-        android:textColor="#FFF"
         android:layout_gravity="center"/>
 
 </LinearLayout>

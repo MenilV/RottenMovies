@@ -2,6 +2,8 @@ package com.menil.rottenmovies;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 /**
  * Created by menil on 17.10.2014.
  */
@@ -34,8 +36,8 @@ public class Movie {
     @SerializedName("posters")
     public Posters posters;
 
-    //public Cast cast;
-    //I will ignore abridged cast for now
+    @SerializedName("abridged_cast")
+    public List<Cast> casts;
 
     //public aternateIDs aids;
 

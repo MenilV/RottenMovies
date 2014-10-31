@@ -47,7 +47,13 @@ public class Main extends Activity
 
         switch(position){
             case 0://home fragment
+                fragment = new HomeFragment();
+                break;
             case 1://box office fragment
+                /**
+                 * CHANGE HERE FIRST
+                 */
+                //fragment = new BoxOfficeFragment();
                 fragment = new HomeFragment();
                 break;
                 //fragment = new BoxOfficeFragment();
@@ -58,7 +64,7 @@ public class Main extends Activity
                 break;
             case 4://upcoming (currently displaying detail view) !fix api deserialization
             case 5://favourites (currently displaying detail view) !fix on long click event
-                fragment = new FavouritesFragment();
+                fragment = new DetailsFragment();
                 break;
             default:
                 fragment= new HomeFragment();

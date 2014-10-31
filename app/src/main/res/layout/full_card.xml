@@ -14,26 +14,23 @@
     android:orientation="vertical"
     android:paddingBottom="2dp">
 
-    <ImageView
-        android:id="@+id/full_card_img"
+    <com.menil.rottenmovies.RemoteImageView
+        android:id="@+id/full_card_img2"
         android:layout_width="match_parent"
         android:layout_height="266dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentTop="true"
         android:layout_marginBottom="1dp"
-        android:layout_marginLeft="1dp"
-        android:layout_marginRight="1dp"
         android:adjustViewBounds="true"
         android:clickable="true"
         android:focusable="true"
-        android:contentDescription="@string/app_name"
         android:longClickable="true"
         android:scaleType="fitXY"
-        android:src="@drawable/dracula_tmb" />
+        android:background="#f1f1f1" />
 
     <TextView
 
-        android:id="@+id/full_card_title"
+        android:id="@+id/full_card_title2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

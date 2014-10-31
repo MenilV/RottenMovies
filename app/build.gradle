@@ -6,8 +6,8 @@ android {
 
     defaultConfig {
         applicationId "com.menil.rottenmovies"
-        minSdkVersion 17
-        targetSdkVersion 20
+        minSdkVersion 14
+        targetSdkVersion 21
         versionCode 1
         versionName "1.0"
     }
@@ -21,7 +21,8 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:support-v4:20.0.0'
+    compile 'com.android.support:support-v4:21.0.0'
+    compile 'com.android.support:cardview-v7:21.0.0'
     compile 'com.android.support:support-annotations:+'
     compile files('libs/google-gson-2.2.4/gson-2.2.4.jar')
 }

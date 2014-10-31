@@ -31,16 +31,10 @@ public class OthersFragment extends android.app.Fragment {
 
     public List<Movie> allMovies = new ArrayList<Movie>();
 
-    int option = 0;
-    View view;
-    GridView gridView;
-
-    /*public void setFragmentDetail (Bundle args){
-        Fragment fragmentDetail = new Fragment();
-        fragmentDetail.setArguments(args);
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container, fragmentDetail).commit();
-    }*/
+    private int option = 0;
+    private View view;
+    private GridView gridView;
+    private int layout=1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -78,6 +72,7 @@ public class OthersFragment extends android.app.Fragment {
         view = inflater.inflate(R.layout.fragment_others, container, false);
         gridView = (GridView) view.findViewById(R.id.gridview);
         CallAPI task = new CallAPI();
+
 
         task.execute(requestURI.get(option));
         //thread for getting data from the API
@@ -144,7 +139,7 @@ public class OthersFragment extends android.app.Fragment {
 
         @Override
         protected void onPostExecute(List<Movie> allMovies) {
-            gridView.setAdapter(new ImageAdapter(view.getContext(), allMovies));
+            gridView.setAdapter(new GridAdapter(view.getContext(), allMovies));
         }
     }
 }

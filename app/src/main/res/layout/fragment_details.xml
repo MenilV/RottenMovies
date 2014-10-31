@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gridview_background2">
+    android:background="#f1f1f1">
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -42,7 +42,7 @@
             android:contentDescription="@string/app_name"
             android:longClickable="true"
             android:scaleType="fitXY"
-            android:src="@drawable/dracula_tmb" />
+            android:src="@drawable/empty_img" />
 
         <LinearLayout
             android:id="@+id/detail_layout_runtime"
