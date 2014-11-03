@@ -5,7 +5,7 @@
     android:layout_height="wrap_content">
     <item>
         <shape android:shape="rectangle">
-            <corners android:radius="2dp"/>
+            <corners android:radius="2dp" />
             <solid android:color="#d2d2d2" />
         </shape>
     </item>

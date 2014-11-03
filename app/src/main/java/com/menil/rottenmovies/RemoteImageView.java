@@ -131,7 +131,7 @@ public class RemoteImageView extends ImageView {
 
         // Temporary solution, until httpsi problem is solved
         /*if(!URL.substring(0, 4).equals("http")){
-			URL="http:"+URL;
+            URL="http:"+URL;
 		}*/
 
         Bitmap image = cache.get(URL);

@@ -3,5 +3,4 @@
     android:id="@+id/boxoffice_list"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/bg_card">
-</ListView>
+    android:background="@drawable/bg_card"></ListView>

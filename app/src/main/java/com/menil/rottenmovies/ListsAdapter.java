@@ -16,22 +16,22 @@ import java.util.List;
  * Created by menil on 31.10.2014.
  */
 
-
+//TODO: merge with gridAdapter
 public class ListsAdapter extends BaseAdapter {
 
     private Context mContext;
     private List<Movie> listMovies = new ArrayList<Movie>();
-    private int option=0;
+    private int option = 0;
 
     public ListsAdapter(Context c, List<Movie> allMovies) {
         this.mContext = c;
         this.listMovies = allMovies;
     }
 
-    public ListsAdapter(Context c, List<Movie> allMovies, int option){
+    public ListsAdapter(Context c, List<Movie> allMovies, int option) {
         this.mContext = c;
         this.listMovies = allMovies;
-        this.option=option;
+        this.option = option;
     }
 
     @Override
@@ -53,8 +53,8 @@ public class ListsAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View view;
         LayoutInflater layoutInflater;
-        RemoteImageView imageView=null;
-        TextView titleView=null;
+        RemoteImageView imageView = null;
+        TextView titleView = null;
         TextView yearView = null;
         TextView actorsView = null;
         TextView runtimeView = null;
@@ -63,9 +63,9 @@ public class ListsAdapter extends BaseAdapter {
 /**PROBLEMS ARE HERE
  * BELOW
  */
-          view = layoutInflater.inflate(R.layout.fragment_list_item, null);
+            view = layoutInflater.inflate(R.layout.fragment_list_item, null);
             //convertView = view;
-        }else{
+        } else {
             view = convertView;
         }
         imageView = (RemoteImageView) view.findViewById(R.id.fragment_list_item_img);
@@ -88,7 +88,7 @@ public class ListsAdapter extends BaseAdapter {
         //String synopsis = listMovies.get(position).synopsis;
         List<Cast> casts = listMovies.get(position).casts;
         //ArrayList<String> actors = new ArrayList<String>();
-        for (Cast cast:casts){
+        for (Cast cast : casts) {
             actorsView.append(casts.get(position).name);
         }
         //String releaseDate = listMovies.get(position). DO I HAVE THIS???

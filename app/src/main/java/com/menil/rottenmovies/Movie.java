@@ -1,5 +1,8 @@
 package com.menil.rottenmovies;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -7,7 +10,7 @@ import java.util.List;
 /**
  * Created by menil on 17.10.2014.
  */
-public class Movie {
+public class Movie implements Parcelable {
     @SerializedName("id")
     public String id;
 
@@ -38,6 +41,17 @@ public class Movie {
 
     @SerializedName("abridged_cast")
     public List<Cast> casts;
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+        dest.writeValue(this);
+    }
 
     //public aternateIDs aids;
 

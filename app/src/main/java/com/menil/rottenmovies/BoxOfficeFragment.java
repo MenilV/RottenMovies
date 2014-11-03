@@ -51,6 +51,7 @@ public class BoxOfficeFragment extends Fragment {
 
         return view;
     }
+
     public class CallAPI extends AsyncTask<URI, String, List<Movie>> {
 
         @Override
@@ -115,7 +116,8 @@ public class BoxOfficeFragment extends Fragment {
              */
 
             listView.setAdapter(new ListsAdapter(view.getContext(), allMovies));
-            Toast.makeText(view.getContext(),"all is fine ... NOT!", Toast.LENGTH_LONG).show();
+            Toast.makeText(view.getContext(), "all is fine ... NOT!", Toast.LENGTH_LONG).show();
+            // TODO: make this work
         }
     }
 }

@@ -34,7 +34,7 @@ public class OthersFragment extends android.app.Fragment {
     private int option = 0;
     private View view;
     private GridView gridView;
-    private int layout=1;
+    private int layout = 1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -45,7 +45,7 @@ public class OthersFragment extends android.app.Fragment {
         List<URI> requestURI = new ArrayList<URI>();
 
         option = args.getInt("position");
-        option -=1;
+        option -= 1;
         /*
         Box Office //no box office here anymore
         In Theaters
@@ -124,7 +124,7 @@ public class OthersFragment extends android.app.Fragment {
                 Gson gson = new Gson();
                 jsonObject = new JSONObject(result);
                 //if (urls[0].toString().contains("upcoming"))
-                    //String total = gson.fromJson(jsonObject.toString(), Movies.class.);
+                //String total = gson.fromJson(jsonObject.toString(), Movies.class.);
                 //{ }
                 Movies filmovi = gson.fromJson(jsonObject.toString(), Movies.class); // deserializes json into filmovi
                 allMovies = filmovi.movies;

@@ -1,123 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#f1f1f1">
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/detail_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Movie Title"
-        android:textSize="35sp"
-        android:background="@drawable/bg_card"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp"/>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="270dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp"
-        android:background="@drawable/bg_card"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/full_card_img_detail"
-            android:layout_width="wrap_content"
-            android:layout_height="266dp"
-            android:layout_marginBottom="3dp"
-            android:layout_marginStart="1dp"
-            android:layout_marginTop="1dp"
-            android:adjustViewBounds="true"
-            android:clickable="true"
-            android:contentDescription="@string/app_name"
-            android:longClickable="true"
-            android:scaleType="fitXY"
-            android:src="@drawable/empty_img" />
-
-        <LinearLayout
-            android:id="@+id/detail_layout_runtime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="start"
-                android:text="year: "
-                android:editable="false"
-                android:textSize="25sp" />
-            <TextView
-                android:id="@+id/detail_year"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="start"
-                android:text="yearEditable"
-                android:textSize="25sp" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="start"
-                android:text="cast: "
-                android:editable="false"
-                android:textSize="25sp" />
-            <TextView
-                android:id="@+id/detail_cast"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="start"
-                android:text="castEditable"
-                android:textSize="25sp" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="start"
-                android:text="Runtime: "
-                android:editable="false"
-                android:textSize="25sp" />
-            <TextView
-                android:id="@+id/detail_runtime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="start"
-                android:text="runtimeEditable"
-                android:textSize="25sp" />
-        </LinearLayout>
-
-
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/synopsis"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="4dp"
-        android:padding="3dp"
-        android:background="@drawable/bg_card"
-        android:text="@string/synopsis"
-        android:textColor="@android:color/black"
-        android:textSize="15sp" />
-
-    <TextView
+        android:orientation="vertical">
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="4dp"
-        android:padding="3dp"
-        android:text="rating"
         android:background="@drawable/bg_card"
-        android:textSize="25sp"/>
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/fragment_details_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:text="Movie Title"
+            android:textSize="35sp" />
+        <TextView
+            android:id="@+id/fragment_details_year"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:text="YEAR"
+            android:textSize="25sp" />
+    </LinearLayout>
 
-</LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="270dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/bg_card"
+            android:orientation="horizontal">
+
+            <com.menil.rottenmovies.RemoteImageView
+                android:id="@+id/fragment_details_img"
+                android:layout_width="wrap_content"
+                android:layout_height="266dp"
+                android:layout_marginBottom="3dp"
+                android:layout_marginStart="1dp"
+                android:layout_marginLeft="1dp"
+                android:layout_marginTop="1dp"
+                android:adjustViewBounds="true"
+                android:clickable="true"
+                android:longClickable="true"
+                android:scaleType="fitXY"
+                android:contentDescription="movie image"
+                android:src="@drawable/empty_img"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:id="@+id/fragment_details_runtime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:text="Runtime: "
+                    android:textSize="25sp"
+                    android:background="@drawable/bg_card"/>
+
+                <TextView
+                    android:id="@+id/fragment_details_rating"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:text="Rating: "
+                    android:textSize="25sp"
+                    android:background="@drawable/bg_card"/>
+                <TextView
+                    android:id="@+id/fragment_details_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:text="ID: "
+                    android:textSize="25sp"
+                    android:background="@drawable/bg_card"/>
+
+                <TextView
+                    android:text="Cast: "
+                    android:id="@+id/fragment_details_cast"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:textSize="15sp"
+                    android:background="@drawable/bg_card"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/fragment_details_synopsis"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:background="@drawable/bg_card"
+            android:padding="3dp"
+            android:text="@string/synopsis"
+            android:textColor="@android:color/black"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:background="@drawable/bg_card"
+            android:padding="3dp"
+            android:text="Left blank intentionally"
+            android:textSize="25sp" />
+
+    </LinearLayout>
 </ScrollView>

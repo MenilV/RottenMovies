@@ -45,7 +45,7 @@ public class Main extends Activity
         Bundle args = new Bundle();
         args.putInt("position", position);
 
-        switch(position){
+        switch (position) {
             case 0://home fragment
                 fragment = new HomeFragment();
                 break;
@@ -56,8 +56,8 @@ public class Main extends Activity
                 //fragment = new BoxOfficeFragment();
                 fragment = new HomeFragment();
                 break;
-                //fragment = new BoxOfficeFragment();
-                //break;
+            //fragment = new BoxOfficeFragment();
+            //break;
             case 2://in theaters
             case 3://opening
                 fragment = new OthersFragment();
@@ -67,17 +67,18 @@ public class Main extends Activity
                 fragment = new DetailsFragment();
                 break;
             default:
-                fragment= new HomeFragment();
+                fragment = new HomeFragment();
                 break;
         }
         fragment.setArguments(args);
         switchContent(fragment);
 
     }
+
     public void switchContent(Fragment fragment) {
 
-            getFragmentManager().beginTransaction()
-                    .replace(R.id.container, fragment).commit();
+        getFragmentManager().beginTransaction()
+                .replace(R.id.container, fragment).commit();
     }
 
     public void restoreActionBar() {
