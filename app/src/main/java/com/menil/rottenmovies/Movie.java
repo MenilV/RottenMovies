@@ -26,12 +26,11 @@ public class Movie implements Parcelable {
     @SerializedName("runtime")
     public int runtime;
 
-    @SerializedName("critics_consensus")
-    public String critics_consensus;
+    @SerializedName("release_dates")
+    public ReleaseDates release_dates;
 
-    //public ReleaseDates releaseDates;
-
-    //public Ratings ratings;
+    @SerializedName("ratings")
+    public Ratings ratings;
 
     @SerializedName("synopsis")
     public String synopsis;
@@ -52,9 +51,5 @@ public class Movie implements Parcelable {
 
         dest.writeValue(this);
     }
-
-    //public aternateIDs aids;
-
-    //public Link links
 
 }

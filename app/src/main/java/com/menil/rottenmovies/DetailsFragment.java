@@ -33,8 +33,13 @@ public class DetailsFragment extends android.app.Fragment {
         TextView rating = (TextView)view.findViewById(R.id.fragment_details_rating);
         TextView ID = (TextView)view.findViewById(R.id.fragment_details_id);
         RemoteImageView imageView = (RemoteImageView) view.findViewById(R.id.fragment_details_img);
-
-        imageView.setImageURL(movie.posters.detailed.replace("tmb", "det"), false);
+        try {
+            imageView.setImageURL(movie.posters.detailed.replace("tmb", "det"), false);
+        }
+        catch (NullPointerException e)
+        {
+            e.printStackTrace();}
+        
         title.setText(movie.title);
         synopsis.setText(movie.synopsis);
         year.setText(" (");

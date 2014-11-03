@@ -13,4 +13,5 @@ public class Posters {
     public String profile;
     @SerializedName("detailed")
     public String detailed;
+
 }

@@ -53,18 +53,23 @@ public class OthersFragment extends android.app.Fragment {
         Upcoming movies
          */
 
-        String limit = "16";
-        String[] uriTopics = {"box_office", "in_theaters", "opening", "upcoming"};
+        //INT: page_limit=50&page=1
+        //OPE: limit=16
+        //UPC: page_limit=16&page=1
         String startURI = "http://api.rottentomatoes.com/api/public/v1.0/lists/movies/";
-        String endURI = ".json?limit=16&country=us&apikey=pj2z7eyve6mfdtcx4vynk26y";
-        String upcomingPages = "1";
+        String[] uriTopics = {"box_office.json?", "in_theaters.json?", "opening.json?", "upcoming.json?"};
+        String page = "page_";//for in theaters and upcoming movies
+        String limit = "limit=16";//max amount
+        String nrPages ="&page=1";
+        String endURI = "&country=us&apikey=pj2z7eyve6mfdtcx4vynk26y";
 
-        /*if (option!=3)
-            requestURI=URI.create(startURI+uriTopics[option]+endURI);
-        else
-            requestURI=URI.create(startURI+uriTopics[option]+".json?page_limit="+limit+"&page="+upcomingPages+);*/
-        for (String topic : uriTopics)
-            requestURI.add(URI.create(startURI + topic + endURI));
+
+        for (String topic : uriTopics){
+            if (topic.equals("opening.json?"))
+                requestURI.add(URI.create(startURI + topic + limit + endURI));
+            else
+                requestURI.add(URI.create(startURI + topic + page + limit + nrPages + endURI));
+        }
         //Upcoming Movies URI (different JSON)
 
 
@@ -122,13 +127,11 @@ public class OthersFragment extends android.app.Fragment {
             try {
 
                 Gson gson = new Gson();
-                jsonObject = new JSONObject(result);
-                //if (urls[0].toString().contains("upcoming"))
-                //String total = gson.fromJson(jsonObject.toString(), Movies.class.);
-                //{ }
-                Movies filmovi = gson.fromJson(jsonObject.toString(), Movies.class); // deserializes json into filmovi
-                allMovies = filmovi.movies;
 
+                jsonObject = new JSONObject(result);
+                Movies filmovi = new Movies();
+                filmovi=gson.fromJson(jsonObject.toString(), Movies.class); // deserializes json into filmovi
+                allMovies = filmovi.movies;
             } catch (JSONException e1) {
                 e1.printStackTrace();
             }
