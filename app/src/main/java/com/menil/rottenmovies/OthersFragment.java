@@ -1,5 +1,6 @@
 package com.menil.rottenmovies;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -30,7 +31,7 @@ import java.util.List;
 public class OthersFragment extends android.app.Fragment {
 
     public List<Movie> allMovies = new ArrayList<Movie>();
-
+    private ProgressDialog progressDialog;
     private int option = 0;
     private View view;
     private GridView gridView;
@@ -41,7 +42,6 @@ public class OthersFragment extends android.app.Fragment {
 
         //API KEY =pj2z7eyve6mfdtcx4vynk26y
         Bundle args = getArguments();
-
         List<URI> requestURI = new ArrayList<URI>();
 
         option = args.getInt("position");
@@ -60,11 +60,11 @@ public class OthersFragment extends android.app.Fragment {
         String[] uriTopics = {"box_office.json?", "in_theaters.json?", "opening.json?", "upcoming.json?"};
         String page = "page_";//for in theaters and upcoming movies
         String limit = "limit=16";//max amount
-        String nrPages ="&page=1";
+        String nrPages = "&page=1";
         String endURI = "&country=us&apikey=pj2z7eyve6mfdtcx4vynk26y";
 
 
-        for (String topic : uriTopics){
+        for (String topic : uriTopics) {
             if (topic.equals("opening.json?"))
                 requestURI.add(URI.create(startURI + topic + limit + endURI));
             else
@@ -86,6 +86,27 @@ public class OthersFragment extends android.app.Fragment {
     }
 
     public class CallAPI extends AsyncTask<URI, String, List<Movie>> {
+
+        @Override
+        protected void onPreExecute() {
+
+            progressDialog = new ProgressDialog(getActivity(), R.style.CustomDialog);
+            progressDialog.setTitle("Loading...");
+            //Set the dialog message to 'Loading application View, please wait...'
+            progressDialog.setMessage("Loading Movies, please wait...");
+            //This dialog can't be canceled by pressing the back key
+            progressDialog.setCancelable(false);
+            //This dialog isn't indeterminate
+            progressDialog.setIndeterminate(false);
+            progressDialog.setIndeterminateDrawable(getResources()
+                            .getDrawable(R.drawable.spinner_animation));
+                    //The maximum number of items is 100
+                    progressDialog.setMax(100);
+            //Set the current progress to zero
+            progressDialog.setProgress(0);
+            //Display the progress dialog
+            progressDialog.show();
+        }
 
         @Override
         protected List<Movie> doInBackground(URI... urls) {
@@ -130,7 +151,7 @@ public class OthersFragment extends android.app.Fragment {
 
                 jsonObject = new JSONObject(result);
                 Movies filmovi = new Movies();
-                filmovi=gson.fromJson(jsonObject.toString(), Movies.class); // deserializes json into filmovi
+                filmovi = gson.fromJson(jsonObject.toString(), Movies.class); // deserializes json into filmovi
                 allMovies = filmovi.movies;
             } catch (JSONException e1) {
                 e1.printStackTrace();
@@ -143,6 +164,7 @@ public class OthersFragment extends android.app.Fragment {
         @Override
         protected void onPostExecute(List<Movie> allMovies) {
             gridView.setAdapter(new GridAdapter(view.getContext(), allMovies));
+            progressDialog.dismiss();
         }
     }
 }
