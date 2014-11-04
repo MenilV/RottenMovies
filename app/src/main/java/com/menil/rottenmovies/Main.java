@@ -62,7 +62,7 @@ public class Main extends Activity
                 fragment = new OthersFragment();
                 break;
             case 3://opening
-                fragment = new OpeningFragment();
+                fragment = new OthersFragment();
                 break;
             case 4://upcoming
                 fragment = new OthersFragment();

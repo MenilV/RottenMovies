@@ -32,10 +32,10 @@ public class OthersFragment extends android.app.Fragment {
 
     public List<Movie> allMovies = new ArrayList<Movie>();
     private ProgressDialog progressDialog;
-    private int option = 0;
+    //private int option = 0;
     private View view;
     private GridView gridView;
-    private int layout = 1;
+   // private int layout = 1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -45,10 +45,9 @@ public class OthersFragment extends android.app.Fragment {
         Bundle args = getArguments();
         List<URI> requestURI = new ArrayList<URI>();
 
-        option = args.getInt("position");
+        int option = args.getInt("position");
         option -= 2;
         /*
-        Box Office //no box office here anymore
         In Theaters
         Opening movies
         Upcoming movies
@@ -59,31 +58,26 @@ public class OthersFragment extends android.app.Fragment {
         //UPC: page_limit=16&page=1
         String startURI = "http://api.rottentomatoes.com/api/public/v1.0/lists/movies/";
         //String[] uriTopics = {"box_office.json?", "in_theaters.json?", "opening.json?", "upcoming.json?"};
-        String[] uriTopics = {"in_theaters", "opening", "upcoming"};
+        String[] uriTopics = {"in_theaters.json?", "opening.json?", "upcoming.json?"};
         String page = "page_";//for in theaters and upcoming movies
-        String limit = "limit=16";//max amount
+        String limit = "limit=50";//max amount is 50
         String nrPages = "&page=1";
         String endURI = "&country=us&apikey=pj2z7eyve6mfdtcx4vynk26y";
 
-/*
+
         for (String topic : uriTopics) {
             if (topic.equals("opening.json?"))
                 requestURI.add(URI.create(startURI + topic + limit + endURI));
             else
                 requestURI.add(URI.create(startURI + topic + page + limit + nrPages + endURI));
-        }*/
-
+        }
 
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_others, container, false);
         gridView = (GridView) view.findViewById(R.id.gridview);
         CallAPI task = new CallAPI();
 
-
-        //task.execute(requestURI.get(option));
-        String start ="http://api.rottentomatoes.com/api/public/v1.0/lists/movies/";
-        String end =".json?apikey=pj2z7eyve6mfdtcx4vynk26y";
-        task.execute(URI.create(start+uriTopics[option]+end));
+        task.execute(requestURI.get(option));
         //thread for getting data from the API
 
         return view;

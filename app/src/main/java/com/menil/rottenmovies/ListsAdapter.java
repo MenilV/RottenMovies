@@ -81,8 +81,10 @@ public class ListsAdapter extends BaseAdapter {
         yearView.setText(Integer.toString(year));
 
         runtimeView = (TextView) view.findViewById(R.id.fragment_list_item_runtime);
-        int runtime = listMovies.get(position).runtime;
-        runtimeView.setText(Integer.toString(runtime));
+        //int runtime = listMovies.get(position).runtime;
+        String runtime = listMovies.get(position).runtime;
+        //runtimeView.setText(Integer.toString(runtime));
+        runtimeView.setText(runtime);
 
         actorsView = (TextView) view.findViewById(R.id.fragment_list_item_actors);
         //String synopsis = listMovies.get(position).synopsis;

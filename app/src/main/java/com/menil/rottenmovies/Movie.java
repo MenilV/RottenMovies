@@ -25,7 +25,7 @@ public class Movie implements Parcelable {
     public String mpaa_rating;
 
     @SerializedName("runtime")
-    public int runtime;
+    public String runtime;
 
     @SerializedName("release_dates")
     public ReleaseDates release_dates;

@@ -8,5 +8,5 @@ import com.google.gson.annotations.SerializedName;
 public class Ratings {
 
     @SerializedName("critics_score")
-    public int critics_score;
+    public long critics_score;
 }
