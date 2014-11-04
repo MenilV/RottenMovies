@@ -90,7 +90,7 @@ public class GridAdapter extends BaseAdapter {
         String picURL = listMovies.get(position).posters.detailed.replace("tmb", "det");
         imageView.setImageURL(picURL, false);
 
-        assert imageView != null;
+        //assert imageView != null;
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

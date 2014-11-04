@@ -26,64 +26,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 /*
- * Created by menil on 08.10.2014.
+ * Created by menil on 04.11.2014.
  */
-public class OthersFragment extends android.app.Fragment {
+public class OpeningFragment extends android.app.Fragment {
 
     public List<Movie> allMovies = new ArrayList<Movie>();
     private ProgressDialog progressDialog;
-    private int option = 0;
-    private View view;
-    private GridView gridView;
-    private int layout = 1;
+    private View view=null;
+    private GridView gridView=null;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+
         //API KEY =pj2z7eyve6mfdtcx4vynk26y
         //search json: http://api.rottentomatoes.com/api/public/v1.0/movies.json?q=STRING&page_limit=10&page=1&apikey=pj2z7eyve6mfdtcx4vynk26y
         Bundle args = getArguments();
-        List<URI> requestURI = new ArrayList<URI>();
-
-        option = args.getInt("position");
-        option -= 2;
-        /*
-        Box Office //no box office here anymore
-        In Theaters
-        Opening movies
-        Upcoming movies
-         */
-
-        //INT: page_limit=50&page=1
-        //OPE: limit=16
-        //UPC: page_limit=16&page=1
-        String startURI = "http://api.rottentomatoes.com/api/public/v1.0/lists/movies/";
-        //String[] uriTopics = {"box_office.json?", "in_theaters.json?", "opening.json?", "upcoming.json?"};
-        String[] uriTopics = {"in_theaters", "opening", "upcoming"};
-        String page = "page_";//for in theaters and upcoming movies
-        String limit = "limit=16";//max amount
-        String nrPages = "&page=1";
-        String endURI = "&country=us&apikey=pj2z7eyve6mfdtcx4vynk26y";
-
-/*
-        for (String topic : uriTopics) {
-            if (topic.equals("opening.json?"))
-                requestURI.add(URI.create(startURI + topic + limit + endURI));
-            else
-                requestURI.add(URI.create(startURI + topic + page + limit + nrPages + endURI));
-        }*/
-
-
-        // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_others, container, false);
         gridView = (GridView) view.findViewById(R.id.gridview);
         CallAPI task = new CallAPI();
-
-
-        //task.execute(requestURI.get(option));
-        String start ="http://api.rottentomatoes.com/api/public/v1.0/lists/movies/";
-        String end =".json?apikey=pj2z7eyve6mfdtcx4vynk26y";
-        task.execute(URI.create(start+uriTopics[option]+end));
+        task.execute(URI.create("http://api.rottentomatoes.com/api/public/v1.0/lists/movies/opening.json?limit=15&country=us&apikey=pj2z7eyve6mfdtcx4vynk26y"));
+        /**
+         * Limit=2,3...15 works, above 16 crashes - probably pagebreak
+         */
         //thread for getting data from the API
 
         return view;
@@ -103,9 +69,9 @@ public class OthersFragment extends android.app.Fragment {
             //This dialog isn't indeterminate
             progressDialog.setIndeterminate(false);
             progressDialog.setIndeterminateDrawable(getResources()
-                            .getDrawable(R.drawable.spinner_animation));
-                    //The maximum number of items is 100
-                    progressDialog.setMax(100);
+                    .getDrawable(R.drawable.spinner_animation));
+            //The maximum number of items is 100
+            progressDialog.setMax(100);
             //Set the current progress to zero
             progressDialog.setProgress(0);
             //Display the progress dialog
@@ -148,14 +114,13 @@ public class OthersFragment extends android.app.Fragment {
                 }
             }
 
-            JSONObject jsonObject;
+            JSONObject jsonObject=null;
             try {
 
                 Gson gson = new Gson();
 
                 jsonObject = new JSONObject(result);
-                Movies filmovi = new Movies();
-                filmovi = gson.fromJson(jsonObject.toString(), Movies.class); // deserializes json into filmovi
+                Movies filmovi = gson.fromJson(jsonObject.toString(), Movies.class); // deserializes json into filmovi
                 allMovies = filmovi.movies;
             } catch (JSONException e1) {
                 e1.printStackTrace();
@@ -167,7 +132,18 @@ public class OthersFragment extends android.app.Fragment {
 
         @Override
         protected void onPostExecute(List<Movie> allMovies) {
-            gridView.setAdapter(new GridAdapter(view.getContext(), allMovies));
+
+            try {
+                /*Context c=null;
+                do{
+                    c = view.getContext();
+                }while (c==null);*/
+                gridView.setAdapter(new GridAdapter(view.getContext(), allMovies));
+                //getting context gives null point exception
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
             progressDialog.dismiss();
         }
     }

@@ -59,12 +59,16 @@ public class Main extends Activity
             //fragment = new BoxOfficeFragment();
             //break;
             case 2://in theaters
-            case 3://opening
                 fragment = new OthersFragment();
                 break;
-            case 4://upcoming (currently displaying detail view) !fix api deserialization
+            case 3://opening
+                fragment = new OpeningFragment();
+                break;
+            case 4://upcoming
+                fragment = new OthersFragment();
+                break;
             case 5://favourites (currently displaying detail view) !fix on long click event
-                fragment = new DetailsFragment();
+                fragment = new HomeFragment();
                 break;
             default:
                 fragment = new HomeFragment();

@@ -10,9 +10,6 @@ import java.util.List;
  */
 public class Movies implements Parcelable {
 
-    //@SerializedName("total")
-    //private String total;
-
     public List<Movie> movies;
 
 
