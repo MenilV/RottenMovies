@@ -35,7 +35,7 @@ public class OthersFragment extends android.app.Fragment {
     //private int option = 0;
     private View view;
     private GridView gridView;
-   // private int layout = 1;
+    // private int layout = 1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -97,9 +97,9 @@ public class OthersFragment extends android.app.Fragment {
             //This dialog isn't indeterminate
             progressDialog.setIndeterminate(false);
             progressDialog.setIndeterminateDrawable(getResources()
-                            .getDrawable(R.drawable.spinner_animation));
-                    //The maximum number of items is 100
-                    progressDialog.setMax(100);
+                    .getDrawable(R.drawable.spinner_animation));
+            //The maximum number of items is 100
+            progressDialog.setMax(100);
             //Set the current progress to zero
             progressDialog.setProgress(0);
             //Display the progress dialog

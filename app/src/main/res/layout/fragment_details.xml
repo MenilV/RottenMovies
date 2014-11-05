@@ -29,6 +29,7 @@
             android:maxWidth="230dp"
             android:ellipsize="end"
             android:singleLine="true"
+            android:textColor="@color/pale_black"
             android:textSize="35sp" />
         <TextView
 
@@ -38,6 +39,7 @@
             android:layout_marginRight="5dp"
             android:gravity="end"
             android:text="YEAR"
+            android:textColor="@color/pale_black"
             android:textSize="20sp"
 />
     </LinearLayout>
@@ -55,7 +57,7 @@
             <com.menil.rottenmovies.RemoteImageView
                 android:id="@+id/fragment_details_img"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="2.5dp"
                 android:layout_marginStart="1dp"
                 android:layout_marginLeft="1dp"
@@ -80,6 +82,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="start"
                     android:text="Runtime: "
+                    android:textColor="@color/pale_black"
                     android:textSize="20sp"
                     />
 
@@ -89,14 +92,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="start"
                     android:text="Rating: "
-                    android:textSize="20sp"
-                    />
-                <TextView
-                    android:id="@+id/fragment_details_id"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="start"
-                    android:text="ID: "
+                    android:textColor="@color/pale_black"
                     android:textSize="20sp"
                     />
 
@@ -106,6 +102,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="start"
+                    android:textColor="@color/pale_black"
                     android:textSize="15sp"
                     />
             </LinearLayout>
@@ -119,17 +116,8 @@
             android:background="@drawable/bg_card"
             android:padding="3dp"
             android:text="@string/synopsis"
-            android:textColor="@android:color/black"
+            android:textColor="@color/pale_black"
             android:textSize="15sp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:background="@drawable/bg_card"
-            android:padding="3dp"
-            android:text="Left blank intentionally"
-            android:textSize="25sp" />
 
     </LinearLayout>
 </ScrollView>

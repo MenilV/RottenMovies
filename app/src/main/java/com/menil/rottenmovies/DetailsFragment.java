@@ -14,13 +14,17 @@ import java.util.List;
  */
 public class DetailsFragment extends android.app.Fragment {
 
-    private View view;
+    @Override
+    public void onSaveInstanceState(Bundle outState){
+        super.onSaveInstanceState(outState);
+        //setUserVisibleHint(true);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_details, container, false);
+        View view = inflater.inflate(R.layout.fragment_details, container, false);
 
         // Retrieve data from bundle with Parcelable object of type Movie
         Bundle bundle = getArguments();
@@ -31,7 +35,6 @@ public class DetailsFragment extends android.app.Fragment {
         TextView runtime = (TextView) view.findViewById(R.id.fragment_details_runtime);
         TextView cast = (TextView) view.findViewById(R.id.fragment_details_cast);
         TextView rating = (TextView) view.findViewById(R.id.fragment_details_rating);
-        TextView ID = (TextView) view.findViewById(R.id.fragment_details_id);
         RemoteImageView imageView = (RemoteImageView) view.findViewById(R.id.fragment_details_img);
         try {
             imageView.setImageURL(movie.posters.detailed.replace("tmb", "det"), false);
@@ -47,8 +50,6 @@ public class DetailsFragment extends android.app.Fragment {
         runtime.append(String.valueOf(movie.runtime));
         runtime.append(" min");
         rating.append(movie.mpaa_rating);
-        ID.append(movie.id);
-
 
         int x = 0;//just to ensure there are no commas after the last actor
         List<Cast> castList = movie.casts;

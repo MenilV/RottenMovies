@@ -53,54 +53,40 @@ public class ListsAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View view;
         LayoutInflater layoutInflater;
-        RemoteImageView imageView = null;
-        TextView titleView = null;
-        TextView yearView = null;
-        TextView actorsView = null;
-        TextView runtimeView = null;
         if (convertView == null) {
             layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-/**PROBLEMS ARE HERE
- * BELOW
- */
-            view = layoutInflater.inflate(R.layout.fragment_list_item, null);
-            //convertView = view;
+            view = layoutInflater.inflate(R.layout.fragment_list_item2, null);
+
         } else {
             view = convertView;
         }
-        imageView = (RemoteImageView) view.findViewById(R.id.fragment_list_item_img);
+        RemoteImageView imageView = (RemoteImageView) view.findViewById(R.id.fragment_list_item_img);
         String picURL = listMovies.get(position).posters.detailed.replace("tmb", "det");
         imageView.setImageURL(picURL, false);
 
-        titleView = (TextView) view.findViewById(R.id.fragment_list_item_title);
+        TextView titleView = (TextView) view.findViewById(R.id.fragment_list_item_title);
         String title = listMovies.get(position).title;
-        titleView.setText(title);
+        titleView.setText((position+1)+". ");
+        titleView.append(title);
 
-        yearView = (TextView) view.findViewById(R.id.fragment_list_item_year);
+        //yearView = (TextView) view.findViewById(R.id.fragment_list_item_year);
         int year = listMovies.get(position).year;
-        yearView.setText(Integer.toString(year));
+        //yearView.setText(Integer.toString(year));
+        titleView.append(" ("+year+")");
 
-        runtimeView = (TextView) view.findViewById(R.id.fragment_list_item_runtime);
-        //int runtime = listMovies.get(position).runtime;
+        TextView runtimeView = (TextView) view.findViewById(R.id.fragment_list_item_runtime);
         String runtime = listMovies.get(position).runtime;
-        //runtimeView.setText(Integer.toString(runtime));
-        runtimeView.setText(runtime);
+        runtimeView.setText("Runtime: "+runtime+" min");
 
-        actorsView = (TextView) view.findViewById(R.id.fragment_list_item_actors);
-        //String synopsis = listMovies.get(position).synopsis;
-        List<Cast> casts = listMovies.get(position).casts;
-        //ArrayList<String> actors = new ArrayList<String>();
-        for (Cast cast : casts) {
-            actorsView.append(casts.get(position).name);
-        }
-        //String releaseDate = listMovies.get(position). DO I HAVE THIS???
+        TextView releaseView = (TextView) view.findViewById(R.id.fragment_list_item_date);
+        String release_date = listMovies.get(position).release_dates.theater;
+        releaseView.setText("Release date: "+release_date);
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(mContext, "Kliknuto je! :D", Toast.LENGTH_LONG).show();
-                Bundle args = new Bundle();
 
+                Bundle args = new Bundle();
                 Fragment fragment = new DetailsFragment();
                 switchFragment(fragment);
             }

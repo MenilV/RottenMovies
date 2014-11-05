@@ -1,15 +1,15 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar"/>
-
+    <style name="AppTheme" parent="@android:Theme.Holo.Light.DarkActionBar"/>
         <!-- Customize your theme here. -->
+
     <style name="CustomDialog" parent="@android:style/Theme.Dialog">
         <item name="android:progressDrawable">@drawable/spinner_animation</item>
         <item name="android:textColor">#FFFFFF</item>
         <item name="android:windowFrame">@android:color/transparent</item>
         <item name="android:windowBackground">@android:color/transparent</item>
-
     </style>
+
 
 </resources>

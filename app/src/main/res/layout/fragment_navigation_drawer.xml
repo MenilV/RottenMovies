@@ -8,4 +8,5 @@
     android:divider="@android:color/transparent"
     android:dividerHeight="0dp"
     android:duplicateParentState="true"
+    android:textColor="@color/pale_black"
     tools:context=".NavigationDrawerFragment"/>

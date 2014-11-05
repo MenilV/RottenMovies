@@ -1,13 +1,15 @@
 package com.menil.rottenmovies;
 
 import android.app.Fragment;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -30,16 +32,22 @@ import java.util.List;
  * Created by menil on 29.10.2014.
  */
 public class BoxOfficeFragment extends Fragment {
+
     public List<Movie> allMovies = new ArrayList<Movie>();
+    private ProgressDialog progressDialog;
     private ListView listView;
     private View view;
+    private Context mContext, mContext2;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        mContext=getActivity().getApplicationContext();
+
         //API KEY =pj2z7eyve6mfdtcx4vynk26y
         View view = inflater.inflate(R.layout.fragment_boxoffice, container, false);
+        mContext2=view.getContext();
         listView = (ListView) view.findViewById(R.id.boxoffice_list);
         Bundle args = getArguments();
         int option = args.getInt("position");
@@ -48,11 +56,63 @@ public class BoxOfficeFragment extends Fragment {
         requestURI.add(URI.create("http://api.rottentomatoes.com/api/public/v1.0/lists/movies/box_office.json?limit=16&country=us&apikey=pj2z7eyve6mfdtcx4vynk26y"));
         task.execute(requestURI.get(0));
         //thread for getting data from the API
-
+        //final View view2=view;
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            //CardView cardView = (CardView) view2.findViewById(R.id.fragment_list_item);
+            Boolean var=true;
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Bundle args = new Bundle();
+                args.putParcelable("movie", allMovies.get(position));
+                Fragment fragment = new DetailsFragment();
+                fragment.setArguments(args);
+                switchFragment(fragment);
+                /*float more=2f;
+                CardView cardView = (CardView) view.findViewById(R.id.card_view);
+                if (var){
+                cardView.setMaxCardElevation(10f);
+                    cardView.setCardElevation(10f);
+                var=false;}
+                else
+                {cardView.setMaxCardElevation(3f);
+                    cardView.setCardElevation(3f);
+                var=true;}*/
+            }
+            private void switchFragment(Fragment fragment) {
+                if (mContext2 == null)
+                    return;
+                if (mContext2 instanceof Main) {
+                    Main main = (Main) mContext2;
+                    main.switchContent(fragment);
+                }
+            }
+        });
         return view;
+
     }
 
     public class CallAPI extends AsyncTask<URI, String, List<Movie>> {
+
+        @Override
+        protected void onPreExecute() {
+
+            progressDialog = new ProgressDialog(getActivity(), R.style.CustomDialog);
+            progressDialog.setTitle("Loading...");
+            //Set the dialog message to 'Loading application View, please wait...'
+            progressDialog.setMessage("Loading Movies, please wait...");
+            //This dialog can't be canceled by pressing the back key
+            progressDialog.setCancelable(false);
+            //This dialog isn't indeterminate
+            progressDialog.setIndeterminate(false);
+            progressDialog.setIndeterminateDrawable(getResources()
+                    .getDrawable(R.drawable.spinner_animation));
+            //The maximum number of items is 100
+            progressDialog.setMax(100);
+            //Set the current progress to zero
+            progressDialog.setProgress(0);
+            //Display the progress dialog
+            progressDialog.show();
+        }
 
         @Override
         protected List<Movie> doInBackground(URI... urls) {
@@ -95,9 +155,6 @@ public class BoxOfficeFragment extends Fragment {
 
                 Gson gson = new Gson();
                 jsonObject = new JSONObject(result);
-                //if (urls[0].toString().contains("upcoming"))
-                //String total = gson.fromJson(jsonObject.toString(), Movies.class.);
-                //{ }
                 Movies filmovi = gson.fromJson(jsonObject.toString(), Movies.class); // deserializes json into filmovi
                 allMovies = filmovi.movies;
 
@@ -111,13 +168,9 @@ public class BoxOfficeFragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<Movie> allMovies) {
-            /**PROBLEMS ARE LOCATED HERE
-             *
-             */
 
-            listView.setAdapter(new ListsAdapter(view.getContext(), allMovies));
-            Toast.makeText(view.getContext(), "all is fine ... NOT!", Toast.LENGTH_LONG).show();
-            // TODO: make this work
+            listView.setAdapter(new ListsAdapter(mContext,allMovies));
+            progressDialog.dismiss();
         }
     }
 }

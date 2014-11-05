@@ -44,7 +44,7 @@ public class Main extends Activity
         FragmentManager fragmentManager = getFragmentManager();
         Bundle args = new Bundle();
         args.putInt("position", position);
-
+        //String tag=null;
         switch (position) {
             case 0://home fragment
                 fragment = new HomeFragment();
@@ -54,10 +54,10 @@ public class Main extends Activity
                  * CHANGE HERE FIRST
                  */
                 //fragment = new BoxOfficeFragment();
-                fragment = new HomeFragment();
+            /*    fragment = new HomeFragment();
+                break;*/
+                fragment = new BoxOfficeFragment();
                 break;
-            //fragment = new BoxOfficeFragment();
-            //break;
             case 2://in theaters
                 fragment = new OthersFragment();
                 break;
@@ -67,7 +67,8 @@ public class Main extends Activity
             case 4://upcoming
                 fragment = new OthersFragment();
                 break;
-            case 5://favourites (currently displaying detail view) !fix on long click event
+            case 5://favourites (currently displaying detail view)
+                //TODO: make on click event on the images to store to favourites
                 fragment = new HomeFragment();
                 break;
             default:
@@ -82,7 +83,7 @@ public class Main extends Activity
     public void switchContent(Fragment fragment) {
 
         getFragmentManager().beginTransaction()
-                .replace(R.id.container, fragment).commit();
+                .replace(R.id.container, fragment).addToBackStack(null).commit();
     }
 
     public void restoreActionBar() {
