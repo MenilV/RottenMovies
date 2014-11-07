@@ -14,39 +14,35 @@ import java.util.List;
  */
 public class DetailsFragment extends android.app.Fragment {
 
-    @Override
+    /*@Override
     public void onSaveInstanceState(Bundle outState){
         super.onSaveInstanceState(outState);
-        //setUserVisibleHint(true);
-    }
+        setUserVisibleHint(true);
+    }*/
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_details, container, false);
+        final View view = inflater.inflate(R.layout.fragment_details, container, false);
 
         // Retrieve data from bundle with Parcelable object of type Movie
         Bundle bundle = getArguments();
         Movie movie = bundle.getParcelable("movie");
-        final TextView title = (TextView) view.findViewById(R.id.fragment_details_title);
+        TextView title = (TextView) view.findViewById(R.id.fragment_details_title);
         TextView synopsis = (TextView) view.findViewById(R.id.fragment_details_synopsis);
-        TextView year = (TextView) view.findViewById(R.id.fragment_details_year);
+        //TextView year = (TextView) view.findViewById(R.id.fragment_details_year);
         TextView runtime = (TextView) view.findViewById(R.id.fragment_details_runtime);
         TextView cast = (TextView) view.findViewById(R.id.fragment_details_cast);
         TextView rating = (TextView) view.findViewById(R.id.fragment_details_rating);
         RemoteImageView imageView = (RemoteImageView) view.findViewById(R.id.fragment_details_img);
-        try {
-            imageView.setImageURL(movie.posters.detailed.replace("tmb", "det"), false);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
+        imageView.setImageURL(movie.posters.detailed.replace("tmb", "det"), false);
+
 
         title.setText(movie.title);
+        title.append(" ("+String.valueOf(movie.year)+")");
         synopsis.setText(movie.synopsis);
-        year.setText(" (");
-        year.append(String.valueOf(movie.year));
-        year.append(")");
+
         runtime.append(String.valueOf(movie.runtime));
         runtime.append(" min");
         rating.append(movie.mpaa_rating);
@@ -67,13 +63,21 @@ public class DetailsFragment extends android.app.Fragment {
                 if (t.getEllipsize() == TextUtils.TruncateAt.END) {
                     t.setEllipsize(TextUtils.TruncateAt.MARQUEE);
                     t.setSingleLine(false);
-                    t.setMaxLines(4);
+                    t.setMaxLines(3);
                 } else if (t.getEllipsize() == TextUtils.TruncateAt.MARQUEE) {
                     t.setSingleLine(true);
                     t.setEllipsize(TextUtils.TruncateAt.END);
                 }
             }
         });
+
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //view.setBackground(imageView.getDrawable());
+            }
+        });
+
 
         return view;
     }

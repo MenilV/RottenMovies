@@ -1,5 +1,6 @@
 package com.menil.rottenmovies;
 
+import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -34,9 +35,11 @@ public class OthersFragment extends android.app.Fragment {
     private ProgressDialog progressDialog;
     //private int option = 0;
     private View view;
+    private View view2;
     private GridView gridView;
     // private int layout = 1;
-
+    private ActionBar mActionBar;
+    private float mActionBarHeight;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -80,6 +83,49 @@ public class OthersFragment extends android.app.Fragment {
         task.execute(requestURI.get(option));
         //thread for getting data from the API
 
+        /*gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Bundle args = new Bundle();
+                args.putParcelable("movie", allMovies.get(position));
+                Fragment fragment = new DetailsFragment();
+                fragment.setArguments(args);
+                switchFragment(fragment);
+            }
+            private void switchFragment(Fragment fragment) {
+                if (view2.getContext() == null)
+                    return;
+                if (view2.getContext() instanceof Main) {
+                    Main main = (Main) view2.getContext();
+                    main.switchContent(fragment);
+                }
+            }
+
+        });*/
+        /*final TypedArray styledAttributes = getActivity().getTheme().obtainStyledAttributes(
+                new int[] { android.R.attr.actionBarSize });
+
+
+        mActionBarHeight = styledAttributes.getDimension(0, 0);
+        styledAttributes.recycle();
+        mActionBar = getActivity().getActionBar();
+
+        gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
+        @Override
+        public void onScrollStateChanged(AbsListView view, int scrollState) {
+            float y = (view.findViewById(R.id.parent)).getScrollY();
+            if (y >= mActionBarHeight && mActionBar.isShowing()) {
+                mActionBar.hide();
+            } else if ( y==0 && !mActionBar.isShowing()) {
+                mActionBar.show();
+            }
+        }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+    }
+});
+*/
         return view;
     }
 

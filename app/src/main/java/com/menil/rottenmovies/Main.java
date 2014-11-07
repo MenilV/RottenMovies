@@ -2,10 +2,14 @@ package com.menil.rottenmovies;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -13,6 +17,7 @@ import android.view.MenuItem;
 public class Main extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
+    final Context mContext=this;
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private CharSequence mTitle;
 
@@ -20,7 +25,15 @@ public class Main extends Activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+        /**
+         * ovo iznad je zlo!!@!!
+         */
         setContentView(R.layout.activity_main);
+
+
+
+        //TODO: make this work
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -33,12 +46,45 @@ public class Main extends Activity
         //this does nothing
     }
 
+
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        if(keyCode == KeyEvent.KEYCODE_BACK)
+        {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                    mContext,R.style.CustomDialog);
+            // set title
+            alertDialogBuilder.setTitle("Exit application?");
+
+            // set dialog message
+            alertDialogBuilder
+                    .setIcon(R.drawable.ic_action_warning)
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog,int id) {
+                            // if this button is clicked, close app
+                            Main.this.finish();
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog,int id) {
+                            // if this button is clicked, just close the dialog box
+                            dialog.cancel();
+                        }
+                    });
+            // create alert dialog
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            // show it
+            alertDialog.show();
+
+        }
+        return false;
+    }
+
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-        // update the main content by replacing fragments
-        // e ovo cudo mi daje mogucnost mjenjanja Viewa na osnovu oznacene opcije
-        // 3 days later... bra'o Menile, sad si se sjetio da pocnes citati svoje komentare!
-
 
         Fragment fragment;
         FragmentManager fragmentManager = getFragmentManager();

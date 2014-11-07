@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -36,7 +37,7 @@ public class BoxOfficeFragment extends Fragment {
     public List<Movie> allMovies = new ArrayList<Movie>();
     private ProgressDialog progressDialog;
     private ListView listView;
-    private View view;
+    //private View view;
     private Context mContext, mContext2;
 
 
@@ -47,19 +48,18 @@ public class BoxOfficeFragment extends Fragment {
 
         //API KEY =pj2z7eyve6mfdtcx4vynk26y
         View view = inflater.inflate(R.layout.fragment_boxoffice, container, false);
-        mContext2=view.getContext();
+        mContext2 = view.getContext();
         listView = (ListView) view.findViewById(R.id.boxoffice_list);
-        Bundle args = getArguments();
-        int option = args.getInt("position");
+        //Bundle args = getArguments();
         CallAPI task = new CallAPI();
         List<URI> requestURI = new ArrayList<URI>();
-        requestURI.add(URI.create("http://api.rottentomatoes.com/api/public/v1.0/lists/movies/box_office.json?limit=16&country=us&apikey=pj2z7eyve6mfdtcx4vynk26y"));
+        requestURI.add(URI.create("http://api.rottentomatoes.com/api/public/v1.0/lists/movies/box_office.json?limit=50&country=us&apikey=pj2z7eyve6mfdtcx4vynk26y"));
+        //limit can be changed to 10-20 for performance
+
         task.execute(requestURI.get(0));
         //thread for getting data from the API
-        //final View view2=view;
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            //CardView cardView = (CardView) view2.findViewById(R.id.fragment_list_item);
-            Boolean var=true;
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Bundle args = new Bundle();
@@ -67,26 +67,19 @@ public class BoxOfficeFragment extends Fragment {
                 Fragment fragment = new DetailsFragment();
                 fragment.setArguments(args);
                 switchFragment(fragment);
-                /*float more=2f;
-                CardView cardView = (CardView) view.findViewById(R.id.card_view);
-                if (var){
-                cardView.setMaxCardElevation(10f);
-                    cardView.setCardElevation(10f);
-                var=false;}
-                else
-                {cardView.setMaxCardElevation(3f);
-                    cardView.setCardElevation(3f);
-                var=true;}*/
             }
             private void switchFragment(Fragment fragment) {
-                if (mContext2 == null)
-                    return;
+                if (mContext2 == null){
+                    Toast.makeText(getActivity().getApplicationContext(),"text",Toast.LENGTH_LONG).show();
+                    return;}
                 if (mContext2 instanceof Main) {
+                    Toast.makeText(getActivity().getApplicationContext(),"text2",Toast.LENGTH_LONG).show();
                     Main main = (Main) mContext2;
                     main.switchContent(fragment);
                 }
             }
         });
+
         return view;
 
     }
@@ -169,7 +162,7 @@ public class BoxOfficeFragment extends Fragment {
         @Override
         protected void onPostExecute(List<Movie> allMovies) {
 
-            listView.setAdapter(new ListsAdapter(mContext,allMovies));
+            listView.setAdapter(new ListsAdapter(mContext, allMovies));
             progressDialog.dismiss();
         }
     }

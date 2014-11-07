@@ -1,8 +1,6 @@
 package com.menil.rottenmovies;
 
-import android.app.Fragment;
 import android.content.Context;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,18 +19,16 @@ public class ListsAdapter extends BaseAdapter {
 
     private Context mContext;
     private List<Movie> listMovies = new ArrayList<Movie>();
-    private int option = 0;
+
+    public ListsAdapter(List<Movie> allMovies){
+        this.listMovies=allMovies;
+    }
 
     public ListsAdapter(Context c, List<Movie> allMovies) {
         this.mContext = c;
         this.listMovies = allMovies;
     }
 
-    public ListsAdapter(Context c, List<Movie> allMovies, int option) {
-        this.mContext = c;
-        this.listMovies = allMovies;
-        this.option = option;
-    }
 
     @Override
     public int getCount() {
@@ -56,7 +52,6 @@ public class ListsAdapter extends BaseAdapter {
         if (convertView == null) {
             layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = layoutInflater.inflate(R.layout.fragment_list_item2, null);
-
         } else {
             view = convertView;
         }
@@ -69,9 +64,7 @@ public class ListsAdapter extends BaseAdapter {
         titleView.setText((position+1)+". ");
         titleView.append(title);
 
-        //yearView = (TextView) view.findViewById(R.id.fragment_list_item_year);
         int year = listMovies.get(position).year;
-        //yearView.setText(Integer.toString(year));
         titleView.append(" ("+year+")");
 
         TextView runtimeView = (TextView) view.findViewById(R.id.fragment_list_item_runtime);
@@ -82,25 +75,15 @@ public class ListsAdapter extends BaseAdapter {
         String release_date = listMovies.get(position).release_dates.theater;
         releaseView.setText("Release date: "+release_date);
 
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Bundle args = new Bundle();
-                Fragment fragment = new DetailsFragment();
-                switchFragment(fragment);
-            }
-
-            private void switchFragment(Fragment fragment) {
-                if (mContext == null)
-                    return;
-                if (mContext instanceof Main) {
-                    Main main = (Main) mContext;
-                    main.switchContent(fragment);
-                }
-            }
-        });
-
+        /*TextView castView = (TextView) view.findViewById(R.id.fragment_list_item_cast);
+        List<Cast> castList=listMovies.get(position).casts;
+        castView.setText("Cast: ");
+        int x=0;
+        for (Cast c : castList) {
+            castView.append(c.name);
+            if (++x < castList.size())
+                castView.append(", ");
+        }*/
         return view;
     }
 

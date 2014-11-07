@@ -3,11 +3,11 @@ package com.menil.rottenmovies;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -25,12 +25,6 @@ public class GridAdapter extends BaseAdapter {
     public GridAdapter(Context c, List<Movie> allMovies) {
         this.mContext = c;
         this.listMovies = allMovies;
-    }
-
-    public GridAdapter(Context c, List<Movie> allMovies, int option) {
-        this.mContext = c;
-        this.listMovies = allMovies;
-        this.option = option;
     }
 
     @Override
@@ -85,18 +79,22 @@ public class GridAdapter extends BaseAdapter {
 
         final RemoteImageView imageView = (RemoteImageView) view.findViewById(R.id.full_card_img);
         final TextView titleView = (TextView) view.findViewById(R.id.full_card_title);
+        ImageView imageViewsmall = (ImageView) view.findViewById(R.id.full_card_small);
 
         titleView.setText(listMovies.get(position).title);
         String picURL = listMovies.get(position).posters.detailed.replace("tmb", "det");
         imageView.setImageURL(picURL, false);
-
+        if (position%3==0)
+            imageViewsmall.setBackgroundResource(R.drawable.yuck_small);
+        else
+            imageViewsmall.setBackgroundResource(R.drawable.tomatto_small);
+        final Fragment fragment = new DetailsFragment();
         //assert imageView != null;
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Bundle args = new Bundle();
-                args.putParcelable("movie", (Parcelable) listMovies.get(position));
-                Fragment fragment = new DetailsFragment();
+                args.putParcelable("movie", listMovies.get(position));
                 fragment.setArguments(args);
                 switchFragment(fragment);
             }
