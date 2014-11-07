@@ -9,8 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -66,20 +66,20 @@ public class BoxOfficeFragment extends Fragment {
                 args.putParcelable("movie", allMovies.get(position));
                 Fragment fragment = new DetailsFragment();
                 fragment.setArguments(args);
+                //TODO: link to imdb and rotten
                 switchFragment(fragment);
             }
             private void switchFragment(Fragment fragment) {
                 if (mContext2 == null){
-                    Toast.makeText(getActivity().getApplicationContext(),"text",Toast.LENGTH_LONG).show();
-                    return;}
+                    return;
+                }
                 if (mContext2 instanceof Main) {
-                    Toast.makeText(getActivity().getApplicationContext(),"text2",Toast.LENGTH_LONG).show();
                     Main main = (Main) mContext2;
                     main.switchContent(fragment);
                 }
             }
         });
-
+        ImageView v=(ImageView)view.findViewById(R.id.fragment_list_item_rtn_link);
         return view;
 
     }

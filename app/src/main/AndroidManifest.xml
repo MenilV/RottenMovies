@@ -6,14 +6,16 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
+
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher_1100"
         android:label="@string/app_name"
-        android:theme="@style/CustomActionBarTheme">
+        android:theme="@style/CustomActionBarTheme"
+        android:name=".MyApplication">
         <activity
-            android:name=".SplashScreen"
+            android:name="com.menil.rottenmovies.SplashScreen"
             android:label="@string/app_name"
-            android:parentActivityName=".Main">
+            android:parentActivityName="com.menil.rottenmovies.Main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -22,8 +24,15 @@
 
         <!-- Main -->
         <activity
-            android:name=".Main"
-            android:label="@string/app_name" />
+            android:name="com.menil.rottenmovies.Main"
+            android:label="@string/app_name"/>
+
+        <!-- Crash report activity -->
+        <activity android:name="org.acra.CrashReportDialog"
+            android:theme="@android:style/Theme.Dialog"
+            android:launchMode="singleInstance"
+            android:excludeFromRecents="true"
+            android:finishOnTaskLaunch="true" />
 
     </application>
 

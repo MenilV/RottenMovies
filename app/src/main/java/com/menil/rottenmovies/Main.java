@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
+
 public class Main extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
@@ -22,9 +23,11 @@ public class Main extends Activity
     private CharSequence mTitle;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         //getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         /**
          * ovo iznad je zlo!!@!!
