@@ -72,7 +72,7 @@
                         android:text="Critics Score: " />
 
                 </LinearLayout>
-                <View
+                <!--<View
                     android:id="@+id/pr_bar_bot"
                     android:layout_width="200dp"
                     android:layout_height="10dp"
@@ -82,8 +82,8 @@
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentLeft="true"
-                    android:layout_marginBottom="1dp"/>
-                <View
+                    android:layout_marginBottom="1dp"/>-->
+              <!--  <View
                     android:id="@+id/pr_bar_top"
                     android:layout_width="200dp"
                     android:layout_height="10dp"
@@ -93,7 +93,7 @@
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentLeft="true"
-                    android:layout_marginBottom="1dp"/>
+                    android:layout_marginBottom="1dp"/>-->
             <!--    <View
                     android:id="@+id/pr_bar_mid"
                     android:layout_width="50dp"

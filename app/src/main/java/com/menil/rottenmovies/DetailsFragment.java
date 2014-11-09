@@ -6,20 +6,19 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.melnykov.fab.FloatingActionButton;
 
 import java.util.List;
 
-/**
+/*
  * Created by menil on 08.10.2014.
  */
 public class DetailsFragment extends android.app.Fragment {
 
     Bundle bundle;
-    private static final String TAG = "DETAILS";
+    //private static final String TAG = "DETAILS";
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -59,8 +58,8 @@ public class DetailsFragment extends android.app.Fragment {
         View view=null;
         if(savedInstanceState==null)
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_details, container, false);
-
+        //view = inflater.inflate(R.layout.fragment_details, container, false);
+            view = inflater.inflate(R.layout.test_details, container, false);
         // Retrieve data from bundle with Parcelable object of type Movie
         bundle = getArguments();
         Movie movie = bundle.getParcelable("movie");
@@ -75,14 +74,18 @@ public class DetailsFragment extends android.app.Fragment {
         RemoteImageView imageView = (RemoteImageView) view.findViewById(R.id.fragment_details_img);
         imageView.setImageURL(movie.posters.detailed.replace("tmb", "det"), false);
 
+        RemoteImageView imageViewTop = (RemoteImageView) view.findViewById(R.id.fragment_details_img_top);
+        imageViewTop.setImageURL(movie.posters.detailed.replace("tmb", "det"), false);//change "det" to ori if you want to download 12GB of images
+
+
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                //LinearLayout linearLayout = (LinearLayout)view.findViewById(R.id.fragment_details_linear);
                 //LayoutInflater layoutInflater = LayoutInflater.from(this);
 
-                View child = getActivity().getLayoutInflater().inflate(R.layout.full_screen_img, null);
-                ImageView fullImage=(ImageView)child.findViewById(R.id.full_screen_imgview);
+                //View child = getActivity().getLayoutInflater().inflate(R.layout.full_screen_img, null);
+               // ImageView fullImage=(ImageView)child.findViewById(R.id.full_screen_imgview);
 
                 //linearLayout.addView(child);
                 //ImageView fullImage=(ImageView)view.findViewById(R.id.fragment_details_img);
@@ -93,6 +96,16 @@ public class DetailsFragment extends android.app.Fragment {
             }
         });
 
+
+        //getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+        //getActivity().getActionBar().setTitle((CharSequence) title);
+        //getActivity().getActionBar().
+
+        /*imageView.buildDrawingCache();
+        Bitmap bmap = imageView.getDrawingCache();
+        Palette p = Palette.generate(bmap);
+        Palette.Swatch item = p.getVibrantSwatch();*/
+        //getActivity().getActionBar().setBackgroundDrawable(item.toString()));
 
         title.setText(movie.title);
         title.append(" (" + String.valueOf(movie.year) + ")");
