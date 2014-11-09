@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- extend one of the Theme.AppCompat themes -->
+    <style name="Theme.MyTheme" parent="Theme.AppCompat.Light">
+        <!-- customize the color palette -->
+        <item name="android:actionBarStyle">@style/MyActionBar2</item>
+        <item name="colorPrimary">@color/green_500</item>
+        <item name="colorPrimaryDark">@color/green_700</item>
+    </style>
+
+
+    <style name="MyActionBar2" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:icon">@drawable/actionbar_icon</item>
+    </style>
+
+
     <!-- the theme applied to the application or activity -->
    <style name="CustomActionBarTheme" parent="@android:style/Theme.Holo.Light.DarkActionBar">
         <item name="android:actionBarStyle">@style/MyActionBar</item>

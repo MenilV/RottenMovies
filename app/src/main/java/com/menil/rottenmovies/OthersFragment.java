@@ -1,6 +1,6 @@
 package com.menil.rottenmovies;
 
-import android.app.ActionBar;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -33,13 +33,36 @@ public class OthersFragment extends android.app.Fragment {
 
     public List<Movie> allMovies = new ArrayList<Movie>();
     private ProgressDialog progressDialog;
-    //private int option = 0;
-    private View view;
-    private View view2;
+    private static final String TAG = "OTHERS";
     private GridView gridView;
-    // private int layout = 1;
-    private ActionBar mActionBar;
-    private float mActionBarHeight;
+    private View view;
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        // Indicate that this fragment would like to influence the set of actions in the action bar.
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -50,11 +73,6 @@ public class OthersFragment extends android.app.Fragment {
 
         int option = args.getInt("position");
         option -= 2;
-        /*
-        In Theaters
-        Opening movies
-        Upcoming movies
-         */
 
         //INT: page_limit=50&page=1
         //OPE: limit=16
@@ -75,6 +93,8 @@ public class OthersFragment extends android.app.Fragment {
                 requestURI.add(URI.create(startURI + topic + page + limit + nrPages + endURI));
         }
 
+        view=null;
+        if(savedInstanceState==null)
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_others, container, false);
         gridView = (GridView) view.findViewById(R.id.gridview);

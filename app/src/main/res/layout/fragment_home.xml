@@ -29,10 +29,12 @@
         android:layout_gravity="center"
         android:gravity="center"/>
     <Button
+        android:layout_gravity="center"
         android:id="@+id/home_button"
+        android:textColor="@android:color/white"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="crash button"/>
+        android:text="crash_test_button"/>
 
     <ImageView
         android:layout_width="match_parent"

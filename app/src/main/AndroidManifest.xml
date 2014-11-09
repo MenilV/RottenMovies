@@ -12,10 +12,11 @@
         android:label="@string/app_name"
         android:theme="@style/CustomActionBarTheme"
         android:name=".MyApplication">
+
+
         <activity
             android:name="com.menil.rottenmovies.SplashScreen"
-            android:label="@string/app_name"
-            android:parentActivityName="com.menil.rottenmovies.Main">
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -25,7 +26,8 @@
         <!-- Main -->
         <activity
             android:name="com.menil.rottenmovies.Main"
-            android:label="@string/app_name"/>
+            android:label="@string/app_name"
+            android:configChanges="screenSize|orientation"/>
 
         <!-- Crash report activity -->
         <activity android:name="org.acra.CrashReportDialog"

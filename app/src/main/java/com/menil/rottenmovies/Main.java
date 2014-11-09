@@ -14,15 +14,44 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
-
 public class Main extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
-    final Context mContext=this;
+    final Context mContext = this;
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private CharSequence mTitle;
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && getFragmentManager().findFragmentByTag("HOME").isVisible()) {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                    mContext, R.style.CustomDialog);
+            // set title
+            alertDialogBuilder.setTitle("Exit application?");
 
+            // set dialog message
+            alertDialogBuilder
+                    .setIcon(R.drawable.ic_action_warning)
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // if this button is clicked, close app
+                            Main.this.finish();
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // if this button is clicked, just close the dialog box
+                            dialog.cancel();
+                        }
+                    });
+            // create alert dialog
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            // show it
+            alertDialog.show();
+        }
+        return false;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,10 +62,6 @@ public class Main extends Activity
          * ovo iznad je zlo!!@!!
          */
         setContentView(R.layout.activity_main);
-
-
-
-        //TODO: make this work
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -51,40 +76,6 @@ public class Main extends Activity
 
 
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event)
-    {
-        if(keyCode == KeyEvent.KEYCODE_BACK)
-        {
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                    mContext,R.style.CustomDialog);
-            // set title
-            alertDialogBuilder.setTitle("Exit application?");
-
-            // set dialog message
-            alertDialogBuilder
-                    .setIcon(R.drawable.ic_action_warning)
-                    .setCancelable(false)
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog,int id) {
-                            // if this button is clicked, close app
-                            Main.this.finish();
-                        }
-                    })
-                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog,int id) {
-                            // if this button is clicked, just close the dialog box
-                            dialog.cancel();
-                        }
-                    });
-            // create alert dialog
-            AlertDialog alertDialog = alertDialogBuilder.create();
-            // show it
-            alertDialog.show();
-
-        }
-        return false;
-    }
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
@@ -93,46 +84,48 @@ public class Main extends Activity
         FragmentManager fragmentManager = getFragmentManager();
         Bundle args = new Bundle();
         args.putInt("position", position);
-        //String tag=null;
+        String tag=null;
+
         switch (position) {
             case 0://home fragment
                 fragment = new HomeFragment();
+                tag="HOME";
                 break;
             case 1://box office fragment
-                /**
-                 * CHANGE HERE FIRST
-                 */
-                //fragment = new BoxOfficeFragment();
-            /*    fragment = new HomeFragment();
-                break;*/
                 fragment = new BoxOfficeFragment();
+                tag="BOXOFFICE";
                 break;
-            case 2://in theaters
+            case 2://in theaters fragment
                 fragment = new OthersFragment();
+                tag="OTHERS";
                 break;
-            case 3://opening
+            case 3://opening fragment
                 fragment = new OthersFragment();
+                tag="OTHERS";
                 break;
-            case 4://upcoming
+            case 4://upcoming fragment
                 fragment = new OthersFragment();
+                tag="OTHERS";
                 break;
             case 5://favourites (currently displaying detail view)
                 //TODO: make on click event on the images to store to favourites
                 fragment = new HomeFragment();
+                tag="HOME";
                 break;
             default:
                 fragment = new HomeFragment();
+                tag="OTHERS";
                 break;
         }
-        fragment.setArguments(args);
-        switchContent(fragment);
 
+        fragment.setArguments(args);
+        switchContent(fragment,tag);
     }
 
-    public void switchContent(Fragment fragment) {
+    public void switchContent(Fragment fragment, String TAG) {
 
         getFragmentManager().beginTransaction()
-                .replace(R.id.container, fragment).addToBackStack(null).commit();
+                .replace(R.id.container, fragment, TAG).addToBackStack(TAG).commit();
     }
 
     public void restoreActionBar() {

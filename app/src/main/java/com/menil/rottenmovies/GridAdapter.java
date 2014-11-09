@@ -84,7 +84,7 @@ public class GridAdapter extends BaseAdapter {
         titleView.setText(listMovies.get(position).title);
         String picURL = listMovies.get(position).posters.detailed.replace("tmb", "det");
         imageView.setImageURL(picURL, false);
-        if (position%3==0)
+        if (position % 3 == 0)
             imageViewsmall.setBackgroundResource(R.drawable.yuck_small);
         else
             imageViewsmall.setBackgroundResource(R.drawable.tomatto_small);
@@ -104,7 +104,7 @@ public class GridAdapter extends BaseAdapter {
                     return;
                 if (mContext instanceof Main) {
                     Main main = (Main) mContext;
-                    main.switchContent(fragment);
+                    main.switchContent(fragment,"DETAILS");
                 }
             }
         });

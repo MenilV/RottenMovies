@@ -1,5 +1,6 @@
 package com.menil.rottenmovies;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -13,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
+import com.melnykov.fab.FloatingActionButton;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -37,20 +39,49 @@ public class BoxOfficeFragment extends Fragment {
     public List<Movie> allMovies = new ArrayList<Movie>();
     private ProgressDialog progressDialog;
     private ListView listView;
-    //private View view;
+    private static final String TAG = "BOXOFFICE";
     private Context mContext, mContext2;
 
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        // Indicate that this fragment would like to influence the set of actions in the action bar.
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        mContext=getActivity().getApplicationContext();
+        View view=null;
+        if(savedInstanceState==null)
+            view = inflater.inflate(R.layout.fragment_boxoffice, container, false);
 
+        mContext = getActivity().getApplicationContext();
         //API KEY =pj2z7eyve6mfdtcx4vynk26y
-        View view = inflater.inflate(R.layout.fragment_boxoffice, container, false);
         mContext2 = view.getContext();
         listView = (ListView) view.findViewById(R.id.boxoffice_list);
-        //Bundle args = getArguments();
+        Bundle args = getArguments();
         CallAPI task = new CallAPI();
         List<URI> requestURI = new ArrayList<URI>();
         requestURI.add(URI.create("http://api.rottentomatoes.com/api/public/v1.0/lists/movies/box_office.json?limit=50&country=us&apikey=pj2z7eyve6mfdtcx4vynk26y"));
@@ -58,7 +89,22 @@ public class BoxOfficeFragment extends Fragment {
 
         task.execute(requestURI.get(0));
         //thread for getting data from the API
+        final FloatingActionButton floatingActionButton = (FloatingActionButton) view.findViewById(R.id.boxoffice_list_fab);
+        floatingActionButton.attachToListView(listView);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(floatingActionButton.getColorNormal()==getResources().getColor(R.color.green)) {
+                    floatingActionButton.setColorNormal(getResources().getColor(R.color.white));
+                    floatingActionButton.setImageResource(R.drawable.ic_navigation_check);
+                }
+                else{
+                    floatingActionButton.setColorNormal(getResources().getColor(R.color.green));
+                    floatingActionButton.setImageResource(R.drawable.ic_add_white_24dp);
 
+                }
+            }
+        });
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -69,19 +115,20 @@ public class BoxOfficeFragment extends Fragment {
                 //TODO: link to imdb and rotten
                 switchFragment(fragment);
             }
+
             private void switchFragment(Fragment fragment) {
-                if (mContext2 == null){
+                if (mContext2 == null) {
                     return;
                 }
                 if (mContext2 instanceof Main) {
                     Main main = (Main) mContext2;
-                    main.switchContent(fragment);
+                    main.switchContent(fragment,"DETAILS");
                 }
             }
         });
-        ImageView v=(ImageView)view.findViewById(R.id.fragment_list_item_rtn_link);
-        return view;
+        ImageView v = (ImageView) view.findViewById(R.id.fragment_list_item_rtn_link);
 
+        return view;
     }
 
     public class CallAPI extends AsyncTask<URI, String, List<Movie>> {

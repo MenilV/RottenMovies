@@ -9,5 +9,3 @@
     android:duplicateParentState="true"
     android:textColor="@color/pale_black"
     tools:context=".NavigationDrawerFragment"/>
-    <!--    android:background="@drawable/gridview_background"-->
-    <!--android:background="?android:attr/activatedBackgroundIndicator"-->
