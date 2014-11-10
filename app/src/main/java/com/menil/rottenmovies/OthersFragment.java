@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
 import com.google.gson.Gson;
+import com.melnykov.fab.FloatingActionButton;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -146,6 +148,29 @@ public class OthersFragment extends android.app.Fragment {
     }
 });
 */
+
+        final FloatingActionButton floatingActionButton = (FloatingActionButton) view.findViewById(R.id.others_gridview_list_fab);
+        floatingActionButton.attachToListView(gridView);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(floatingActionButton.getColorNormal()==getResources().getColor(R.color.green)) {
+                    floatingActionButton.setColorNormal(getResources().getColor(R.color.white));
+                    floatingActionButton.setImageResource(R.drawable.ic_navigation_check);
+                    gridView.smoothScrollToPosition(0);
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            //this only gives a small delay
+                        }
+                    }, 1000);
+                    floatingActionButton.setColorNormal(getResources().getColor(R.color.green));
+                    floatingActionButton.setImageResource(R.drawable.ic_action_up);
+                }
+            }
+        });
+
         return view;
     }
 

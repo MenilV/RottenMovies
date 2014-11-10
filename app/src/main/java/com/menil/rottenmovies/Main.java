@@ -12,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 
 
 public class Main extends Activity
@@ -23,32 +24,39 @@ public class Main extends Activity
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && getFragmentManager().findFragmentByTag("HOME").isVisible()) {
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                    mContext, R.style.CustomDialog);
-            // set title
-            alertDialogBuilder.setTitle("Exit application?");
+        if (keyCode ==KeyEvent.KEYCODE_HOME){
+            Main.this.finish();
+        }
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (getFragmentManager().findFragmentByTag("HOME").isVisible()) {
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                        mContext, R.style.CustomDialog);
+                // set title
+                alertDialogBuilder.setTitle("Exit application?");
 
-            // set dialog message
-            alertDialogBuilder
-                    .setIcon(R.drawable.ic_action_warning)
-                    .setCancelable(false)
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // if this button is clicked, close app
-                            Main.this.finish();
-                        }
-                    })
-                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // if this button is clicked, just close the dialog box
-                            dialog.cancel();
-                        }
-                    });
-            // create alert dialog
-            AlertDialog alertDialog = alertDialogBuilder.create();
-            // show it
-            alertDialog.show();
+                // set dialog message
+                alertDialogBuilder
+                        .setIcon(R.drawable.ic_action_warning)
+                        .setCancelable(false)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // if this button is clicked, close app
+                                Main.this.finish();
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // if this button is clicked, just close the dialog box
+                                dialog.cancel();
+                            }
+                        });
+                // create alert dialog
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                // show it
+                alertDialog.show();
+            } else {
+                getFragmentManager().popBackStack();
+            }
         }
         return false;
     }
@@ -57,7 +65,7 @@ public class Main extends Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+        getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         /**
          * ovo iznad je zlo!!@!!
          */

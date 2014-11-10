@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -89,6 +90,7 @@ public class BoxOfficeFragment extends Fragment {
 
         task.execute(requestURI.get(0));
         //thread for getting data from the API
+
         final FloatingActionButton floatingActionButton = (FloatingActionButton) view.findViewById(R.id.boxoffice_list_fab);
         floatingActionButton.attachToListView(listView);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -97,14 +99,20 @@ public class BoxOfficeFragment extends Fragment {
                 if(floatingActionButton.getColorNormal()==getResources().getColor(R.color.green)) {
                     floatingActionButton.setColorNormal(getResources().getColor(R.color.white));
                     floatingActionButton.setImageResource(R.drawable.ic_navigation_check);
-                }
-                else{
+                    listView.smoothScrollToPosition(0);
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            //this only gives a small delay
+                            }
+                        }, 1000);
                     floatingActionButton.setColorNormal(getResources().getColor(R.color.green));
-                    floatingActionButton.setImageResource(R.drawable.ic_add_white_24dp);
-
+                    floatingActionButton.setImageResource(R.drawable.ic_action_up);
+                    }
                 }
-            }
         });
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

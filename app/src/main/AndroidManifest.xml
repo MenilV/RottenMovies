@@ -26,8 +26,8 @@
         <!-- Main -->
         <activity
             android:name="com.menil.rottenmovies.Main"
-            android:label="@string/app_name"
-            android:configChanges="screenSize|orientation"/>
+            android:configChanges="screenSize|orientation"
+            android:label="@string/app_name"/>
 
         <!-- Crash report activity -->
         <activity android:name="org.acra.CrashReportDialog"

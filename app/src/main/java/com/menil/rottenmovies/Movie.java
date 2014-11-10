@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-/**
+/*
  * Created by menil on 17.10.2014.
  */
 public class Movie implements Parcelable {
@@ -49,8 +49,24 @@ public class Movie implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
         dest.writeValue(this);
     }
 
+    public Movie(String id, String name, int type) {
+
+        //this.id = Objects.requireNonNull(id);
+       // this.title = Objects.requireNonNull(name);
+        this.year = type;
+    }
+
+    public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
+
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in.readString(), in.readString(), in.readInt());
+        }
+
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
 }

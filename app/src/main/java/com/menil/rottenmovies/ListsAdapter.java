@@ -77,7 +77,10 @@ public class ListsAdapter extends BaseAdapter {
 
         TextView rating = (TextView)view.findViewById(R.id.fragment_list_item_rating);
         int criticsScore = (int)listMovies.get(position).ratings.critics_score;
-        rating.append(String.valueOf(criticsScore));
+        rating.setText("Rating: "+String.valueOf(criticsScore));
+
+
+
 
         /*View progress_top = (View)view.findViewById(R.id.pr_bar_top);
         progress_top.setLayoutParams(new ViewGroup.LayoutParams(40,20));*/
