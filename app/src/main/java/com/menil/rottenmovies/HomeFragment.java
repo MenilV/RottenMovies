@@ -1,13 +1,14 @@
 package com.menil.rottenmovies;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-
 
 
 /*
@@ -42,14 +43,24 @@ public class HomeFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-     }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view=null;
-        if(savedInstanceState==null)
-        view = inflater.inflate(R.layout.fragment_home, container, false);
+        View view = null;
+        if (savedInstanceState == null)
+            view = inflater.inflate(R.layout.fragment_home, container, false);
+        try {
+            ActionBar actionBar = getActivity().getActionBar();
+            actionBar.setBackgroundDrawable(new ColorDrawable(0xFF399322));//transparent
+            //actionBar.setDisplayOptions(actionBar.getDisplayOptions() ^ ActionBar.DISPLAY_SHOW_TITLE);
+            actionBar.setSubtitle("Box Office");
+            actionBar.setSubtitle(null);
+
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
         Button homeButton = (Button) view.findViewById(R.id.home_button);
         //only for testing crash reports
         homeButton.setOnClickListener(new View.OnClickListener() {

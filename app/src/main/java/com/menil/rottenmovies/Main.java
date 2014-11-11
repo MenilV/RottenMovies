@@ -24,7 +24,7 @@ public class Main extends Activity
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode ==KeyEvent.KEYCODE_HOME){
+        if (keyCode == KeyEvent.KEYCODE_HOME) {
             Main.this.finish();
         }
         if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -83,8 +83,6 @@ public class Main extends Activity
     }
 
 
-
-
     @Override
     public void onNavigationDrawerItemSelected(int position) {
 
@@ -92,42 +90,47 @@ public class Main extends Activity
         FragmentManager fragmentManager = getFragmentManager();
         Bundle args = new Bundle();
         args.putInt("position", position);
-        String tag=null;
+        String tag = null;
 
         switch (position) {
             case 0://home fragment
                 fragment = new HomeFragment();
-                tag="HOME";
+                tag = "HOME";
                 break;
             case 1://box office fragment
                 fragment = new BoxOfficeFragment();
-                tag="BOXOFFICE";
+                tag = "BOXOFFICE";
                 break;
             case 2://in theaters fragment
                 fragment = new OthersFragment();
-                tag="OTHERS";
+                tag = "OTHERS";
                 break;
             case 3://opening fragment
                 fragment = new OthersFragment();
-                tag="OTHERS";
+                tag = "OTHERS";
                 break;
             case 4://upcoming fragment
                 fragment = new OthersFragment();
-                tag="OTHERS";
+                tag = "OTHERS";
                 break;
             case 5://favourites (currently displaying detail view)
                 //TODO: make on click event on the images to store to favourites
                 fragment = new HomeFragment();
-                tag="HOME";
+                tag = "HOME";
                 break;
+            case 6://search
+                //TODO: crashing probably because of api
+                //fragment = new SearchFragment();
+                //tag="SEARCH";
+                //break;
             default:
                 fragment = new HomeFragment();
-                tag="OTHERS";
+                tag = "OTHERS";
                 break;
         }
 
         fragment.setArguments(args);
-        switchContent(fragment,tag);
+        switchContent(fragment, tag);
     }
 
     public void switchContent(Fragment fragment, String TAG) {

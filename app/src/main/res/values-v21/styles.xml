@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="AppTheme" parent="android:Theme.Material.Light">
-    <item name="android:colorPrimary">#399322</item>
-    <!--   darker variant for the status bar and contextual app bars -->
-    <item name="android:colorPrimaryDark">#2C721A</item>
-    <!--   theme UI controls like checkboxes and text fields -->
-    <item name="android:navigationBarColor">#FFFFFFFF</item>
+        <item name="android:colorPrimary">#399322</item>
+        <!--   darker variant for the status bar and contextual app bars -->
+        <item name="android:colorPrimaryDark">#2C721A</item>
+        <!--   theme UI controls like checkboxes and text fields -->
+        <item name="android:navigationBarColor">#FFFFFFFF</item>
     </style>
 </resources>

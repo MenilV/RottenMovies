@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -96,6 +97,12 @@ public class NavigationDrawerFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selectItem(position);
+                try {
+                    getActivity().getActionBar().setBackgroundDrawable(new ColorDrawable(0xFF399322));//transparent
+
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
             }
         });
         mDrawerListView.setAdapter(new ArrayAdapter<String>(
@@ -108,7 +115,9 @@ public class NavigationDrawerFragment extends Fragment {
                         getString(R.string.title_section2),
                         getString(R.string.title_section3),
                         getString(R.string.title_section4),
-                        getString(R.string.title_section5)
+                        getString(R.string.title_section5),
+                        getString(R.string.title_section6),
+                        getString(R.string.title_section7)
                 }));
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return mDrawerListView;

@@ -2,6 +2,7 @@ package com.menil.rottenmovies;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
@@ -10,6 +11,7 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.google.gson.Gson;
@@ -30,15 +32,13 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
- * Created by menil on 08.10.2014.
+/**
+ * Created by menil on 10.11.2014.
  */
-public class OthersFragment extends android.app.Fragment {
-
-    private static final String TAG = "OTHERS";
+public class SearchFragment extends Fragment {
+    private static final String TAG = "SEARCH";
     public List<Movie> allMovies = new ArrayList<Movie>();
     private ProgressDialog progressDialog;
-    private GridView gridView;
     private View view;
 
     @Override
@@ -82,40 +82,38 @@ public class OthersFragment extends android.app.Fragment {
         //INT: page_limit=50&page=1
         //OPE: limit=16
         //UPC: page_limit=16&page=1
-        String startURI = "http://api.rottentomatoes.com/api/public/v1.0/lists/movies/";
-        //String[] uriTopics = {"box_office.json?", "in_theaters.json?", "opening.json?", "upcoming.json?"};
-        String[] uriTopics = {"in_theaters.json?", "opening.json?", "upcoming.json?"};
-        String page = "page_";//for in theaters and upcoming movies
-        String limit = "limit=50";//max amount is 50
-        String nrPages = "&page=1";
-        String endURI = "&country=us&apikey=pj2z7eyve6mfdtcx4vynk26y";
 
 
-        for (String topic : uriTopics) {
+        String startURI = "http://api.rottentomatoes.com/api/public/v1.0/movies.json?q=";
+        //String page = "page_";//for in theaters and upcoming movies
+        String endURI = "test&page_limit=50&page=1&apikey=pj2z7eyve6mfdtcx4vynk26y";
+
+
+        /*for (String topic : uriTopics) {
             if (topic.equals("opening.json?"))
                 requestURI.add(URI.create(startURI + topic + limit + endURI));
             else
                 requestURI.add(URI.create(startURI + topic + page + limit + nrPages + endURI));
-        }
-
+        }*/
+        requestURI.add(URI.create(startURI+endURI));
         view = null;
         if (savedInstanceState == null)
             // Inflate the layout for this fragment
-            view = inflater.inflate(R.layout.fragment_others, container, false);
-        gridView = (GridView) view.findViewById(R.id.gridview);
+            view = inflater.inflate(R.layout.fragment_search, container, false);
+        final GridView gridView = (GridView) view.findViewById(R.id.gridview2);
         CallAPI task = new CallAPI();
 
         try {
             ActionBar actionbar = getActivity().getActionBar();
             actionbar.setBackgroundDrawable(new ColorDrawable(0xFF399322));//transparent
-            actionbar.setSubtitle("In Theaters");
+            actionbar.setSubtitle("Search");
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
-        task.execute(requestURI.get(option));
+        task.execute(requestURI.get(0));
         //thread for getting data from the API
 
-        /*gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Bundle args = new Bundle();
@@ -125,15 +123,15 @@ public class OthersFragment extends android.app.Fragment {
                 switchFragment(fragment);
             }
             private void switchFragment(Fragment fragment) {
-                if (view2.getContext() == null)
+                if (view.getContext() == null)
                     return;
-                if (view2.getContext() instanceof Main) {
-                    Main main = (Main) view2.getContext();
-                    main.switchContent(fragment);
+                if (view.getContext() instanceof Main) {
+                    Main main = (Main) view.getContext();
+                    main.switchContent(fragment, "SEARCH");
                 }
             }
 
-        });*/
+        });
         /*final TypedArray styledAttributes = getActivity().getTheme().obtainStyledAttributes(
                 new int[] { android.R.attr.actionBarSize });
 
@@ -159,7 +157,7 @@ public class OthersFragment extends android.app.Fragment {
 });
 */
 
-        final FloatingActionButton floatingActionButton = (FloatingActionButton) view.findViewById(R.id.others_gridview_list_fab);
+        final FloatingActionButton floatingActionButton = (FloatingActionButton) view.findViewById(R.id.others_gridview2_list_fab_2);
         floatingActionButton.attachToListView(gridView);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -262,7 +260,7 @@ public class OthersFragment extends android.app.Fragment {
 
         @Override
         protected void onPostExecute(List<Movie> allMovies) {
-            gridView.setAdapter(new GridAdapter(view.getContext(), allMovies));
+            //gridView.setAdapter(new GridAdapter(view.getContext(), allMovies));
             progressDialog.dismiss();
         }
     }

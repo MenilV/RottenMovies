@@ -1,29 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
-    xmlns:ripple="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="?android:attr/actionBarSize">
-    <ListView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/boxoffice_list"
+
+    <GridView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/gridview2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="5dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginRight="5dp"
+        android:background="#f1f1f1"
         android:clickable="true"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0dp" />
-    <com.andexert.library.RippleView
-        android:id="@+id/boxoffice_list_ripple_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        ripple:rv_rippleDuration="700">
+        android:columnWidth="130dp"
+        android:gravity="center"
+        android:horizontalSpacing="5dp"
+        android:longClickable="true"
+        android:minHeight="@dimen/activity_horizontal_margin"
+        android:minWidth="@dimen/activity_vertical_margin"
+        android:numColumns="auto_fit"
+        android:paddingRight="4dp"
+        android:paddingLeft="4dp"
+        android:paddingEnd="4dp"
+        android:paddingStart="4dp"
+        android:stretchMode="columnWidth"
+        android:textColor="@color/pale_black"
+        android:verticalSpacing="3dp">
+
+    </GridView>
+
     <com.melnykov.fab.FloatingActionButton
-        android:id="@+id/boxoffice_list_fab"
+        android:id="@+id/others_gridview2_list_fab_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
@@ -32,5 +38,4 @@
         fab:fab_colorNormal="@color/green"
         fab:fab_colorPressed="@color/green_900"
         fab:fab_colorRipple="@color/green_700" />
-    </com.andexert.library.RippleView>
 </FrameLayout>

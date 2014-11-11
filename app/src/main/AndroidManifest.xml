@@ -7,11 +7,11 @@
 
     <application
 
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher_1100"
         android:label="@string/app_name"
-        android:theme="@style/CustomActionBarTheme"
-        android:name=".MyApplication">
+        android:theme="@style/CustomActionBarTheme">
 
 
         <activity
@@ -27,14 +27,16 @@
         <activity
             android:name="com.menil.rottenmovies.Main"
             android:configChanges="screenSize|orientation"
-            android:label="@string/app_name"/>
+            android:icon="@drawable/actionbar_icon"
+            android:label="@string/app_name" />
 
         <!-- Crash report activity -->
-        <activity android:name="org.acra.CrashReportDialog"
-            android:theme="@android:style/Theme.Dialog"
-            android:launchMode="singleInstance"
+        <activity
+            android:name="org.acra.CrashReportDialog"
             android:excludeFromRecents="true"
-            android:finishOnTaskLaunch="true" />
+            android:finishOnTaskLaunch="true"
+            android:launchMode="singleInstance"
+            android:theme="@android:style/Theme.Dialog" />
 
     </application>
 

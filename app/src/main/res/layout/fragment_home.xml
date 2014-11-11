@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#399322"
     android:orientation="vertical"
-    android:paddingTop="?android:attr/actionBarSize">
+    android:paddingTop="?android:attr/actionBarSize"
+    tools:context=".HomeFragment">
 
     <TextView
         android:layout_width="fill_parent"
@@ -24,18 +26,28 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:text="Welcome to Home screen\nThe navigation menu is on the left"
-        android:textColor="@android:color/white"
         android:layout_gravity="center"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:text="@string/welcome_msg"
+        android:textColor="@android:color/white"
+        android:textSize="20sp" />
+
     <Button
-        android:layout_gravity="center"
         android:id="@+id/home_button"
-        android:textColor="@android:color/white"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="crash_test_button"/>
+        android:layout_gravity="center"
+        android:text="@string/crash_button"
+        android:textColor="@android:color/white" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:textColor="@android:color/white"
+        android:text="@string/known_bugs"/>
 
     <ImageView
         android:layout_width="match_parent"

@@ -1,10 +1,15 @@
 package com.menil.rottenmovies;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -20,12 +25,8 @@ public class ListsAdapter extends BaseAdapter {
     private Context mContext;
     private List<Movie> listMovies = new ArrayList<Movie>();
 
-    public ListsAdapter(List<Movie> allMovies) {
-        this.listMovies = allMovies;
-    }
-
-    public ListsAdapter(Context c, List<Movie> allMovies) {
-        this.mContext = c;
+    public ListsAdapter(Context context, List<Movie> allMovies) {
+        this.mContext = context;
         this.listMovies = allMovies;
     }
 
@@ -73,30 +74,80 @@ public class ListsAdapter extends BaseAdapter {
 
         TextView releaseView = (TextView) view.findViewById(R.id.fragment_list_item_date);
         String release_date = listMovies.get(position).release_dates.theater;
-        releaseView.setText("Release date: " + release_date);
+        String new_date=release_date.substring(8,10)+"/"+release_date.substring(5,7)+"/"+release_date.substring(0,4);
+        releaseView.setText("Release date: " + new_date);
 
-        TextView rating = (TextView)view.findViewById(R.id.fragment_list_item_rating);
-        int criticsScore = (int)listMovies.get(position).ratings.critics_score;
-        rating.setText("Rating: "+String.valueOf(criticsScore));
-
-
-
-
-        /*View progress_top = (View)view.findViewById(R.id.pr_bar_top);
-        progress_top.setLayoutParams(new ViewGroup.LayoutParams(40,20));*/
+        TextView rating = (TextView) view.findViewById(R.id.fragment_list_item_rating);
+        int criticsScore = (int) listMovies.get(position).ratings.critics_score;
+        rating.setText("Rating: " + String.valueOf(criticsScore));
 
 
 
-        /*TextView castView = (TextView) view.findViewById(R.id.fragment_list_item_cast);
-        List<Cast> castList=listMovies.get(position).casts;
-        castView.setText("Cast: ");
-        int x=0;
-        for (Cast c : castList) {
-            castView.append(c.name);
-            if (++x < castList.size())
-                castView.append(", ");
-        }*/
+        ImageView IMDBImage = (ImageView) view.findViewById(R.id.fragment_list_item_imdb_link);
+        final String IMDBiD=listMovies.get(position).imdb.imdb;
+
+
+        IMDBImage.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                final View v2=v;
+                final Uri uri = Uri.parse("http://www.imdb.com/title/tt"+IMDBiD);
+                int SPLASH_TIME_OUT = 250;
+                new Handler().postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        v2.getContext().startActivity(intent);
+                    }
+                }, SPLASH_TIME_OUT);
+
+
+            }
+        });
+
+        ImageView RottenImage = (ImageView) view.findViewById(R.id.fragment_list_item_rtn_link);
+        final String RottenID=listMovies.get(position).links.alternate;
+        RottenImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Uri uri = Uri.parse(RottenID);
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                v.getContext().startActivity(intent);
+            }
+        });
+
+        final Button addToFav = (Button)view.findViewById(R.id.fragment_list_add_to_fav);
+        addToFav.setVisibility(View.INVISIBLE);
+
+        ImageView more = (ImageView)view.findViewById(R.id.fragment_list_more);
+        more.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (addToFav.getVisibility()==View.INVISIBLE)
+                    addToFav.setVisibility(View.VISIBLE);
+                else
+                    addToFav.setVisibility(View.INVISIBLE);
+            }
+        });
         return view;
     }
+
+    /*public View getView(){
+        View v=(ImageView)v.findViewById(R.id.fragment_list_item_imdb_link);
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri uri = Uri.parse("http://www.imdb.com/title/tt");
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                mContext.startActivity(intent);
+            }
+        });
+    }*/
 
 }

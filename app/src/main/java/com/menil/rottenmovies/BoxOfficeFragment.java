@@ -1,9 +1,11 @@
 package com.menil.rottenmovies;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
@@ -37,11 +38,12 @@ import java.util.List;
  */
 public class BoxOfficeFragment extends Fragment {
 
+    private static final String TAG = "BOXOFFICE";
     public List<Movie> allMovies = new ArrayList<Movie>();
     private ProgressDialog progressDialog;
     private ListView listView;
-    private static final String TAG = "BOXOFFICE";
     private Context mContext, mContext2;
+
 
 
     @Override
@@ -74,8 +76,8 @@ public class BoxOfficeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view=null;
-        if(savedInstanceState==null)
+        View view = null;
+        if (savedInstanceState == null)
             view = inflater.inflate(R.layout.fragment_boxoffice, container, false);
 
         mContext = getActivity().getApplicationContext();
@@ -88,15 +90,25 @@ public class BoxOfficeFragment extends Fragment {
         requestURI.add(URI.create("http://api.rottentomatoes.com/api/public/v1.0/lists/movies/box_office.json?limit=50&country=us&apikey=pj2z7eyve6mfdtcx4vynk26y"));
         //limit can be changed to 10-20 for performance
 
+        try {
+            ActionBar actionBar = getActivity().getActionBar();
+            actionBar.setBackgroundDrawable(new ColorDrawable(0xFF399322));//transparent
+            //actionBar.setDisplayOptions(actionBar.getDisplayOptions() ^ ActionBar.DISPLAY_SHOW_TITLE);
+            actionBar.setSubtitle("Box Office");
+
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
         task.execute(requestURI.get(0));
         //thread for getting data from the API
+        //end point not supporing page limit, ergo 50 movies is the limit
 
         final FloatingActionButton floatingActionButton = (FloatingActionButton) view.findViewById(R.id.boxoffice_list_fab);
         floatingActionButton.attachToListView(listView);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(floatingActionButton.getColorNormal()==getResources().getColor(R.color.green)) {
+                if (floatingActionButton.getColorNormal() == getResources().getColor(R.color.green)) {
                     floatingActionButton.setColorNormal(getResources().getColor(R.color.white));
                     floatingActionButton.setImageResource(R.drawable.ic_navigation_check);
                     listView.smoothScrollToPosition(0);
@@ -105,12 +117,12 @@ public class BoxOfficeFragment extends Fragment {
                         @Override
                         public void run() {
                             //this only gives a small delay
-                            }
-                        }, 1000);
+                        }
+                    }, 1000);
                     floatingActionButton.setColorNormal(getResources().getColor(R.color.green));
                     floatingActionButton.setImageResource(R.drawable.ic_action_up);
-                    }
                 }
+            }
         });
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -130,14 +142,15 @@ public class BoxOfficeFragment extends Fragment {
                 }
                 if (mContext2 instanceof Main) {
                     Main main = (Main) mContext2;
-                    main.switchContent(fragment,"DETAILS");
+                    main.switchContent(fragment, "DETAILS");
                 }
             }
         });
-        ImageView v = (ImageView) view.findViewById(R.id.fragment_list_item_rtn_link);
 
         return view;
     }
+
+
 
     public class CallAPI extends AsyncTask<URI, String, List<Movie>> {
 

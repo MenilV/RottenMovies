@@ -104,7 +104,7 @@ public class GridAdapter extends BaseAdapter {
                     return;
                 if (mContext instanceof Main) {
                     Main main = (Main) mContext;
-                    main.switchContent(fragment,"DETAILS");
+                    main.switchContent(fragment, "DETAILS");
                 }
             }
         });

@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!--Crash report related strings-->
+    <string name="crash_toast_text">Rotten Movies has crashed, but a report has been sent to the developer to help fix the issue!</string>
+    <string name="crash_dialog_title">Rotten Movies has crashed</string>
+    <string name="crash_dialog_text">An unexpected error occurred forcing the
+    application to stop. Please help us fix this by sending us error data,
+    all you have to do is click OK.</string>
+    <string name="crash_dialog_comment_prompt">You might add your comments about the problem below:</string>
+    <string name="crash_dialog_ok_toast">Thank you for your feedback!</string>
+
+    <string name="known_bugs">Known bugs and missing features:\n
+        -On details screen pressing Home button (physical) crashres application\n
+        -Refresh Button not working\n
+        -Favourites not working\n
+        -On Click image from Details not expanding\n
+        -All tabs load a maximum of 50 movies\n
+        -All view except BoxOffice need UI/UX changes\n
+        -Details View needs scrolling up to show filled actionbar\n
+        -Details View needs scrolling down to show full image\n
+        -In Theaters no infinite scroll\n
+        -Upcoming Movies no infinite scroll\n</string>
+
     <string name="app_name">Rotten Movies</string>
     <string name="title_section0">Home</string>
     <string name="title_section1">Box Office</string>
@@ -8,6 +29,9 @@
     <string name="title_section3">Opening Movies</string>
     <string name="title_section4">Upcoming Movies</string>
     <string name="title_section5">Favourites</string>
+    <string name="title_section6">Search</string>
+    <string name="title_section7">About</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_refresh">Refresh</string>
@@ -21,14 +45,8 @@
     <string name="rating_placeholder">Rating: </string>
     <string name="cast_placeholder">Cast: </string>
 
-    <!--Crash report related strings-->
-    <string name="crash_toast_text">Rotten Movies has crashed, but a report has been sent to the developer to help fix the issue!</string>
-    <string name="crash_dialog_title">Rotten Movies has crashed</string>
-    <string name="crash_dialog_text">An unexpected error occurred forcing the
-    application to stop. Please help us fix this by sending us error data,
-    all you have to do is click OK.</string>
-    <string name="crash_dialog_comment_prompt">You might add your comments about the problem below:</string>
-    <string name="crash_dialog_ok_toast">Thank you for your feedback!</string>
-
+    <string name="add_to_favourites">Add to Favourites</string>
+    <string name="crash_button">crash_test_button</string>
+    <string name="welcome_msg">Welcome to Home screen\nThe navigation menu is on the left</string>
 
 </resources>

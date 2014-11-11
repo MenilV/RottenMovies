@@ -26,6 +26,7 @@ import javax.crypto.spec.SecretKeySpec;
 public class DetailsFragment extends android.app.Fragment {
 
     Bundle bundle;
+
     //private static final String TAG = "DETAILS";
     //TODO:Details fragment crashes on KEYCODE_HOME pressed
     @Override
@@ -50,18 +51,19 @@ public class DetailsFragment extends android.app.Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view=null;
-        if(savedInstanceState==null)
-        // Inflate the layout for this fragment
-        //view = inflater.inflate(R.layout.fragment_details, container, false);
+        View view = null;
+        if (savedInstanceState == null)
+            // Inflate the layout for this fragment
+            //view = inflater.inflate(R.layout.fragment_details, container, false);
             view = inflater.inflate(R.layout.test_details, container, false);
         // Retrieve data from bundle with Parcelable object of type Movie
         bundle = getArguments();
-        try{
-        getActivity().getActionBar().setBackgroundDrawable(new ColorDrawable(0x00000000));//transparent
-        getActivity().getActionBar().setTitle("");
-        getActivity().getActionBar().setIcon(new ColorDrawable(0x00000000));
-        }catch(NullPointerException e){
+        try {
+            getActivity().getActionBar().setBackgroundDrawable(new ColorDrawable(0x00000000));//transparent
+            getActivity().getActionBar().setSubtitle(null);
+            getActivity().getActionBar().setTitle(null);
+            getActivity().getActionBar().setIcon(new ColorDrawable(0x00000000));
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
 
@@ -79,9 +81,9 @@ public class DetailsFragment extends android.app.Fragment {
 
         //getting a resized image from ThumbrIo service
         RemoteImageView imageViewTop = (RemoteImageView) view.findViewById(R.id.fragment_details_img_top);
-        String rescaledImage=null;
+        String rescaledImage = null;
         try {
-            rescaledImage = ThumbrIo.sign(movie.posters.detailed.replace("tmb", "ori"),"510x755c");
+            rescaledImage = ThumbrIo.sign(movie.posters.detailed.replace("tmb", "ori"), "510x755c");
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (InvalidKeyException e) {
@@ -95,11 +97,11 @@ public class DetailsFragment extends android.app.Fragment {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               //LinearLayout linearLayout = (LinearLayout)view.findViewById(R.id.fragment_details_linear);
+                //LinearLayout linearLayout = (LinearLayout)view.findViewById(R.id.fragment_details_linear);
                 //LayoutInflater layoutInflater = LayoutInflater.from(this);
 
                 //View child = getActivity().getLayoutInflater().inflate(R.layout.full_screen_img, null);
-               // ImageView fullImage=(ImageView)child.findViewById(R.id.full_screen_imgview);
+                // ImageView fullImage=(ImageView)child.findViewById(R.id.full_screen_imgview);
 
                 //linearLayout.addView(child);
                 //ImageView fullImage=(ImageView)view.findViewById(R.id.fragment_details_img);
@@ -123,19 +125,22 @@ public class DetailsFragment extends android.app.Fragment {
 
         title.setText(movie.title);
         title.append(" (" + String.valueOf(movie.year) + ")");
-        synopsis.setText("Synopsis:\n"+movie.synopsis);
+        synopsis.setText("Synopsis:\n" + movie.synopsis);
 
-        runtime.append(String.valueOf(movie.runtime));
-        runtime.append(" min");
-        rating.append(movie.mpaa_rating);
+        runtime.setText("Runtime: "+String.valueOf(movie.runtime)+" min");
+        rating.setText("Rating: "+movie.mpaa_rating);
 
         int x = 0;//just to ensure there are no commas after the last actor
         List<Cast> castList = movie.casts;
+        String castText="Cast: ";
         for (Cast c : castList) {
-            cast.append(c.name);
+            //cast.append(c.name);
+            castText+=c.name;
             if (++x < castList.size())
-                cast.append(", ");
+                castText+=", ";
+                //cast.append(", ");
         }
+        cast.setText(castText);
         title.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -156,11 +161,10 @@ public class DetailsFragment extends android.app.Fragment {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(floatingActionButton.getColorNormal()==getResources().getColor(R.color.green)) {
+                if (floatingActionButton.getColorNormal() == getResources().getColor(R.color.green)) {
                     floatingActionButton.setColorNormal(getResources().getColor(R.color.white));
                     floatingActionButton.setImageResource(R.drawable.ic_navigation_check);
-                }
-                else{
+                } else {
                     floatingActionButton.setColorNormal(getResources().getColor(R.color.green));
                     floatingActionButton.setImageResource(R.drawable.ic_add_white_24dp);
 
@@ -189,7 +193,8 @@ public class DetailsFragment extends android.app.Fragment {
         return view;
     }
 }
-class ThumbrIo{
+
+class ThumbrIo {
 
     private static final String THUMBRIO_API_KEY = "t0AsaoQ1lG-nJaIvOavA";
     private static final String THUMBRIO_SECRET_KEY = "9YmFRL63IhMqhASdj1fq";
@@ -204,7 +209,7 @@ class ThumbrIo{
     private static String toHex(byte bytes[]) {
         StringBuffer buf = new StringBuffer(bytes.length * 2);
 
-        for (byte b: bytes)
+        for (byte b : bytes)
             buf.append(Integer.toHexString(b + 0x800).substring(1));
 
         return buf.toString();
@@ -239,8 +244,7 @@ class ThumbrIo{
         if (queryArguments != null && !queryArguments.isEmpty()) {
             if (queryArguments.startsWith("?")) {
                 path = String.format("%s%s", path, queryArguments);
-            }
-            else {
+            } else {
                 path = String.format("%s?%s", path, queryArguments);
             }
         }
@@ -264,7 +268,7 @@ class ThumbrIo{
         return String.format("%s%s/%s", baseUrl, token, path);
     }
 
-    public static String safe_url_escape(String url) throws UnsupportedEncodingException{
+    public static String safe_url_escape(String url) throws UnsupportedEncodingException {
         String res = URLEncoder.encode(url, "UTF-8");
         return res.replace("%2F", "/").replace("*", "%2A").replace("+", "%20");
     }
