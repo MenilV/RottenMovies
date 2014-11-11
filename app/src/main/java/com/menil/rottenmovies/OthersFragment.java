@@ -2,7 +2,9 @@ package com.menil.rottenmovies;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.google.gson.Gson;
@@ -35,11 +38,12 @@ import java.util.List;
  */
 public class OthersFragment extends android.app.Fragment {
 
-    private static final String TAG = "OTHERS";
+    private static final String TAG = "IN THEATERS";
     public List<Movie> allMovies = new ArrayList<Movie>();
     private ProgressDialog progressDialog;
     private GridView gridView;
     private View view;
+    private Context mContext, mContext2;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -71,11 +75,17 @@ public class OthersFragment extends android.app.Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        View view = null;
+        if (savedInstanceState == null)
+            view = inflater.inflate(R.layout.fragment_others, container, false);
+
+        mContext = getActivity().getApplicationContext();
+
         //API KEY =pj2z7eyve6mfdtcx4vynk26y
         //search json: http://api.rottentomatoes.com/api/public/v1.0/movies.json?q=STRING&page_limit=10&page=1&apikey=pj2z7eyve6mfdtcx4vynk26y
         Bundle args = getArguments();
         List<URI> requestURI = new ArrayList<URI>();
-
+        mContext2 = view.getContext();
         int option = args.getInt("position");
         option -= 2;
 
@@ -98,13 +108,11 @@ public class OthersFragment extends android.app.Fragment {
                 requestURI.add(URI.create(startURI + topic + page + limit + nrPages + endURI));
         }
 
-        view = null;
-        if (savedInstanceState == null)
-            // Inflate the layout for this fragment
-            view = inflater.inflate(R.layout.fragment_others, container, false);
-        gridView = (GridView) view.findViewById(R.id.gridview);
-        CallAPI task = new CallAPI();
 
+        gridView = (GridView) view.findViewById(R.id.others_gridview);
+        CallAPI task = new CallAPI();
+        task.execute(requestURI.get(option));
+        //thread for getting data from the API
         try {
             ActionBar actionbar = getActivity().getActionBar();
             actionbar.setBackgroundDrawable(new ColorDrawable(0xFF399322));//transparent
@@ -112,10 +120,8 @@ public class OthersFragment extends android.app.Fragment {
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
-        task.execute(requestURI.get(option));
-        //thread for getting data from the API
 
-        /*gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Bundle args = new Bundle();
@@ -124,40 +130,17 @@ public class OthersFragment extends android.app.Fragment {
                 fragment.setArguments(args);
                 switchFragment(fragment);
             }
+
             private void switchFragment(Fragment fragment) {
-                if (view2.getContext() == null)
+                if (mContext2 == null) {
                     return;
-                if (view2.getContext() instanceof Main) {
-                    Main main = (Main) view2.getContext();
-                    main.switchContent(fragment);
+                }
+                if (mContext2 instanceof Main) {
+                    Main main = (Main) mContext2;
+                    main.switchContent(fragment, "DETAILS");
                 }
             }
-
-        });*/
-        /*final TypedArray styledAttributes = getActivity().getTheme().obtainStyledAttributes(
-                new int[] { android.R.attr.actionBarSize });
-
-
-        mActionBarHeight = styledAttributes.getDimension(0, 0);
-        styledAttributes.recycle();
-        mActionBar = getActivity().getActionBar();
-
-        gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
-        @Override
-        public void onScrollStateChanged(AbsListView view, int scrollState) {
-            float y = (view.findViewById(R.id.parent)).getScrollY();
-            if (y >= mActionBarHeight && mActionBar.isShowing()) {
-                mActionBar.hide();
-            } else if ( y==0 && !mActionBar.isShowing()) {
-                mActionBar.show();
-            }
-        }
-
-    @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-    }
-});
-*/
+        });
 
         final FloatingActionButton floatingActionButton = (FloatingActionButton) view.findViewById(R.id.others_gridview_list_fab);
         floatingActionButton.attachToListView(gridView);
@@ -262,7 +245,7 @@ public class OthersFragment extends android.app.Fragment {
 
         @Override
         protected void onPostExecute(List<Movie> allMovies) {
-            gridView.setAdapter(new GridAdapter(view.getContext(), allMovies));
+            gridView.setAdapter(new GridAdapter(mContext, allMovies));
             progressDialog.dismiss();
         }
     }

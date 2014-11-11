@@ -2,7 +2,6 @@ package com.menil.rottenmovies;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,26 +52,7 @@ public class GridAdapter extends BaseAdapter {
         //TextView runtimeView = null;
         if (convertView == null) {
             layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-/**PROBLEMS ARE HERE
- * BELOW
- */
-            /*if (option==1) {
-                view = layoutInflater.inflate(R.layout.fragment_list_item, null);
-                imageView = (RemoteImageView) view.findViewById(R.id.fragment_list_item_img);
-                titleView = (TextView) view.findViewById(R.id.fragment_list_item_title);
-                yearView = (TextView) view.findViewById(R.id.fragment_list_item_year);
-                runtimeView = (TextView) view.findViewById(R.id.fragment_list_item_runtime);
-                int runtime = listMovies.get(position).runtime;
-                int year = listMovies.get(position).year;
-                runtimeView.setText(Integer.toString(runtime));
-                yearView.setText(Integer.toString(year));
-            }
-            else {*/
             view = layoutInflater.inflate(R.layout.full_card_2, null);
-            //imageView= (RemoteImageView) view.findViewById(R.id.full_card_img);
-            // titleView = (TextView) view.findViewById(R.id.full_card_title);
-            // }
-            //convertView = view;
         } else {
             view = convertView;
         }
@@ -90,7 +70,7 @@ public class GridAdapter extends BaseAdapter {
             imageViewsmall.setBackgroundResource(R.drawable.tomatto_small);
         final Fragment fragment = new DetailsFragment();
         //assert imageView != null;
-        imageView.setOnClickListener(new View.OnClickListener() {
+        /*imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Bundle args = new Bundle();
@@ -107,7 +87,7 @@ public class GridAdapter extends BaseAdapter {
                     main.switchContent(fragment, "DETAILS");
                 }
             }
-        });
+        });*/
 
         return view;
     }

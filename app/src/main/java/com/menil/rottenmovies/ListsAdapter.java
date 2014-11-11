@@ -15,11 +15,11 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
+/*
  * Created by menil on 31.10.2014.
  */
 
-//TODO: merge with gridAdapter
+
 public class ListsAdapter extends BaseAdapter {
 
     private Context mContext;
@@ -86,7 +86,7 @@ public class ListsAdapter extends BaseAdapter {
         ImageView IMDBImage = (ImageView) view.findViewById(R.id.fragment_list_item_imdb_link);
         final String IMDBiD=listMovies.get(position).imdb.imdb;
 
-
+        //IMDB direct link to Movie
         IMDBImage.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -109,6 +109,7 @@ public class ListsAdapter extends BaseAdapter {
             }
         });
 
+        //Rotten Movies direct link to Movie
         ImageView RottenImage = (ImageView) view.findViewById(R.id.fragment_list_item_rtn_link);
         final String RottenID=listMovies.get(position).links.alternate;
         RottenImage.setOnClickListener(new View.OnClickListener() {
@@ -122,9 +123,9 @@ public class ListsAdapter extends BaseAdapter {
             }
         });
 
+        //Add to favourites button
         final Button addToFav = (Button)view.findViewById(R.id.fragment_list_add_to_fav);
         addToFav.setVisibility(View.INVISIBLE);
-
         ImageView more = (ImageView)view.findViewById(R.id.fragment_list_more);
         more.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,17 +138,5 @@ public class ListsAdapter extends BaseAdapter {
         });
         return view;
     }
-
-    /*public View getView(){
-        View v=(ImageView)v.findViewById(R.id.fragment_list_item_imdb_link);
-        v.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Uri uri = Uri.parse("http://www.imdb.com/title/tt");
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                mContext.startActivity(intent);
-            }
-        });
-    }*/
 
 }

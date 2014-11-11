@@ -33,7 +33,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
+/*
  * Created by menil on 29.10.2014.
  */
 public class BoxOfficeFragment extends Fragment {
@@ -132,7 +132,6 @@ public class BoxOfficeFragment extends Fragment {
                 args.putParcelable("movie", allMovies.get(position));
                 Fragment fragment = new DetailsFragment();
                 fragment.setArguments(args);
-                //TODO: link to imdb and rotten
                 switchFragment(fragment);
             }
 
