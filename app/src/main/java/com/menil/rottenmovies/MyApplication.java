@@ -2,11 +2,12 @@ package com.menil.rottenmovies;
 
 import android.app.Application;
 
+import org.acra.ACRA;
 import org.acra.ReportField;
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
 
-/**
+/*
  * Created by menil on 07.11.2014.
  */
 @ReportsCrashes(
@@ -46,7 +47,7 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-     //  ACRA.init(this);
+      // ACRA.init(this);
         //TODO: uncomment this^
     }
 }

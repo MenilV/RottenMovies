@@ -88,10 +88,8 @@ public class Main extends Activity
 
         Fragment fragment;
         FragmentManager fragmentManager = getFragmentManager();
-        Bundle args = new Bundle();
-        args.putInt("position", position);
-        String tag = null;
 
+        String tag;
         switch (position) {
             case 0://home fragment
                 fragment = new HomeFragment();
@@ -103,15 +101,15 @@ public class Main extends Activity
                 break;
             case 2://in theaters fragment
                 fragment = new InTheatersFragment();
-                tag = "OTHERS";
+                tag = "INTHEATERS";
                 break;
             case 3://opening fragment
-                fragment = new InTheatersFragment();
-                tag = "OTHERS";
+                fragment = new BoxOfficeFragment();
+                tag = "OPENING";
                 break;
             case 4://upcoming fragment
-                fragment = new InTheatersFragment();
-                tag = "OTHERS";
+                fragment = new BoxOfficeFragment();
+                tag = "UPCOMING";
                 break;
             case 5://favourites (currently displaying detail view)
                 //TODO: make on click event on the images to store to favourites
@@ -128,7 +126,9 @@ public class Main extends Activity
                 tag = "OTHERS";
                 break;
         }
-
+        Bundle args = new Bundle();
+        args.putInt("position", position);
+        args.putString("tag", tag);
         fragment.setArguments(args);
         switchContent(fragment, tag);
     }

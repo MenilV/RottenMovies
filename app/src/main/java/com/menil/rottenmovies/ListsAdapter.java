@@ -25,13 +25,14 @@ public class ListsAdapter extends BaseAdapter {
 
     private Context mContext;
     private List<Movie> listMovies = new ArrayList<Movie>();
-    private String savedDate;
+    private String savedDate, tag;
     private ArrayList<String> bannedDates = new ArrayList<String>();
     private ArrayList<Integer> uniquePositionDates= new ArrayList<Integer>();
 
-    public ListsAdapter(Context context, List<Movie> allMovies) {
+    public ListsAdapter(Context context, List<Movie> allMovies, String tag) {
         this.mContext = context;
         this.listMovies = allMovies;
+        this.tag=tag;
     }
 
 
@@ -95,8 +96,12 @@ public class ListsAdapter extends BaseAdapter {
             view = convertView;
         }
 
-
-        setHeader(position, view);//setting the header for upcoming and opening movies
+        if (tag.equals("BOXOFFICE")) {
+            LinearLayout headerLayout = (LinearLayout) view.findViewById(R.id.header_layout);
+            headerLayout.setVisibility(View.GONE);
+        }else {
+            setHeader(position, view);//setting the header for upcoming and opening movies
+        }
 
         RemoteImageView imageView = (RemoteImageView) view.findViewById(R.id.fragment_list_item_img);
         String picURL = listMovies.get(position).posters.detailed.replace("tmb", "det");
@@ -124,7 +129,12 @@ public class ListsAdapter extends BaseAdapter {
         rating.setText("Rating: " + String.valueOf(criticsScore));
 
         ImageView IMDBImage = (ImageView) view.findViewById(R.id.fragment_list_item_imdb_link);
-        final String IMDBiD=listMovies.get(position).imdb.imdb;
+        final String IMDBiD;
+
+        if (listMovies.get(position).imdb==null)
+            IMDBiD="0000000";
+        else
+            IMDBiD=listMovies.get(position).imdb.getIMDB();
 
         //IMDB direct link to Movie
         IMDBImage.setOnClickListener(new View.OnClickListener() {

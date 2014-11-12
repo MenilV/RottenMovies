@@ -11,6 +11,10 @@ android {
         versionCode 1
         versionName "0.2-beta"
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -30,6 +34,4 @@ dependencies {
     compile 'com.melnykov:floatingactionbutton:1.0.6' //for floating action buttons
     compile 'ch.acra:acra:4.5.0' //for crash reports
     compile 'com.github.traex.rippleeffect:library:1.2.2' //for ripple effects
-    compile 'se.emilsjolander:stickylistheaders:2.5.2' // for listview headers
-
 }

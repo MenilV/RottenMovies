@@ -8,4 +8,8 @@ import com.google.gson.annotations.SerializedName;
 public class IMDB {
     @SerializedName("imdb")
     public String imdb;
+
+    public String getIMDB(){
+        return imdb;
+    }
 }
