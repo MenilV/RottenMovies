@@ -102,15 +102,15 @@ public class Main extends Activity
                 tag = "BOXOFFICE";
                 break;
             case 2://in theaters fragment
-                fragment = new OthersFragment();
+                fragment = new InTheatersFragment();
                 tag = "OTHERS";
                 break;
             case 3://opening fragment
-                fragment = new OthersFragment();
+                fragment = new InTheatersFragment();
                 tag = "OTHERS";
                 break;
             case 4://upcoming fragment
-                fragment = new OthersFragment();
+                fragment = new InTheatersFragment();
                 tag = "OTHERS";
                 break;
             case 5://favourites (currently displaying detail view)

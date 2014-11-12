@@ -1,5 +1,6 @@
 package com.menil.rottenmovies;
 
+import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
@@ -7,6 +8,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -36,9 +38,9 @@ import java.util.List;
 /*
  * Created by menil on 29.10.2014.
  */
-public class BoxOfficeFragment extends Fragment {
+public class BoxOfficeFragment extends Fragment {//UPCOMING and OPENING ARE ALSO HERE
 
-    private static final String TAG = "BOXOFFICE";
+    //private static final String TAG = "BOXOFFICE";
     public List<Movie> allMovies = new ArrayList<Movie>();
     private ProgressDialog progressDialog;
     private ListView listView;
@@ -73,20 +75,42 @@ public class BoxOfficeFragment extends Fragment {
         super.onDetach();
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = null;
         if (savedInstanceState == null)
             view = inflater.inflate(R.layout.fragment_boxoffice, container, false);
+///////////////////////////////////////////////////////////////////
+        List<URI> requestURI = new ArrayList<URI>();
+        //INT: page_limit=50&page=1
+        //OPE: limit=16
+        //UPC: page_limit=16&page=1
+        String startURI = "http://api.rottentomatoes.com/api/public/v1.0/lists/movies/";
+        //String[] uriTopics = {"box_office.json?", "in_theaters.json?", "opening.json?", "upcoming.json?"};
+        String[] uriTopics = {"in_theaters.json?", "opening.json?", "upcoming.json?"};
+        String page = "page_";//for in theaters and upcoming movies
+        String limit = "limit=50";//max amount is 50
+        String nrPages = "&page=1";
+        String endURI = "&country=us&apikey=pj2z7eyve6mfdtcx4vynk26y";
 
+
+        for (String topic : uriTopics) {
+            if (topic.equals("opening.json?"))
+                requestURI.add(URI.create(startURI + topic + limit + endURI));
+            else
+                requestURI.add(URI.create(startURI + topic + page + limit + nrPages + endURI));
+        }
+
+/////////////////////////////////////////////////////////////////////
         mContext = getActivity().getApplicationContext();
         //API KEY =pj2z7eyve6mfdtcx4vynk26y
         mContext2 = view.getContext();
         listView = (ListView) view.findViewById(R.id.boxoffice_list);
         Bundle args = getArguments();
         CallAPI task = new CallAPI();
-        List<URI> requestURI = new ArrayList<URI>();
+        //List<URI> requestURI = new ArrayList<URI>();
         requestURI.add(URI.create("http://api.rottentomatoes.com/api/public/v1.0/lists/movies/box_office.json?limit=50&country=us&apikey=pj2z7eyve6mfdtcx4vynk26y"));
         //limit can be changed to 10-20 for performance
 
@@ -99,7 +123,8 @@ public class BoxOfficeFragment extends Fragment {
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
-        task.execute(requestURI.get(0));
+        task.execute(requestURI.get(0));//0 is for box office
+
         //thread for getting data from the API
         //end point not supporing page limit, ergo 50 movies is the limit
 
@@ -146,6 +171,9 @@ public class BoxOfficeFragment extends Fragment {
             }
         });
 
+        /*TextView header = (TextView)view.findViewById(R.id.boxoffice_list_header);
+        listView.addHeaderView(header);
+        header.setVisibility(View.VISIBLE);*/
         return view;
     }
 

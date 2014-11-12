@@ -21,6 +21,14 @@
     </statePointEntry>
     <statePointEntry>
       <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "org.acra.CrashReportDialog"/>
+      <point      
+        x = "480"      
+        y = "1440"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
         class = "com.android.tools.idea.editors.navigation.model.MenuState"      
         xmlResourceName = "main"/>
       <point      

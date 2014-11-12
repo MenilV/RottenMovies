@@ -48,5 +48,13 @@
     <string name="add_to_favourites">Add to Favourites</string>
     <string name="crash_button">crash_test_button</string>
     <string name="welcome_msg">Welcome to Home screen\nThe navigation menu is on the left</string>
+    <string name="title_placeholder">POSITION. TITLE (YEAR)</string>
+    <string name="runtime_placeholder2">RUNTIME:</string>
+    <string name="release_placeholder">RELEASE DATE:</string>
+    <string name="critics_placeholder">Critics Score:</string>
+    <string name="fragment_more_description">Fragment list more button</string>
+    <string name="rtn_link_description">Rotten Tomatoes link</string>
+    <string name="imdb_link_description">IMDB link</string>
+    <string name="header_placeholder">HEADER PLACEHOLDER</string>
 
 </resources>

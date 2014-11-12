@@ -52,7 +52,7 @@ public class GridAdapter extends BaseAdapter {
         //TextView runtimeView = null;
         if (convertView == null) {
             layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = layoutInflater.inflate(R.layout.full_card_2, null);
+            view = layoutInflater.inflate(R.layout.grid_full_card, null);
         } else {
             view = convertView;
         }

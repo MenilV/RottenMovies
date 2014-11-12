@@ -55,7 +55,7 @@ public class DetailsFragment extends android.app.Fragment {
         if (savedInstanceState == null)
             // Inflate the layout for this fragment
             //view = inflater.inflate(R.layout.fragment_details, container, false);
-            view = inflater.inflate(R.layout.test_details, container, false);
+            view = inflater.inflate(R.layout.details_card, container, false);
         // Retrieve data from bundle with Parcelable object of type Movie
         bundle = getArguments();
         try {

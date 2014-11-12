@@ -36,7 +36,7 @@ import java.util.List;
 /*
  * Created by menil on 08.10.2014.
  */
-public class OthersFragment extends android.app.Fragment {
+public class InTheatersFragment extends android.app.Fragment {
 
     private static final String TAG = "IN THEATERS";
     public List<Movie> allMovies = new ArrayList<Movie>();
@@ -77,7 +77,7 @@ public class OthersFragment extends android.app.Fragment {
 
         View view = null;
         if (savedInstanceState == null)
-            view = inflater.inflate(R.layout.fragment_others, container, false);
+            view = inflater.inflate(R.layout.fragment_intheaters, container, false);
 
         mContext = getActivity().getApplicationContext();
 
