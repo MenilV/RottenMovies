@@ -5,23 +5,13 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 /*
  * Created by menil on 17.10.2014.
  */
-public class Movie implements Parcelable {
-
-    public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
-
-        public Movie createFromParcel(Parcel in) {
-            return new Movie(in.readString(), in.readString(), in.readInt());
-        }
-
-        public Movie[] newArray(int size) {
-            return new Movie[size];
-        }
-    };
+public class Movie implements Parcelable, Serializable {
     @SerializedName("id")
     public String id;
     @SerializedName("title")
@@ -47,17 +37,32 @@ public class Movie implements Parcelable {
     @SerializedName("links")
     public Link links;
 
-    public Movie(String id, String name, int type) {
-
-        //this.id = Objects.requireNonNull(id);
-        // this.title = Objects.requireNonNull(name);
-        this.year = type;
+    public String getId(){
+        return this.id;
     }
 
+    public Movie(Parcel in) {
+        readFromParcel(in);
+    }
+    public void readFromParcel (Parcel in)
+    {
+        id = in.readString();
+        title = in.readString();
+    }
     @Override
     public int describeContents() {
         return 0;
     }
+
+    public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
+
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
+        }
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {

@@ -15,9 +15,7 @@
         -Refresh Button not working\n
         -Favourites not working\n
         -On Click image from Details not expanding\n
-        -All tabs load a maximum of 50 movies\n
-        -All view except BoxOffice need UI/UX changes\n
-        -Details View needs scrolling up to show filled actionbar\n
+        -Last card on bottom right cant be clicked
         -Details View needs scrolling down to show full image\n
         -In Theaters no infinite scroll\n
         -Upcoming Movies no infinite scroll\n</string>

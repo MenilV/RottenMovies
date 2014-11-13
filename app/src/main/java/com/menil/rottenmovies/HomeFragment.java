@@ -53,6 +53,7 @@ public class HomeFragment extends Fragment {
             view = inflater.inflate(R.layout.fragment_home, container, false);
         try {
             ActionBar actionBar = getActivity().getActionBar();
+            actionBar.show();
             actionBar.setBackgroundDrawable(new ColorDrawable(0xFF399322));//transparent
             //actionBar.setDisplayOptions(actionBar.getDisplayOptions() ^ ActionBar.DISPLAY_SHOW_TITLE);
             actionBar.setSubtitle("Box Office");

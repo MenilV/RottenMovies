@@ -94,6 +94,7 @@ public class InTheatersFragment extends android.app.Fragment {
         //thread for getting data from the API
         try {
             ActionBar actionbar = getActivity().getActionBar();
+            actionbar.show();
             actionbar.setBackgroundDrawable(new ColorDrawable(0xFF399322));//transparent
             actionbar.setSubtitle("In Theaters");
         } catch (NullPointerException e) {
@@ -106,6 +107,7 @@ public class InTheatersFragment extends android.app.Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Bundle args = new Bundle();
                 args.putParcelable("movie", allMovies.get(position));
+                //args.putSerializable("movie", allMovies.get(position));
                 Fragment fragment = new DetailsFragment();
                 fragment.setArguments(args);
                 switchFragment(fragment);

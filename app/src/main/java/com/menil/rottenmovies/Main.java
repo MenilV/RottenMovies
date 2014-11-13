@@ -4,9 +4,10 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.KeyEvent;
@@ -65,9 +66,11 @@ public class Main extends Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
+
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         /**
-         * ovo iznad je zlo!!@!!
+         * ovo iznad je zlo!!@!! ali radi :D
          */
         setContentView(R.layout.activity_main);
 
@@ -87,7 +90,7 @@ public class Main extends Activity
     public void onNavigationDrawerItemSelected(int position) {
 
         Fragment fragment;
-        FragmentManager fragmentManager = getFragmentManager();
+        //FragmentManager fragmentManager = getFragmentManager();
 
         String tag;
         switch (position) {
@@ -142,7 +145,6 @@ public class Main extends Activity
     public void restoreActionBar() {
         ActionBar actionBar = getActionBar();
         assert actionBar != null;
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(mTitle);
     }
@@ -166,6 +168,7 @@ public class Main extends Activity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+
         return id == R.id.action_settings || super.onOptionsItemSelected(item);
     }
 }

@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -88,6 +89,7 @@ public class BoxOfficeFragment extends Fragment {//API KEY =pj2z7eyve6mfdtcx4vyn
         Bundle args = getArguments();
         CallAPI task = new CallAPI();
             ActionBar actionBar = getActivity().getActionBar();
+            actionBar.show();
             actionBar.setBackgroundDrawable(new ColorDrawable(0xFF399322));//transparent
 
             //
@@ -149,6 +151,14 @@ public class BoxOfficeFragment extends Fragment {//API KEY =pj2z7eyve6mfdtcx4vyn
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Bundle args = new Bundle();
                 args.putParcelable("movie", allMovies.get(position));
+                //args.putSerializable("movie", allMovies.get(position));
+                /*
+                Intent intent = new Intent(getActivity(), DetailsActivity.class);
+                intent.putExtras(args);
+                startActivity(intent);
+                */
+
+
                 Fragment fragment = new DetailsFragment();
                 fragment.setArguments(args);
                 switchFragment(fragment);

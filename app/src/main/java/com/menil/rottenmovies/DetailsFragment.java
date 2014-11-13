@@ -1,5 +1,7 @@
 package com.menil.rottenmovies;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.melnykov.fab.FloatingActionButton;
 
@@ -31,6 +34,7 @@ public class DetailsFragment extends android.app.Fragment {
     private Bundle bundle;
     private Drawable mActionBarBackgroundDrawable;
     private View view;
+    public SharedPreferences preferences;
 
     //private static final String TAG = "DETAILS";
     //TODO:Details fragment crashes on KEYCODE_HOME pressed
@@ -81,7 +85,7 @@ public class DetailsFragment extends android.app.Fragment {
         }
 
 
-        Movie movie = bundle.getParcelable("movie");
+        final Movie movie = bundle.getParcelable("movie");
 
         TextView title = (TextView) view.findViewById(R.id.fragment_details_title);
         TextView synopsis = (TextView) view.findViewById(R.id.fragment_details_synopsis);
@@ -91,13 +95,13 @@ public class DetailsFragment extends android.app.Fragment {
         TextView rating = (TextView) view.findViewById(R.id.fragment_details_rating);
 
         RemoteImageView imageView = (RemoteImageView) view.findViewById(R.id.fragment_details_img);
-        imageView.setImageURL(movie.posters.detailed.replace("tmb", "det"), false);
+        imageView.setImageURL(movie.posters.detailed.replace("tmb", "det"), true);
 
         //getting a resized image from ThumbrIo service
         final RemoteImageView imageViewTop = (RemoteImageView) view.findViewById(R.id.fragment_details_img_top);
         String rescaledImage = null;
         try {
-            rescaledImage = ThumbrIo.sign(movie.posters.detailed.replace("tmb", "ori"), "510x755c");
+            rescaledImage = ThumbrIo1.sign(movie.posters.detailed.replace("tmb", "ori"), "510x755c");
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (InvalidKeyException e) {
@@ -152,13 +156,19 @@ public class DetailsFragment extends android.app.Fragment {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (floatingActionButton.getColorNormal() == getResources().getColor(R.color.green)) {
+                preferences = getActivity().getSharedPreferences("favsAreHere", Context.MODE_PRIVATE);
+                if (preferences.getString("id", null)==null)// && floatingActionButton.getColorNormal() == getResources().getColor(R.color.green) )
+                {
                     floatingActionButton.setColorNormal(getResources().getColor(R.color.white));
                     floatingActionButton.setImageResource(R.drawable.ic_navigation_check);
+                    ModifyPreferences("id", movie.id, 0);
+                    Toast.makeText(getActivity().getApplicationContext(),"Added to favourites", Toast.LENGTH_LONG).show();
+
                 } else {
                     floatingActionButton.setColorNormal(getResources().getColor(R.color.green));
                     floatingActionButton.setImageResource(R.drawable.ic_action_favorite);
-
+                    ModifyPreferences("id", movie.id, 1);
+                    Toast.makeText(getActivity().getApplicationContext(),"Removed from favourites", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -170,23 +180,30 @@ public class DetailsFragment extends android.app.Fragment {
 
             @Override
             public void onClick(View v) {
-                if (floatingActionButton2.getColorPressed() == getResources().getColor(R.color.light_gray)) {
-                    floatingActionButton2.setColorPressed(R.color.pale_gray);
+
+                if (floatingActionButton2.getColorNormal() == getResources().getColor(R.color.green)) {
+                    floatingActionButton2.setColorNormal(R.color.green2);
                     floatingActionButton2.setImageResource(R.drawable.ic_action_up);
                     RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(imageViewTop.getLayoutParams());
                     lp.setMargins(0, 0, 0, 0);
                     imageViewTop.setLayoutParams(lp);
+                    //getActivity().getActionBar().hide();
 
                 } else {
                     floatingActionButton2.setImageResource(R.drawable.ic_action_expand);
                     RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(imageViewTop.getLayoutParams());
-                    lp.setMargins(0, -400, 0, -400);
+                    lp.setMargins(0, -300, 0, -300);
                     imageViewTop.setLayoutParams(lp);
-                    floatingActionButton2.setColorPressed(R.color.light_gray);
+                    floatingActionButton2.setColorNormal(R.color.green);
+                    getActivity().getActionBar().show();
                 }
             }
         });
-        synopsis.setOnClickListener(new View.OnClickListener() {
+
+        /**
+         * On Click resize synopsis. Might be useful in the future.
+         */
+        /*synopsis.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 TextView t = (TextView) v.findViewById(R.id.fragment_details_synopsis);
@@ -202,13 +219,30 @@ public class DetailsFragment extends android.app.Fragment {
 
                 }
             }
-        });
+        });*/
 
         NotifyingScrollView scrollView = (NotifyingScrollView) view.findViewById(R.id.fragment_details_scroll);
         scrollView.setOnScrollChangedListener(mOnScrollChangedListener);
         return view;
 
     }
+    private void ModifyPreferences(String key, String value, int option)
+    {
+        preferences = getActivity().getSharedPreferences("favsAreHere", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        switch (option) {
+            case 0://adds item to favs
+                editor.putString(key, value);
+                editor.apply();
+                break;
+            case 1://deletes item from favs
+                editor.remove(key);
+                editor.apply();
+                break;
+        }
+    }
+
 
     private NotifyingScrollView.OnScrollChangedListener mOnScrollChangedListener = new NotifyingScrollView.OnScrollChangedListener() {
         public void onScrollChanged(ScrollView who, int l, int t, int oldl, int oldt) {
@@ -219,7 +253,7 @@ public class DetailsFragment extends android.app.Fragment {
         }
     };
 }
-class ThumbrIo {
+class ThumbrIo1 {
 
     private static final String THUMBRIO_API_KEY = "t0AsaoQ1lG-nJaIvOavA";
     private static final String THUMBRIO_SECRET_KEY = "9YmFRL63IhMqhASdj1fq";
@@ -227,7 +261,7 @@ class ThumbrIo {
             "http://api.thumbr.io/", "https://api.thumbr.io/"
     };
 
-    private ThumbrIo() {
+    private ThumbrIo1() {
         throw new AssertionError();
     }
 
@@ -242,7 +276,7 @@ class ThumbrIo {
 
     public static String sign(String url, String size)
             throws NoSuchAlgorithmException, InvalidKeyException, UnsupportedEncodingException {
-        return ThumbrIo.sign(url, size, "thumb.png", null, THUMBRIO_BASE_URLS[0]);
+        return ThumbrIo1.sign(url, size, "thumb.png", null, THUMBRIO_BASE_URLS[0]);
     }
 
     public static String sign(String url, String size, String thumbName)
@@ -288,7 +322,7 @@ class ThumbrIo {
         Mac mac = Mac.getInstance("HmacMD5");
         mac.init(keySpec);
         byte[] hmacBytes = mac.doFinal((baseUrl + path).getBytes("UTF-8"));
-        String token = ThumbrIo.toHex(hmacBytes);
+        String token = ThumbrIo1.toHex(hmacBytes);
 
         return String.format("%s%s/%s", baseUrl, token, path);
     }

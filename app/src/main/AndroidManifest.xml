@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
 
-        <!-- Main -->
+        <!-- Main activity -->
         <activity
             android:name="com.menil.rottenmovies.Main"
             android:configChanges="screenSize|orientation"
@@ -37,6 +37,14 @@
             android:finishOnTaskLaunch="true"
             android:launchMode="singleInstance"
             android:theme="@android:style/Theme.Dialog" />
+
+        <!-- Details activity -->
+        <activity
+            android:name="com.menil.rottenmovies.DetailsActivity"
+            android:configChanges="screenSize|orientation"
+            android:icon="@drawable/transparent"
+            android:label="@string/app_name" />
+
 
     </application>
 
