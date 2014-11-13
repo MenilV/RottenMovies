@@ -45,11 +45,6 @@ public class GridAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
         View view;
         LayoutInflater layoutInflater;
-        // RemoteImageView imageView=null;
-        // TextView titleView=null;
-        //TextView yearView = null;
-        //TextView synopsisView = null;
-        //TextView runtimeView = null;
         if (convertView == null) {
             layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = layoutInflater.inflate(R.layout.grid_full_card, null);
@@ -57,37 +52,24 @@ public class GridAdapter extends BaseAdapter {
             view = convertView;
         }
 
-        final RemoteImageView imageView = (RemoteImageView) view.findViewById(R.id.full_card_img);
-        final TextView titleView = (TextView) view.findViewById(R.id.full_card_title);
-        ImageView imageViewsmall = (ImageView) view.findViewById(R.id.full_card_small);
 
+        TextView titleView = (TextView) view.findViewById(R.id.full_card_title);
         titleView.setText(listMovies.get(position).title);
+
+        TextView subtitleView = (TextView) view.findViewById(R.id.full_card_subtitle);
+        subtitleView.setText("(" + String.valueOf(listMovies.get(position).year)+")\n"+listMovies.get(position).runtime+" min");
+
+        RemoteImageView imageView = (RemoteImageView) view.findViewById(R.id.full_card_img);
         String picURL = listMovies.get(position).posters.detailed.replace("tmb", "det");
         imageView.setImageURL(picURL, false);
-        if (position % 3 == 0)
-            imageViewsmall.setBackgroundResource(R.drawable.yuck_small);
-        else
-            imageViewsmall.setBackgroundResource(R.drawable.tomatto_small);
-        final Fragment fragment = new DetailsFragment();
-        //assert imageView != null;
-        /*imageView.setOnClickListener(new View.OnClickListener() {
+
+        ImageView favView = (ImageView) view.findViewById(R.id.fragment_grid_fav);
+        favView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle args = new Bundle();
-                args.putParcelable("movie", listMovies.get(position));
-                fragment.setArguments(args);
-                switchFragment(fragment);
-            }
 
-            private void switchFragment(Fragment fragment) {
-                if (mContext == null)
-                    return;
-                if (mContext instanceof Main) {
-                    Main main = (Main) mContext;
-                    main.switchContent(fragment, "DETAILS");
-                }
             }
-        });*/
+        });
 
         return view;
     }

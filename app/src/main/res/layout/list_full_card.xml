@@ -21,6 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/header_placeholder"
+            android:textSize="18sp"
             android:textColor="@color/pale_black"/>
         <View
             android:background="#399322"
@@ -71,7 +72,9 @@
                         android:layout_height="wrap_content"
                         android:paddingBottom="14dp"
                         android:text="@string/title_placeholder"
+                        android:maxWidth="210dp"
                         android:textColor="@android:color/black"
+                        android:textSize="17sp"
                         android:textStyle="bold|italic" />
 
                     <TextView

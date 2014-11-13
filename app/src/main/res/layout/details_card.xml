@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.menil.rottenmovies.NotifyingScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fragment_details_scroll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     android:background="#f1f1f1">
 
     <RelativeLayout
@@ -119,33 +120,14 @@
                 android:paddingEnd="10dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:paddingStart="10dp"
                 android:paddingTop="7dp"
                 android:text="@string/synopsis"
                 android:textColor="@color/pale_black"
-                android:textSize="15sp" />
+                android:textSize="17sp" />
 
         </android.support.v7.widget.CardView>
-        <!--        <android.support.v7.widget.CardView
-                    android:id="@+id/fragment_details_expand_card"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginRight="-6dp"
-                    android:layout_marginEnd="-6dp">
 
-                    <ImageView
-                        android:id="@+id/fragment_details_expand"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:minHeight="30dp"
-                        android:minWidth="30dp"
-                        android:src="@drawable/ic_action_expand"/>
-        </android.support.v7.widget.CardView>-->
-
-            <com.melnykov.fab.FloatingActionButton
+        <com.melnykov.fab.FloatingActionButton
                 android:id="@+id/fragment_details_fab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -160,4 +142,4 @@
 
     </RelativeLayout>
 
-</ScrollView>
+</com.menil.rottenmovies.NotifyingScrollView>

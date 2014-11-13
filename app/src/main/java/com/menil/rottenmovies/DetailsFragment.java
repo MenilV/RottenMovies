@@ -1,11 +1,14 @@
 package com.menil.rottenmovies;
 
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.melnykov.fab.FloatingActionButton;
@@ -25,7 +28,9 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class DetailsFragment extends android.app.Fragment {
 
-    Bundle bundle;
+    private Bundle bundle;
+    private Drawable mActionBarBackgroundDrawable;
+    private View view;
 
     //private static final String TAG = "DETAILS";
     //TODO:Details fragment crashes on KEYCODE_HOME pressed
@@ -51,24 +56,33 @@ public class DetailsFragment extends android.app.Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = null;
+
         if (savedInstanceState == null)
             // Inflate the layout for this fragment
             //view = inflater.inflate(R.layout.fragment_details, container, false);
-            view = inflater.inflate(R.layout.details_card, container, false);
+        /**
+        /INFLATED TEST VIEW>>>>>> CHANGE THAT
+        */
+            view = inflater.inflate(R.layout.details_card_test, container, false);
         // Retrieve data from bundle with Parcelable object of type Movie
         bundle = getArguments();
         try {
-            getActivity().getActionBar().setBackgroundDrawable(new ColorDrawable(0x00000000));//transparent
+            mActionBarBackgroundDrawable = getResources().getDrawable(R.drawable.actionbar_background);
+            mActionBarBackgroundDrawable.setAlpha(0);
+
+            getActivity().getActionBar().setDisplayShowTitleEnabled(false);
+            getActivity().getActionBar().setTitle("");
+            getActivity().getActionBar().setBackgroundDrawable(mActionBarBackgroundDrawable);
             getActivity().getActionBar().setSubtitle(null);
-            getActivity().getActionBar().setTitle(null);
             getActivity().getActionBar().setIcon(new ColorDrawable(0x00000000));
+
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
 
+
         Movie movie = bundle.getParcelable("movie");
-        assert view != null;
+
         TextView title = (TextView) view.findViewById(R.id.fragment_details_title);
         TextView synopsis = (TextView) view.findViewById(R.id.fragment_details_synopsis);
 
@@ -80,7 +94,7 @@ public class DetailsFragment extends android.app.Fragment {
         imageView.setImageURL(movie.posters.detailed.replace("tmb", "det"), false);
 
         //getting a resized image from ThumbrIo service
-        RemoteImageView imageViewTop = (RemoteImageView) view.findViewById(R.id.fragment_details_img_top);
+        final RemoteImageView imageViewTop = (RemoteImageView) view.findViewById(R.id.fragment_details_img_top);
         String rescaledImage = null;
         try {
             rescaledImage = ThumbrIo.sign(movie.posters.detailed.replace("tmb", "ori"), "510x755c");
@@ -93,52 +107,29 @@ public class DetailsFragment extends android.app.Fragment {
         }
         imageViewTop.setImageURL(rescaledImage, false);
 
-
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //LinearLayout linearLayout = (LinearLayout)view.findViewById(R.id.fragment_details_linear);
-                //LayoutInflater layoutInflater = LayoutInflater.from(this);
-
-                //View child = getActivity().getLayoutInflater().inflate(R.layout.full_screen_img, null);
-                // ImageView fullImage=(ImageView)child.findViewById(R.id.full_screen_imgview);
-
-                //linearLayout.addView(child);
-                //ImageView fullImage=(ImageView)view.findViewById(R.id.fragment_details_img);
-                //fullImage.setImageDrawable(imageView.getDrawable());
-                //View child = inflater.inflate(R.layout.full_screen_img, null);
-
-
+                //this is for image fullscreen
             }
         });
 
-
-        //getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
-        //getActivity().getActionBar().setTitle((CharSequence) title);
-        //getActivity().getActionBar().
-
-        /*imageView.buildDrawingCache();
-        Bitmap bmap = imageView.getDrawingCache();
-        Palette p = Palette.generate(bmap);
-        Palette.Swatch item = p.getVibrantSwatch();*/
-        //getActivity().getActionBar().setBackgroundDrawable(item.toString()));
-
         title.setText(movie.title);
         title.append(" (" + String.valueOf(movie.year) + ")");
-        synopsis.setText("Synopsis:\n" + movie.synopsis);
+        synopsis.setText("Synopsis:\n\n" + movie.synopsis);
 
-        runtime.setText("Runtime: "+String.valueOf(movie.runtime)+" min");
-        rating.setText("Rating: "+movie.mpaa_rating);
+        runtime.setText("Runtime: " + String.valueOf(movie.runtime) + " min");
+        rating.setText("Rating: " + movie.mpaa_rating);
 
         int x = 0;//just to ensure there are no commas after the last actor
         List<Cast> castList = movie.casts;
-        String castText="Cast: ";
+        String castText = "Cast: ";
         for (Cast c : castList) {
             //cast.append(c.name);
-            castText+=c.name;
+            castText += c.name;
             if (++x < castList.size())
-                castText+=", ";
-                //cast.append(", ");
+                castText += ", ";
+            //cast.append(", ");
         }
         cast.setText(castText);
         title.setOnClickListener(new View.OnClickListener() {
@@ -166,12 +157,35 @@ public class DetailsFragment extends android.app.Fragment {
                     floatingActionButton.setImageResource(R.drawable.ic_navigation_check);
                 } else {
                     floatingActionButton.setColorNormal(getResources().getColor(R.color.green));
-                    floatingActionButton.setImageResource(R.drawable.ic_add_white_24dp);
+                    floatingActionButton.setImageResource(R.drawable.ic_action_favorite);
 
                 }
             }
         });
 
+        final FloatingActionButton floatingActionButton2 = (FloatingActionButton) view.findViewById(R.id.fragment_details_fab2);
+        floatingActionButton2.setOnClickListener(new View.OnClickListener() {
+            //View hider = view.findViewById(R.id.hider);
+
+
+            @Override
+            public void onClick(View v) {
+                if (floatingActionButton2.getColorPressed() == getResources().getColor(R.color.light_gray)) {
+                    floatingActionButton2.setColorPressed(R.color.pale_gray);
+                    floatingActionButton2.setImageResource(R.drawable.ic_action_up);
+                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(imageViewTop.getLayoutParams());
+                    lp.setMargins(0, 0, 0, 0);
+                    imageViewTop.setLayoutParams(lp);
+
+                } else {
+                    floatingActionButton2.setImageResource(R.drawable.ic_action_expand);
+                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(imageViewTop.getLayoutParams());
+                    lp.setMargins(0, -400, 0, -400);
+                    imageViewTop.setLayoutParams(lp);
+                    floatingActionButton2.setColorPressed(R.color.light_gray);
+                }
+            }
+        });
         synopsis.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -190,10 +204,21 @@ public class DetailsFragment extends android.app.Fragment {
             }
         });
 
+        NotifyingScrollView scrollView = (NotifyingScrollView) view.findViewById(R.id.fragment_details_scroll);
+        scrollView.setOnScrollChangedListener(mOnScrollChangedListener);
         return view;
-    }
-}
 
+    }
+
+    private NotifyingScrollView.OnScrollChangedListener mOnScrollChangedListener = new NotifyingScrollView.OnScrollChangedListener() {
+        public void onScrollChanged(ScrollView who, int l, int t, int oldl, int oldt) {
+            final int headerHeight = view.findViewById(R.id.fragment_details_img_top).getHeight() - getActivity().getActionBar().getHeight();
+            final float ratio = (float) Math.min(Math.max(t, 0), headerHeight) / headerHeight;
+            final int newAlpha = (int) (ratio * 255);
+            mActionBarBackgroundDrawable.setAlpha(newAlpha);
+        }
+    };
+}
 class ThumbrIo {
 
     private static final String THUMBRIO_API_KEY = "t0AsaoQ1lG-nJaIvOavA";

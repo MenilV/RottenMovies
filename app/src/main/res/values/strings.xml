@@ -29,8 +29,7 @@
     <string name="title_section3">Opening Movies</string>
     <string name="title_section4">Upcoming Movies</string>
     <string name="title_section5">Favourites</string>
-    <string name="title_section6">Search</string>
-    <string name="title_section7">About</string>
+    <string name="title_section6">About</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -41,6 +40,7 @@
     <string name="synopsis">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nisl leo, imperdiet non magna ut, tempor eleifend turpis. Ut pretium porttitor metus non dictum. Sed ut orci finibus nulla tempor ultrices. Pellentesque scelerisque velit semper, blandit enim convallis, consequat purus. Morbi eget dictum dolor. Suspendisse commodo tempus neque, a euismod purus iaculis et. Maecenas congue, nulla ac cursus commodo, quam tortor consequat mi, vitae finibus risus mi a libero. Vivamus suscipit nec augue mollis tincidunt. Integer hendrerit pretium cursus. Pellentesque sed quam orci. Nullam sit amet auctor velit. Mauris ornare nec leo vel dignissim. Quisque non sodales leo, quis feugiat velit. Nunc sit amet metus vitae elit rhoncus venenatis. Praesent vel hendrerit dui. Proin et nisl malesuada, hendrerit nulla sit amet, interdum ante. Suspendisse mi lectus, cursus quis eros ac, mattis auctor augue. Praesent accumsan neque sapien, nec efficitur massa congue et. Vestibulum lacinia tincidunt metus. Morbi id lacus luctus, faucibus lectus eget, vulputate sem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nisl leo, imperdiet non magna ut, tempor eleifend turpis. Ut pretium porttitor metus non dictum. Sed ut orci finibus nulla tempor ultrices. Pellentesque scelerisque velit semper, blandit enim convallis, consequat purus. Morbi eget dictum dolor. Suspendisse commodo tempus neque, a euismod purus iaculis et. Maecenas congue, nulla ac cursus commodo, quam tortor consequat mi, vitae finibus risus mi a libero. Vivamus suscipit nec augue mollis tincidunt. Integer hendrerit pretium cursus. Pellentesque sed quam orci. Nullam sit amet auctor velit. Mauris ornare nec leo vel dignissim. Quisque non sodales leo, quis feugiat velit. Nunc sit amet metus vitae elit rhoncus venenatis. Praesent vel hendrerit dui. Proin et nisl malesuada, hendrerit nulla sit amet, interdum ante. Suspendisse mi lectus, cursus quis eros ac, mattis auctor augue. Praesent accumsan neque sapien, nec efficitur massa congue et. Vestibulum lacinia tincidunt metus. Morbi id lacus luctus, faucibus lectus eget, vulputate sem.</string>
     <string name="splash_subtitle">Movie info all in one place</string>
     <string name="movie_title_placeholder">Movie Title</string>
+    <string name="movie_subtitle_placeholder">Movie Subtitle</string>
     <string name="runtime_placeholder">Runtime: </string>
     <string name="rating_placeholder">Rating: </string>
     <string name="cast_placeholder">Cast: </string>

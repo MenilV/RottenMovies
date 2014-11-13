@@ -38,7 +38,6 @@ import java.util.List;
  */
 public class InTheatersFragment extends android.app.Fragment {
 
-    private static final String TAG = "IN THEATERS";
     public List<Movie> allMovies = new ArrayList<Movie>();
     private ProgressDialog progressDialog;
     private GridView gridView;
@@ -46,7 +45,7 @@ public class InTheatersFragment extends android.app.Fragment {
     private Context mContext, mContext2;
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
+    public void onActivityCreated(Bundle savedInstanceState) {//API KEY =pj2z7eyve6mfdtcx4vynk26y
         super.onActivityCreated(savedInstanceState);
         // Indicate that this fragment would like to influence the set of actions in the action bar.
         setHasOptionsMenu(true);
@@ -81,37 +80,17 @@ public class InTheatersFragment extends android.app.Fragment {
 
         mContext = getActivity().getApplicationContext();
 
-        //API KEY =pj2z7eyve6mfdtcx4vynk26y
-        //search json: http://api.rottentomatoes.com/api/public/v1.0/movies.json?q=STRING&page_limit=10&page=1&apikey=pj2z7eyve6mfdtcx4vynk26y
         Bundle args = getArguments();
-        List<URI> requestURI = new ArrayList<URI>();
         mContext2 = view.getContext();
-        int option = args.getInt("position");
-        option -= 2;
 
-        //INT: page_limit=50&page=1
-        //OPE: limit=16
-        //UPC: page_limit=16&page=1
         String startURI = "http://api.rottentomatoes.com/api/public/v1.0/lists/movies/";
-        //String[] uriTopics = {"box_office.json?", "in_theaters.json?", "opening.json?", "upcoming.json?"};
-        String[] uriTopics = {"in_theaters.json?", "opening.json?", "upcoming.json?"};
-        String page = "page_";//for in theaters and upcoming movies
-        String limit = "limit=50";//max amount is 50
+        String limit = "50";//max amount is 50
         String nrPages = "&page=1";
         String endURI = "&country=us&apikey=pj2z7eyve6mfdtcx4vynk26y";
 
-
-        for (String topic : uriTopics) {
-            if (topic.equals("opening.json?"))
-                requestURI.add(URI.create(startURI + topic + limit + endURI));
-            else
-                requestURI.add(URI.create(startURI + topic + page + limit + nrPages + endURI));
-        }
-
-
-        gridView = (GridView) view.findViewById(R.id.others_gridview);
         CallAPI task = new CallAPI();
-        task.execute(requestURI.get(option));
+        URI requestURI=URI.create(startURI + "in_theaters.json?page_limit=" + limit + nrPages + endURI);
+        task.execute(requestURI);
         //thread for getting data from the API
         try {
             ActionBar actionbar = getActivity().getActionBar();
@@ -121,6 +100,7 @@ public class InTheatersFragment extends android.app.Fragment {
             e.printStackTrace();
         }
 
+        gridView = (GridView) view.findViewById(R.id.others_gridview);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -137,7 +117,7 @@ public class InTheatersFragment extends android.app.Fragment {
                 }
                 if (mContext2 instanceof Main) {
                     Main main = (Main) mContext2;
-                    main.switchContent(fragment, "DETAILS");
+                    main.switchContent(fragment, "INTHEATERS");
                 }
             }
         });
