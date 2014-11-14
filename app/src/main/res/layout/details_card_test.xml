@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <com.menil.rottenmovies.RemoteImageView
+        <ImageView
             android:id="@+id/fragment_details_img_top"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -23,7 +23,7 @@
             android:layout_marginTop="-200dp"
             android:layout_marginBottom="-200dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/image_ori2" />
+            android:src="@drawable/empty_img" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -47,7 +47,7 @@
                         android:layout_height="match_parent"
                         android:orientation="horizontal">
 
-                        <com.menil.rottenmovies.RemoteImageView
+                        <ImageView
                             android:id="@+id/fragment_details_img"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

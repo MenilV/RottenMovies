@@ -4,16 +4,21 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
+import android.widget.Toast;
 
 
 public class Main extends Activity
@@ -22,6 +27,7 @@ public class Main extends Activity
     final Context mContext = this;
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private CharSequence mTitle;
+    private ProgressDialog progressDialog;
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -85,54 +91,100 @@ public class Main extends Activity
         //this does nothing
     }
 
+    public boolean isConnectedToInternet(){
+        ConnectivityManager connectivity = (ConnectivityManager)getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null)
+        {
+            NetworkInfo[] info = connectivity.getAllNetworkInfo();
+            if (info != null)
+                for (int i = 0; i < info.length; i++)
+                    if (info[i].getState() == NetworkInfo.State.CONNECTED)
+                    {
+                        return true;
+                    }
+
+        }
+        return false;
+    }
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
 
-        Fragment fragment;
-        //FragmentManager fragmentManager = getFragmentManager();
+            Fragment fragment;
+            //FragmentManager fragmentManager = getFragmentManager();
 
-        String tag;
-        switch (position) {
-            case 0://home fragment
-                fragment = new HomeFragment();
-                tag = "HOME";
-                break;
-            case 1://box office fragment
-                fragment = new BoxOfficeFragment();
-                tag = "BOXOFFICE";
-                break;
-            case 2://in theaters fragment
-                fragment = new InTheatersFragment();
-                tag = "INTHEATERS";
-                break;
-            case 3://opening fragment
-                fragment = new BoxOfficeFragment();
-                tag = "OPENING";
-                break;
-            case 4://upcoming fragment
-                fragment = new BoxOfficeFragment();
-                tag = "UPCOMING";
-                break;
-            case 5://favourites (currently displaying detail view)
-                //TODO: make on click event on the images to store to favourites
-                fragment = new HomeFragment();
-                tag = "HOME";
-                break;
-            case 6://about
-                fragment = new AboutFragment();
-                tag="SEARCH";
-                break;
-            default:
-                fragment = new HomeFragment();
-                tag = "OTHERS";
-                break;
-        }
-        Bundle args = new Bundle();
-        args.putInt("position", position);
-        args.putString("tag", tag);
-        fragment.setArguments(args);
-        switchContent(fragment, tag);
+            //if (!isConnectedToInternet())
+
+            String tag;
+            switch (position) {
+                case 0://home fragment
+                    fragment = new HomeFragment();
+                    tag = "HOME";
+                    break;
+                case 1://box office fragment
+                    if (!isConnectedToInternet())
+                    {
+                        fragment = new HomeFragment();
+                        tag = "HOME";
+                        Toast.makeText(getApplicationContext(),"No Internet connection.\nReturning to Home...", Toast.LENGTH_LONG).show();
+                    } else {
+                        fragment = new BoxOfficeFragment();
+                        tag = "BOXOFFICE";
+                    }
+                    break;
+                case 2://in theaters fragment
+                    if (!isConnectedToInternet())
+                    {
+                        fragment = new HomeFragment();
+                        tag = "HOME";
+                        Toast.makeText(getApplicationContext(),"No Internet connection.\nReturning to Home...", Toast.LENGTH_LONG).show();
+                    } else {
+                        fragment = new InTheatersFragment();
+                        tag = "INTHEATERS";
+                    }
+                    break;
+                case 3://opening fragment
+                    if (!isConnectedToInternet())
+                    {
+                        fragment = new HomeFragment();
+                        tag = "HOME";
+                        Toast.makeText(getApplicationContext(),"No Internet connection.\nReturning to Home...", Toast.LENGTH_LONG).show();
+                    } else {
+                        fragment = new BoxOfficeFragment();
+                        tag = "OPENING";
+                    }
+                    break;
+                case 4://upcoming fragment
+                    if (!isConnectedToInternet())
+                    {
+                        fragment = new HomeFragment();
+                        tag = "HOME";
+                        Toast.makeText(getApplicationContext(),"No Internet connection.\nReturning to Home...", Toast.LENGTH_LONG).show();
+                    } else {
+                        fragment = new BoxOfficeFragment();
+                        tag = "UPCOMING";
+                    }
+                    break;
+                case 5://favourites (currently displaying detail view)
+                    //TODO: make on click event on the images to store to favourites
+                    fragment = new HomeFragment();
+                    tag = "HOME";
+                    break;
+                case 6://about
+                    fragment = new AboutFragment();
+                    tag = "ABOUT";
+                    break;
+                default://Home is the default view
+                    fragment = new HomeFragment();
+                    tag = "HOME";
+                    break;
+            }
+            Bundle args = new Bundle();
+            args.putInt("position", position);
+            args.putString("tag", tag);
+            fragment.setArguments(args);
+            switchContent(fragment, tag);
+
     }
 
     public void switchContent(Fragment fragment, String TAG) {

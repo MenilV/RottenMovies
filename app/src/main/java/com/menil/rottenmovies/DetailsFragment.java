@@ -9,11 +9,13 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.koushikdutta.ion.Ion;
 import com.melnykov.fab.FloatingActionButton;
 
 import java.io.UnsupportedEncodingException;
@@ -65,9 +67,9 @@ public class DetailsFragment extends android.app.Fragment {
             // Inflate the layout for this fragment
             //view = inflater.inflate(R.layout.fragment_details, container, false);
         /**
-        /INFLATED TEST VIEW>>>>>> CHANGE THAT
+        /INFLATED TEST VIEW>>>>>> CHANGE THAT OR DON'T???
         */
-            view = inflater.inflate(R.layout.details_card_test, container, false);
+        view = inflater.inflate(R.layout.details_card_test, container, false);
         // Retrieve data from bundle with Parcelable object of type Movie
         bundle = getArguments();
         try {
@@ -84,60 +86,15 @@ public class DetailsFragment extends android.app.Fragment {
             e.printStackTrace();
         }
 
-
         final Movie movie = bundle.getParcelable("movie");
 
+        /**
+         * TEXT STUFF COMES HERE
+         */
+
         TextView title = (TextView) view.findViewById(R.id.fragment_details_title);
-        TextView synopsis = (TextView) view.findViewById(R.id.fragment_details_synopsis);
-
-        TextView runtime = (TextView) view.findViewById(R.id.fragment_details_runtime);
-        TextView cast = (TextView) view.findViewById(R.id.fragment_details_cast);
-        TextView rating = (TextView) view.findViewById(R.id.fragment_details_rating);
-
-        RemoteImageView imageView = (RemoteImageView) view.findViewById(R.id.fragment_details_img);
-        imageView.setImageURL(movie.posters.detailed.replace("tmb", "det"), true);
-
-        //getting a resized image from ThumbrIo service
-        final RemoteImageView imageViewTop = (RemoteImageView) view.findViewById(R.id.fragment_details_img_top);
-        String rescaledImage = null;
-        try {
-            rescaledImage = ThumbrIo1.sign(movie.posters.detailed.replace("tmb", "ori"), "510x755c");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        imageViewTop.setImageURL(rescaledImage, false);
-
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //this is for image fullscreen
-            }
-        });
-
         title.setText(movie.title+ " (" + String.valueOf(movie.year) + ")");
         title.setSelected(true);
-
-        synopsis.setText("Synopsis:\n\n" + movie.synopsis);
-
-        runtime.setText("Runtime: " + String.valueOf(movie.runtime) + " min");
-        rating.setText("Rating: " + movie.mpaa_rating);
-
-        int x = 0;//just to ensure there are no commas after the last actor
-        List<Cast> castList = movie.casts;
-        String castText = "Cast: ";
-        for (Cast c : castList) {
-            //cast.append(c.name);
-            castText += c.name;
-            if (++x < castList.size())
-                castText += ", ";
-        }
-        cast.setText(castText);
-        cast.setSelected(true);
-
         title.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -153,6 +110,67 @@ public class DetailsFragment extends android.app.Fragment {
                 }
             }
         });
+
+        TextView synopsis = (TextView) view.findViewById(R.id.fragment_details_synopsis);
+        synopsis.setText("Synopsis:\n\n" + movie.synopsis);
+
+        TextView runtime = (TextView) view.findViewById(R.id.fragment_details_runtime);
+        runtime.setText("Runtime: " + String.valueOf(movie.runtime) + " min");
+
+        TextView rating = (TextView) view.findViewById(R.id.fragment_details_rating);
+        rating.setText("Rating: " + movie.mpaa_rating);
+
+        TextView cast = (TextView) view.findViewById(R.id.fragment_details_cast);
+        int x = 0;//just to ensure there are no commas after the last actor
+        List<Cast> castList = movie.casts;
+        String castText = "Cast: ";
+        for (Cast c : castList) {
+            //cast.append(c.name);
+            castText += c.name;
+            if (++x < castList.size())
+                castText += ", ";
+        }
+        cast.setText(castText);
+        cast.setSelected(true);
+
+        /**
+         * IMAGE STUFF COMES HERE
+         */
+
+        ImageView imageView = (ImageView) view.findViewById(R.id.fragment_details_img);
+        //imageView.setImageURL(movie.posters.detailed.replace("tmb", "det"), true);
+        Ion.with(imageView)
+                .placeholder(R.drawable.empty_img)
+                .error(R.drawable.empty_img_error)
+                .load(movie.posters.detailed.replace("tmb", "det"));
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //this is for image fullscreen
+            }
+        });
+
+        //getting a resized image from ThumbrIo service
+        final ImageView imageViewTop = (ImageView)view.findViewById(R.id.fragment_details_img_top);
+        String rescaledImage = null;
+
+        try {//rescale and set picture TOP
+            rescaledImage = ThumbrIo1.sign(movie.posters.detailed.replace("tmb", "ori"), "510x755c");
+            Ion.with(imageViewTop)
+                    .placeholder(R.drawable.empty_img)
+                    .error(R.drawable.empty_img_error)
+                    .load(rescaledImage);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        /**
+         * BUTTONS STUFF COMES HERE
+         */
 
         final FloatingActionButton floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fragment_details_fab);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -177,8 +195,6 @@ public class DetailsFragment extends android.app.Fragment {
 
         final FloatingActionButton floatingActionButton2 = (FloatingActionButton) view.findViewById(R.id.fragment_details_fab2);
         floatingActionButton2.setOnClickListener(new View.OnClickListener() {
-            //View hider = view.findViewById(R.id.hider);
-
 
             @Override
             public void onClick(View v) {

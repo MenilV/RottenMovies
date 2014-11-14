@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 /**
  * Created by menil on 14.11.2014.
@@ -60,6 +61,7 @@ public class AboutFragment extends Fragment {
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
+
 
         return view;
     }

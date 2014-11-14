@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.koushikdutta.ion.Ion;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -103,9 +105,13 @@ public class ListsAdapter extends BaseAdapter {
             setHeader(position, view);//setting the header for upcoming and opening movies
         }
 
-        RemoteImageView imageView = (RemoteImageView) view.findViewById(R.id.fragment_list_item_img);
         String picURL = listMovies.get(position).posters.detailed.replace("tmb", "det");
-        imageView.setImageURL(picURL, false);
+        ImageView imageView = (ImageView) view.findViewById(R.id.fragment_list_item_img);
+        Ion.with(imageView)
+                .placeholder(R.drawable.empty_img)
+                .error(R.drawable.empty_img_error)
+                .load(picURL);
+
 
         TextView titleView = (TextView) view.findViewById(R.id.fragment_list_item_title);
         String title = listMovies.get(position).title;

@@ -48,7 +48,8 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <com.menil.rottenmovies.RemoteImageView
+            <!--<com.menil.rottenmovies.RemoteImageView-->
+            <ImageView
                 android:id="@+id/fragment_list_item_img"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -58,6 +59,8 @@
                 android:minWidth="100dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/empty_img" />
+
+
 
             <RelativeLayout
                 android:layout_width="match_parent"

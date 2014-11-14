@@ -1,15 +1,18 @@
 package com.menil.rottenmovies;
 
-import android.annotation.TargetApi;
+
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -75,6 +78,22 @@ public class BoxOfficeFragment extends Fragment {//API KEY =pj2z7eyve6mfdtcx4vyn
         super.onDetach();
     }
 
+    /*public boolean isConnectedToInternet(){
+        ConnectivityManager connectivity = (ConnectivityManager)getActivity().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null)
+        {
+            NetworkInfo[] info = connectivity.getAllNetworkInfo();
+            if (info != null)
+                for (int i = 0; i < info.length; i++)
+                    if (info[i].getState() == NetworkInfo.State.CONNECTED)
+                    {
+                        return true;
+                    }
+
+        }
+        return false;
+    }*/
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -87,6 +106,46 @@ public class BoxOfficeFragment extends Fragment {//API KEY =pj2z7eyve6mfdtcx4vyn
         mContext2 = view.getContext();
         listView = (ListView) view.findViewById(R.id.boxoffice_list);
         Bundle args = getArguments();
+
+        /*if (!isConnectedToInternet())
+        {
+            Fragment fragment = new FireMissilesDialogFragment();
+           // fragment.show();
+
+        }*/
+        /*{
+            progressDialog = new ProgressDialog(mContext2, R.style.CustomDialog);
+            progressDialog.setTitle("Loading...");
+            //Set the dialog message to 'Loading application View, please wait...'
+            progressDialog.setMessage("Waiting for Internet connection...");
+            //This dialog can be canceled by pressing the back key
+            progressDialog.setCancelable(true);
+            //This dialog isn't indeterminate
+            progressDialog.setIndeterminate(false);
+            progressDialog.setIndeterminateDrawable(getResources()
+                    .getDrawable(R.drawable.spinner_animation));
+            //The maximum number of items is 100
+            progressDialog.setMax(100);
+            //Set the current progress to zero
+            progressDialog.setProgress(0);
+            //Display the progress dialog
+            progressDialog.show();
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    // Do something after 5s = 5000ms
+                    progressDialog.dismiss();
+                }
+            }, 5000);
+            //progressDialog.setMessage("Please check your Internet connection...");
+            //progressDialog.show();
+             progressDialog.dismiss();
+
+        }*/
+
+
+            //CallAPI task = new CallAPI();
         CallAPI task = new CallAPI();
             ActionBar actionBar = getActivity().getActionBar();
             actionBar.show();
