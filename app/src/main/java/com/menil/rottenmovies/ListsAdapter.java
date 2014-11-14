@@ -114,6 +114,7 @@ public class ListsAdapter extends BaseAdapter {
 
         int year = listMovies.get(position).year;
         titleView.append(" (" + year + ")");
+        titleView.setSelected(true);
 
         TextView runtimeView = (TextView) view.findViewById(R.id.fragment_list_item_runtime);
         String runtime = listMovies.get(position).runtime;

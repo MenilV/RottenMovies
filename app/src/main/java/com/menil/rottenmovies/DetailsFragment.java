@@ -118,8 +118,9 @@ public class DetailsFragment extends android.app.Fragment {
             }
         });
 
-        title.setText(movie.title);
-        title.append(" (" + String.valueOf(movie.year) + ")");
+        title.setText(movie.title+ " (" + String.valueOf(movie.year) + ")");
+        title.setSelected(true);
+
         synopsis.setText("Synopsis:\n\n" + movie.synopsis);
 
         runtime.setText("Runtime: " + String.valueOf(movie.runtime) + " min");
@@ -133,9 +134,10 @@ public class DetailsFragment extends android.app.Fragment {
             castText += c.name;
             if (++x < castList.size())
                 castText += ", ";
-            //cast.append(", ");
         }
         cast.setText(castText);
+        cast.setSelected(true);
+
         title.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

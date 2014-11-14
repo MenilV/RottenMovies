@@ -10,12 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-
-/*
- * Created by menil on 27.10.2014.
+/**
+ * Created by menil on 14.11.2014.
  */
-public class HomeFragment extends Fragment {
-
+public class AboutFragment extends Fragment {
     private static final String TAG = "HOME";
 
     @Override
@@ -50,11 +48,13 @@ public class HomeFragment extends Fragment {
 
         View view = null;
         if (savedInstanceState == null)
-            view = inflater.inflate(R.layout.fragment_home, container, false);
+            view = inflater.inflate(R.layout.fragment_about, container, false);
         try {
             ActionBar actionBar = getActivity().getActionBar();
             actionBar.show();
             actionBar.setBackgroundDrawable(new ColorDrawable(0xFF399322));//transparent
+            //actionBar.setDisplayOptions(actionBar.getDisplayOptions() ^ ActionBar.DISPLAY_SHOW_TITLE);
+            actionBar.setSubtitle("About");
             actionBar.setSubtitle(null);
 
         } catch (NullPointerException e) {

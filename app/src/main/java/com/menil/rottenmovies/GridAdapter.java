@@ -2,12 +2,16 @@ package com.menil.rottenmovies;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.os.Bundle;
+import android.support.v7.widget.CardView;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +61,20 @@ public class GridAdapter extends BaseAdapter {
         titleView.setText(listMovies.get(position).title);
 
         TextView subtitleView = (TextView) view.findViewById(R.id.full_card_subtitle);
-        subtitleView.setText("(" + String.valueOf(listMovies.get(position).year)+")\n"+listMovies.get(position).runtime+" min");
+        subtitleView.setText("(" + String.valueOf(listMovies.get(position).year)+")");//+listMovies.get(position).runtime+" min");
+
+        int x = 0;//just to ensure there are no commas after the last actor
+        TextView actorsView = (TextView) view.findViewById(R.id.full_card_actors);
+        List<Cast> castList = listMovies.get(position).casts;
+        //String castText = "Cast: ";
+        String castText = "";
+        for (Cast c : castList) {
+            castText += c.name;
+            if (++x < castList.size())
+                castText += ", ";
+        }
+        actorsView.setText(castText);
+        actorsView.setSelected(true);
 
         RemoteImageView imageView = (RemoteImageView) view.findViewById(R.id.full_card_img);
         String picURL = listMovies.get(position).posters.detailed.replace("tmb", "det");

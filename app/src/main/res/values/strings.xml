@@ -10,7 +10,7 @@
     <string name="crash_dialog_comment_prompt">You might add your comments about the problem below:</string>
     <string name="crash_dialog_ok_toast">Thank you for your feedback!</string>
 
-    <string name="known_bugs">Known bugs and missing features:\n
+    <string name="known_bugs">Known bugs and missing features:\n\n
         -On details screen pressing Home button (physical) crashres application\n
         -Refresh Button not working\n
         -Favourites not working\n
@@ -46,6 +46,7 @@
     <string name="add_to_favourites">Add to Favourites</string>
     <string name="crash_button">crash_test_button</string>
     <string name="welcome_msg">Welcome to Home screen\nThe navigation menu is on the left</string>
+    <string name="about_msg">2014 Menil V.\n Powered by ABH</string>
     <string name="title_placeholder">POSITION. TITLE (YEAR)</string>
     <string name="runtime_placeholder2">RUNTIME:</string>
     <string name="release_placeholder">RELEASE DATE:</string>

@@ -41,7 +41,7 @@ public class InTheatersFragment extends android.app.Fragment {
     public List<Movie> allMovies = new ArrayList<Movie>();
     private ProgressDialog progressDialog;
     private GridView gridView;
-    private View view;
+    //private View view;
     private Context mContext, mContext2;
 
     @Override
@@ -133,13 +133,6 @@ public class InTheatersFragment extends android.app.Fragment {
                     floatingActionButton.setColorNormal(getResources().getColor(R.color.white));
                     floatingActionButton.setImageResource(R.drawable.ic_navigation_check);
                     gridView.smoothScrollToPosition(0);
-                    final Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            //this only gives a small delay
-                        }
-                    }, 1000);
                     floatingActionButton.setColorNormal(getResources().getColor(R.color.green));
                     floatingActionButton.setImageResource(R.drawable.ic_action_up);
                 }

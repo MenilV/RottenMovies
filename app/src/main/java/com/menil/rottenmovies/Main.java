@@ -119,11 +119,10 @@ public class Main extends Activity
                 fragment = new HomeFragment();
                 tag = "HOME";
                 break;
-            case 6://search
-                //TODO: crashing probably because of api
-                //fragment = new SearchFragment();
-                //tag="SEARCH";
-                //break;
+            case 6://about
+                fragment = new AboutFragment();
+                tag="SEARCH";
+                break;
             default:
                 fragment = new HomeFragment();
                 tag = "OTHERS";

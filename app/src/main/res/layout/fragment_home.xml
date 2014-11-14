@@ -13,7 +13,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10sp"
-        android:background="@drawable/drawer_shadow2"
+
         android:gravity="center"
         android:text="@string/app_name"
         android:textColor="@android:color/white"
@@ -21,7 +21,7 @@
 
     <Space
         android:layout_width="fill_parent"
-        android:layout_height="25sp" />
+        android:layout_height="25dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -31,18 +31,14 @@
         android:text="@string/welcome_msg"
         android:textColor="@android:color/white"
         android:textSize="20sp" />
+    <Space
+        android:layout_width="fill_parent"
+        android:layout_height="25dp" />
 
-    <Button
-        android:id="@+id/home_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/crash_button"
-        android:textColor="@android:color/white" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingStart="20dp"
         android:paddingEnd="20dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"

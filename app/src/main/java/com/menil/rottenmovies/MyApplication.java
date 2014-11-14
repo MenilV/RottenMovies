@@ -47,7 +47,6 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-      // ACRA.init(this);
-        //TODO: uncomment this^
+        ACRA.init(this);
     }
 }
