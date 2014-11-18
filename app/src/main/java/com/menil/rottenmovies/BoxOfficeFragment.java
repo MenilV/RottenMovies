@@ -3,16 +3,10 @@ package com.menil.rottenmovies;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.melnykov.fab.FloatingActionButton;
@@ -35,11 +28,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /*
@@ -52,6 +45,7 @@ public class BoxOfficeFragment extends Fragment {//API KEY =pj2z7eyve6mfdtcx4vyn
     private ListView listView;
     private Context mContext, mContext2;
     private String tag;
+    private Boolean sort = false;
 
 
 
@@ -134,6 +128,7 @@ public class BoxOfficeFragment extends Fragment {//API KEY =pj2z7eyve6mfdtcx4vyn
         URI requestURI;
         String request;
 
+
         tag=args.getString("tag");
         switch (tag){
             case "BOXOFFICE":
@@ -143,10 +138,12 @@ public class BoxOfficeFragment extends Fragment {//API KEY =pj2z7eyve6mfdtcx4vyn
             case "OPENING":
                 request = startURI + "opening.json?limit=" + limit + endURI;
                 actionBar.setSubtitle("Opening Movies");
+                sort=!sort;
                 break;
             case "UPCOMING":
                 request = startURI + "upcoming.json?page_limit=" + limit + nrPages + endURI;
                 actionBar.setSubtitle("Upcoming Movies");
+                sort=!sort;
                 break;
             default:
                 request = startURI + "box_office.json?limit=" + limit + endURI;
@@ -183,13 +180,6 @@ public class BoxOfficeFragment extends Fragment {//API KEY =pj2z7eyve6mfdtcx4vyn
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Bundle args = new Bundle();
                 args.putParcelable("movie", allMovies.get(position));
-                //args.putSerializable("movie", allMovies.get(position));
-                /*
-                Intent intent = new Intent(getActivity(), DetailsActivity.class);
-                intent.putExtras(args);
-                startActivity(intent);
-                */
-
 
                 Fragment fragment = new DetailsFragment();
                 fragment.setArguments(args);
@@ -206,8 +196,7 @@ public class BoxOfficeFragment extends Fragment {//API KEY =pj2z7eyve6mfdtcx4vyn
                 }
             }
         });
-       // Movies movies = new Movies();
-       // movies.sortMoviesAscending(allMovies);
+
         return view;
     }
 
@@ -289,7 +278,10 @@ public class BoxOfficeFragment extends Fragment {//API KEY =pj2z7eyve6mfdtcx4vyn
 
         @Override
         protected void onPostExecute(List<Movie> allMovies) {
-
+            if (sort) {
+                //MovieComparator mc = null;
+                Collections.sort(allMovies);
+            }
             listView.setAdapter(new ListsAdapter(mContext, allMovies, tag));
             progressDialog.dismiss();
         }

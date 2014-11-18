@@ -23,6 +23,7 @@ import com.koushikdutta.ion.ProgressCallback;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /*
@@ -69,6 +70,7 @@ public class ListsAdapter extends BaseAdapter {
         String prettyDate;
         String currentDate;
 
+
         if (position==0) {
             headerLayout.setVisibility(View.VISIBLE);
             savedDate = listMovies.get(position).release_dates.theater;
@@ -112,13 +114,6 @@ public class ListsAdapter extends BaseAdapter {
         }else {
             setHeader(position, view);//setting the header for upcoming and opening movies
         }
-
-
-
-
-        //SharedPreferences.Editor editor = sharedpreferences.edit();
-        //editor.putString("key", "value");
-       // editor.commit();
 
         String picURL = listMovies.get(position).posters.detailed.replace("tmb", "det");
         ImageView imageView = (ImageView) view.findViewById(R.id.fragment_list_item_img);

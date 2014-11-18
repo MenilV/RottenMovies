@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -169,6 +170,19 @@ public class DetailsFragment extends android.app.Fragment {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+        imageViewTop.setOnClickListener(new View.OnClickListener() {
+            Boolean toggle = true;
+            @Override
+            public void onClick(View v) {
+                RelativeLayout relativeLayoutpane = (RelativeLayout) view.findViewById(R.id.fragment_details_card_relative);
+                if(toggle) {
+                    relativeLayoutpane.setVisibility(View.GONE);
+                }
+                else
+                    relativeLayoutpane.setVisibility(View.VISIBLE);
+                toggle=!toggle;
+            }
+        });
 
         /**
          * BUTTONS STUFF COMES HERE
