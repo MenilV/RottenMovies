@@ -4,17 +4,23 @@ package com.menil.rottenmovies;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.melnykov.fab.FloatingActionButton;
@@ -30,6 +36,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,7 +45,7 @@ import java.util.List;
 /*
  * Created by menil on 29.10.2014.
  */
-public class BoxOfficeFragment extends Fragment {//API KEY =
+public class BoxOfficeFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vynk26y
 
     public List<Movie> allMovies = new ArrayList<Movie>();
     private ProgressDialog progressDialog;
@@ -46,37 +53,21 @@ public class BoxOfficeFragment extends Fragment {//API KEY =
     private Context mContext, mContext2;
     private String tag;
     private Boolean sort = false;
-
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        // Indicate that this fragment would like to influence the set of actions in the action bar.
-        setHasOptionsMenu(true);
-
-    }
+    View view;
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putSerializable("allMovies", (Serializable) allMovies);
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
-    /*public boolean isConnectedToInternet(){
+    public boolean isConnectedToInternet(){
         ConnectivityManager connectivity = (ConnectivityManager)getActivity().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivity != null)
         {
@@ -90,21 +81,36 @@ public class BoxOfficeFragment extends Fragment {//API KEY =
 
         }
         return false;
-    }*/
+    }
+
+    private boolean onRestoreInstanceStae(Bundle savedInstanceState){
+        if(savedInstanceState!=null){
+            allMovies = (List<Movie>) savedInstanceState.getSerializable("allMovies");
+            return false;
+        }
+        else return true;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Boolean restore = onRestoreInstanceStae(savedInstanceState);
+        //this shows if we need to call the API again
 
-        View view = null;
-        if (savedInstanceState == null)
+        if (!isConnectedToInternet()) {
+            Toast.makeText(mContext, "You need internet connection...", Toast.LENGTH_LONG).show();
+            return null;
+        }
+
+        if (view == null){
             view = inflater.inflate(R.layout.fragment_boxoffice, container, false);
-
+        }
 
         mContext = getActivity().getApplicationContext();
-
-        mContext2 = view.getContext();
         listView = (ListView) view.findViewById(R.id.boxoffice_list);
+        mContext2 = view.getContext();
+
         ActionBar actionBar = getActivity().getActionBar();
+
         try {
             assert actionBar != null;
             actionBar.show();
@@ -119,7 +125,7 @@ public class BoxOfficeFragment extends Fragment {//API KEY =
         Bundle args = getArguments();
 
 
-        CallAPI task = new CallAPI();
+
         String startURI = "http://api.rottentomatoes.com/api/public/v1.0/lists/movies/";
         String limit = "50";//max amount is 50
         String nrPages = "&page=1";
@@ -150,9 +156,12 @@ public class BoxOfficeFragment extends Fragment {//API KEY =
                 actionBar.setSubtitle("Box Office");
         }
         requestURI = URI.create(request);
-        task.execute(requestURI);
-        //thread for getting data from the API
+        if(restore) {
+            CallAPI task = new CallAPI();
+            task.execute(requestURI);
+            //thread for getting data from the API
 
+        }
         final FloatingActionButton floatingActionButton = (FloatingActionButton) view.findViewById(R.id.boxoffice_list_fab);
         floatingActionButton.attachToListView(listView);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -206,12 +215,14 @@ public class BoxOfficeFragment extends Fragment {//API KEY =
         @Override
         protected void onPreExecute() {
 
-            progressDialog = new ProgressDialog(getActivity(), R.style.CustomDialog);
+
+            progressDialog = new ProgressDialog(getActivity());//, R.style.CustomDialog);
             progressDialog.setTitle("Loading...");
             //Set the dialog message to 'Loading application View, please wait...'
             progressDialog.setMessage("Loading Movies, please wait...");
             //This dialog can't be canceled by pressing the back key
             progressDialog.setCancelable(true);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             //This dialog isn't indeterminate
             progressDialog.setIndeterminate(false);
             progressDialog.setIndeterminateDrawable(getResources()

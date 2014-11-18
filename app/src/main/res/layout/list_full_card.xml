@@ -1,7 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:ripple="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/transparent"
@@ -141,6 +139,7 @@
                     android:contentDescription="@string/fragment_more_description"
                     android:src="@drawable/ic_action_navigation_more_vert" />
 
+
                 <Button
                     android:id="@+id/fragment_list_add_to_fav"
                     android:layout_width="wrap_content"
@@ -171,28 +170,21 @@
         android:orientation="vertical"
         android:paddingBottom="15dp">
 
-
         <android.support.v7.widget.CardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end">
 
-            <com.andexert.library.RippleView
-                android:id="@+id/fragment_list_item_ripple_rtn"
+
+            <ImageView
+                android:id="@+id/fragment_list_item_rtn_link"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:rv_color="@android:color/holo_red_dark"
-                ripple:rv_centered="true">
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/rtn_link_description"
+                android:maxHeight="40dp"
+                android:src="@drawable/rtlogo_small" />
 
-                <ImageView
-                    android:id="@+id/fragment_list_item_rtn_link"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:adjustViewBounds="true"
-                    android:contentDescription="@string/rtn_link_description"
-                    android:maxHeight="40dp"
-                    android:src="@drawable/rtlogo_small" />
-            </com.andexert.library.RippleView>
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
@@ -200,22 +192,16 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end">
 
-            <com.andexert.library.RippleView
-                android:id="@+id/fragment_list_item_ripple_imdb"
+
+            <ImageView
+                android:id="@+id/fragment_list_item_imdb_link"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:rv_color="@android:color/holo_purple"
-                ripple:rv_centered="true">
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/imdb_link_description"
+                android:maxHeight="40dp"
+                android:src="@drawable/imdb_small" />
 
-                <ImageView
-                    android:id="@+id/fragment_list_item_imdb_link"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:adjustViewBounds="true"
-                    android:contentDescription="@string/imdb_link_description"
-                    android:maxHeight="40dp"
-                    android:src="@drawable/imdb_small" />
-            </com.andexert.library.RippleView>
         </android.support.v7.widget.CardView>
     </LinearLayout>
 </RelativeLayout>

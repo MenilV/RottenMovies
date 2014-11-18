@@ -3,11 +3,14 @@ package com.menil.rottenmovies;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 
 /*
@@ -60,6 +63,41 @@ public class HomeFragment extends Fragment {
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
+        assert view != null;
+        ImageView AtlantImage = (ImageView) view.findViewById(R.id.fragment_home_abh_link);
+        AtlantImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Uri uri = Uri.parse("http://www.atlantbh.com/");
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                v.getContext().startActivity(intent);
+            }
+        });
+        ImageView RottenImage = (ImageView) view.findViewById(R.id.fragment_home_rtn_link);
+        RottenImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Uri uri = Uri.parse("http://www.rottentomatoes.com");
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                v.getContext().startActivity(intent);
+            }
+        });
+
+        ImageView IMDBImage = (ImageView) view.findViewById(R.id.fragment_home_imdb_link);
+        IMDBImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Uri uri = Uri.parse("http://www.imdb.com");
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                v.getContext().startActivity(intent);
+            }
+        });
         return view;
     }
 

@@ -32,7 +32,7 @@ public class Main extends Activity
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (getFragmentManager().findFragmentByTag("HOME").isVisible()) {
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                        mContext, R.style.CustomDialog);
+                        mContext);//, R.style.CustomDialog);
                 // set title
                 alertDialogBuilder.setTitle("Exit application?");
 
@@ -177,13 +177,6 @@ public class Main extends Activity
                 .replace(R.id.container, fragment, TAG).addToBackStack(TAG).commit();
     }
 
-    public void restoreActionBar() {
-        ActionBar actionBar = getActionBar();
-        assert actionBar != null;
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // if (!mNavigationDrawerFragment.isDrawerOpen()) {
@@ -205,6 +198,11 @@ public class Main extends Activity
         int id = item.getItemId();
         if (item.getItemId() == R.id.action_exit)
             finish();
+        else if (item.getItemId()==R.id.action_search)
+        {
+            SearchFragment fragment = new SearchFragment();
+            switchContent(fragment,"SEARCH");
+        }
         return id == R.id.action_settings || super.onOptionsItemSelected(item);
     }
 

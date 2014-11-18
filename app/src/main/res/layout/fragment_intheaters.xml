@@ -24,6 +24,7 @@
         android:paddingStart="4dp"
         android:stretchMode="columnWidth"
         android:textColor="@color/pale_black"
+        android:scrollbarThumbVertical="@drawable/scrollbar_color"
         android:verticalSpacing="3dp">
 
     </GridView>

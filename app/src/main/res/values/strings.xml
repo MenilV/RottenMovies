@@ -46,7 +46,7 @@
     <string name="add_to_favourites">Add to Favourites</string>
     <string name="crash_button">crash_test_button</string>
     <string name="welcome_msg">Welcome to Home screen\nThe navigation menu is on the left</string>
-    <string name="about_msg">Rotten Movies is a native Android application for all users who like, share and track latest movie info. \n\n Made by: Menil V.(2014)</string>
+    <string name="about_msg">Rotten Movies is a native Android application for all users who like, share and track latest movie info. \n\n Made by: Menil V.(2014)\n Thanks to: AtlantBH</string>
     <string name="title_placeholder">POSITION. TITLE (YEAR)</string>
     <string name="runtime_placeholder2">RUNTIME:</string>
     <string name="release_placeholder">RELEASE DATE:</string>

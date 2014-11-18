@@ -136,3 +136,11 @@ class ReleaseDates {
     @SerializedName("theater")
     public String theater;
 }
+
+class Cast {
+    @SerializedName("name")
+    public String name;
+
+    @SerializedName("id")
+    public String id;
+}

@@ -1,18 +1,16 @@
 package com.menil.rottenmovies;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.GridView;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.melnykov.fab.FloatingActionButton;
@@ -33,115 +31,35 @@ import java.util.ArrayList;
 import java.util.List;
 
 /*
- * Created by menil on 08.10.2014.
+ * Created by menil on 18.11.2014.
  */
-public class InTheatersFragment extends android.app.Fragment {
+public class SearchFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vynk26y
 
     public List<Movie> allMovies = new ArrayList<Movie>();
     private ProgressDialog progressDialog;
-    private GridView gridView;
-    //private View view;
+    private ListView listView;
     private Context mContext, mContext2;
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {//API KEY = pj2z7eyve6mfdtcx4vynk26y
-        super.onActivityCreated(savedInstanceState);
-        // Indicate that this fragment would like to influence the set of actions in the action bar.
-        setHasOptionsMenu(true);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = null;
         if (savedInstanceState == null)
-            view = inflater.inflate(R.layout.fragment_intheaters, container, false);
+            view = inflater.inflate(R.layout.fragment_search, container, false);
 
-        mContext = getActivity().getApplicationContext();
+        listView = (ListView) view.findViewById(R.id.search_listview);
+        final TextView textSearch = (TextView)view.findViewById(R.id.search_textbox);
 
-        Bundle args = getArguments();
-        mContext2 = view.getContext();
-
-        String startURI = "http://api.rottentomatoes.com/api/public/v1.0/lists/movies/";
-        String limit = "50";//max amount is 50
-        String nrPages = "&page=1";
-        String endURI = "&country=us&apikey=pj2z7eyve6mfdtcx4vynk26y";
-
-        CallAPI task = new CallAPI();
-        URI requestURI = URI.create(startURI + "in_theaters.json?page_limit=" + limit + nrPages + endURI);
-        task.execute(requestURI);
-        //thread for getting data from the API
-        ActionBar actionBar = getActivity().getActionBar();
-        try {
-            assert actionBar != null;
-            actionBar.show();
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setTitle(R.string.app_name);
-            actionBar.setSubtitle("In Theaters");
-            actionBar.setBackgroundDrawable(new ColorDrawable(0xFF399322));//transparent
-            actionBar.setIcon(R.drawable.actionbar_icon);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
-
-        gridView = (GridView) view.findViewById(R.id.others_gridview);
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Bundle args = new Bundle();
-                args.putParcelable("movie", allMovies.get(position));
-                //args.putSerializable("movie", allMovies.get(position));
-                Fragment fragment = new DetailsFragment();
-                fragment.setArguments(args);
-                switchFragment(fragment);
-            }
-
-            private void switchFragment(Fragment fragment) {
-                if (mContext2 == null) {
-                    return;
-                }
-                if (mContext2 instanceof Main) {
-                    Main main = (Main) mContext2;
-                    main.switchContent(fragment, "INTHEATERS");
-                }
-            }
-        });
-
-        final FloatingActionButton floatingActionButton = (FloatingActionButton) view.findViewById(R.id.others_gridview_list_fab);
-        floatingActionButton.attachToListView(gridView);
+        FloatingActionButton floatingActionButton= (FloatingActionButton) view.findViewById(R.id.search_list_fab);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (floatingActionButton.getColorNormal() == getResources().getColor(R.color.green)) {
-                    floatingActionButton.setColorNormal(getResources().getColor(R.color.white));
-                    floatingActionButton.setImageResource(R.drawable.ic_navigation_check);
-                    gridView.smoothScrollToPosition(0);
-                    floatingActionButton.setColorNormal(getResources().getColor(R.color.green));
-                    floatingActionButton.setImageResource(R.drawable.ic_action_up);
-                }
+                String request = "http://api.rottentomatoes.com/api/public/v1.0/movies.json?q="+textSearch.getText().toString()+"&page_limit=50&page=1&apikey=pj2z7eyve6mfdtcx4vynk26y";
+                URI requestURI = URI.create(request);
+                CallAPI task = new CallAPI();
+                task.execute(requestURI);
             }
         });
-
 
         return view;
     }
@@ -157,6 +75,7 @@ public class InTheatersFragment extends android.app.Fragment {
             progressDialog.setMessage("Loading Movies, please wait...");
             //This dialog can't be canceled by pressing the back key
             progressDialog.setCancelable(true);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             //This dialog isn't indeterminate
             progressDialog.setIndeterminate(false);
             progressDialog.setIndeterminateDrawable(getResources()
@@ -209,11 +128,10 @@ public class InTheatersFragment extends android.app.Fragment {
             try {
 
                 Gson gson = new Gson();
-
                 jsonObject = new JSONObject(result);
-                Movies filmovi = new Movies();
-                filmovi = gson.fromJson(jsonObject.toString(), Movies.class); // deserializes json into filmovi
+                Movies filmovi = gson.fromJson(jsonObject.toString(), Movies.class); // deserializes json into filmovi
                 allMovies = filmovi.movies;
+
             } catch (JSONException e1) {
                 e1.printStackTrace();
             }
@@ -224,7 +142,8 @@ public class InTheatersFragment extends android.app.Fragment {
 
         @Override
         protected void onPostExecute(List<Movie> allMovies) {
-            gridView.setAdapter(new GridAdapter(mContext, allMovies));
+
+            listView.setAdapter(new ListsAdapter(mContext, allMovies, "BOXOFFICE"));
             progressDialog.dismiss();
         }
     }

@@ -13,7 +13,6 @@ import android.view.ViewGroup;
  * Created by menil on 14.11.2014.
  */
 public class AboutFragment extends Fragment {
-    private static final String TAG = "HOME";
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
