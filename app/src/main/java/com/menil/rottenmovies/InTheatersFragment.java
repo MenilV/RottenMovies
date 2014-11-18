@@ -92,12 +92,15 @@ public class InTheatersFragment extends android.app.Fragment {
         URI requestURI=URI.create(startURI + "in_theaters.json?page_limit=" + limit + nrPages + endURI);
         task.execute(requestURI);
         //thread for getting data from the API
+        ActionBar actionBar = getActivity().getActionBar();
         try {
-            ActionBar actionbar = getActivity().getActionBar();
-            actionbar.show();
-            actionbar.setBackgroundDrawable(new ColorDrawable(0xFF399322));//transparent
-            actionbar.setSubtitle("In Theaters");
-        } catch (NullPointerException e) {
+            assert actionBar != null;
+            actionBar.show();
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setTitle(R.string.app_name);
+            actionBar.setSubtitle("In Theaters");
+            actionBar.setBackgroundDrawable(new ColorDrawable(0xFF399322));//transparent
+        }catch (NullPointerException e) {
             e.printStackTrace();
         }
 

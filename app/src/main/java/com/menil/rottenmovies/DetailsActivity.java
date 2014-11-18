@@ -57,7 +57,7 @@ public class DetailsActivity extends PreferenceActivity {
         super.onCreate(savedInstanceState);
 
 //        LayoutInflater inflater = (LayoutInflater)context.getSystemService (Context.LAYOUT_INFLATER_SERVICE);
-        view = getLayoutInflater().inflate(R.layout.details_card_test, null);
+        view = getLayoutInflater().inflate(R.layout.fragment_details, null);
         bundle=getIntent().getExtras();
         try {
             mActionBarBackgroundDrawable = getResources().getDrawable(R.drawable.actionbar_background);
@@ -169,32 +169,7 @@ public class DetailsActivity extends PreferenceActivity {
             }
         });
 
-        final FloatingActionButton floatingActionButton2 = (FloatingActionButton) view.findViewById(R.id.fragment_details_fab2);
-        floatingActionButton2.setOnClickListener(new View.OnClickListener() {
-            //View hider = view.findViewById(R.id.hider);
 
-
-            @Override
-            public void onClick(View v) {
-
-                if (floatingActionButton2.getColorNormal() == getResources().getColor(R.color.green)) {
-                    floatingActionButton2.setColorNormal(R.color.green2);
-                    floatingActionButton2.setImageResource(R.drawable.ic_action_up);
-                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(imageViewTop.getLayoutParams());
-                    lp.setMargins(0, 0, 0, 0);
-                    imageViewTop.setLayoutParams(lp);
-                    //getActivity().getActionBar().hide();
-
-                } else {
-                    floatingActionButton2.setImageResource(R.drawable.ic_action_expand);
-                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(imageViewTop.getLayoutParams());
-                    lp.setMargins(0, -300, 0, -300);
-                    imageViewTop.setLayoutParams(lp);
-                    floatingActionButton2.setColorNormal(R.color.green);
-                    getActionBar().show();
-                }
-            }
-        });
 
         /**
          * On Click resize synopsis. Might be useful in the future.
@@ -217,8 +192,7 @@ public class DetailsActivity extends PreferenceActivity {
             }
         });*/
 
-        NotifyingScrollView scrollView = (NotifyingScrollView) view.findViewById(R.id.fragment_details_scroll);
-        scrollView.setOnScrollChangedListener(mOnScrollChangedListener);
+
     }
     private void ModifyPreferences(String key, String value, int option)
     {

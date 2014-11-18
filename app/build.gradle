@@ -36,4 +36,7 @@ dependencies {
     compile 'com.github.traex.rippleeffect:library:1.2.2' //for ripple effects
     compile 'com.sothree.slidinguppanel:library:+'
     compile 'com.koushikdutta.ion:ion:2.+'
+
+
+
 }

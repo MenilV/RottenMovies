@@ -97,10 +97,14 @@ public class NavigationDrawerFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selectItem(position);
+                ActionBar actionBar = getActivity().getActionBar();
                 try {
-                    getActivity().getActionBar().setBackgroundDrawable(new ColorDrawable(0xFF399322));//transparent
-
-                } catch (NullPointerException e) {
+                    assert actionBar != null;
+                    actionBar.hide();
+                    actionBar.setDisplayShowTitleEnabled(false);
+                    actionBar.setTitle("");
+                    actionBar.setBackgroundDrawable(new ColorDrawable(0xFF399322));//transparent
+                }catch (NullPointerException e) {
                     e.printStackTrace();
                 }
             }

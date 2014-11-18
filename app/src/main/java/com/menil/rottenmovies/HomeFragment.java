@@ -6,9 +6,13 @@ import android.app.Fragment;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Gallery;
+import android.widget.ImageView;
 
 
 /*
@@ -51,16 +55,17 @@ public class HomeFragment extends Fragment {
         View view = null;
         if (savedInstanceState == null)
             view = inflater.inflate(R.layout.fragment_home, container, false);
+        ActionBar actionBar = getActivity().getActionBar();
         try {
-            ActionBar actionBar = getActivity().getActionBar();
+            assert actionBar != null;
             actionBar.show();
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setTitle(R.string.app_name);
             actionBar.setBackgroundDrawable(new ColorDrawable(0xFF399322));//transparent
-            actionBar.setSubtitle(null);
-
-        } catch (NullPointerException e) {
+        }catch (NullPointerException e) {
             e.printStackTrace();
         }
-
         return view;
     }
+
 }

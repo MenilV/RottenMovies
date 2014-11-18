@@ -1,5 +1,6 @@
 package com.menil.rottenmovies;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
@@ -10,11 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.koushikdutta.ion.Ion;
 import com.melnykov.fab.FloatingActionButton;
 
@@ -69,18 +70,19 @@ public class DetailsFragment extends android.app.Fragment {
         /**
         /INFLATED TEST VIEW>>>>>> CHANGE THAT OR DON'T???
         */
-        view = inflater.inflate(R.layout.details_card_test, container, false);
+        view = inflater.inflate(R.layout.fragment_details, container, false);
         // Retrieve data from bundle with Parcelable object of type Movie
         bundle = getArguments();
+        ActionBar actionBar = getActivity().getActionBar();
         try {
             mActionBarBackgroundDrawable = getResources().getDrawable(R.drawable.actionbar_background);
             mActionBarBackgroundDrawable.setAlpha(0);
-
-            getActivity().getActionBar().setDisplayShowTitleEnabled(false);
-            getActivity().getActionBar().setTitle("");
-            getActivity().getActionBar().setBackgroundDrawable(mActionBarBackgroundDrawable);
-            getActivity().getActionBar().setSubtitle(null);
-            getActivity().getActionBar().setIcon(new ColorDrawable(0x00000000));
+            assert actionBar!=null;
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setTitle("");
+            actionBar.setBackgroundDrawable(mActionBarBackgroundDrawable);
+            actionBar.setSubtitle(null);
+            actionBar.setIcon(new ColorDrawable(0x00000000));
 
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -171,8 +173,11 @@ public class DetailsFragment extends android.app.Fragment {
         /**
          * BUTTONS STUFF COMES HERE
          */
+        Gson gson = new Gson();
+        String fav = gson.toJson(movie);
 
         final FloatingActionButton floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fragment_details_fab);
+        floatingActionButton.setColorNormal(getResources().getColor(R.color.green));
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -193,30 +198,6 @@ public class DetailsFragment extends android.app.Fragment {
             }
         });
 
-        final FloatingActionButton floatingActionButton2 = (FloatingActionButton) view.findViewById(R.id.fragment_details_fab2);
-        floatingActionButton2.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                if (floatingActionButton2.getColorNormal() == getResources().getColor(R.color.green)) {
-                    floatingActionButton2.setColorNormal(R.color.green2);
-                    floatingActionButton2.setImageResource(R.drawable.ic_action_up);
-                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(imageViewTop.getLayoutParams());
-                    lp.setMargins(0, 0, 0, 0);
-                    imageViewTop.setLayoutParams(lp);
-                    //getActivity().getActionBar().hide();
-
-                } else {
-                    floatingActionButton2.setImageResource(R.drawable.ic_action_expand);
-                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(imageViewTop.getLayoutParams());
-                    lp.setMargins(0, -300, 0, -300);
-                    imageViewTop.setLayoutParams(lp);
-                    floatingActionButton2.setColorNormal(R.color.green);
-                    getActivity().getActionBar().show();
-                }
-            }
-        });
 
         /**
          * On Click resize synopsis. Might be useful in the future.
@@ -239,8 +220,7 @@ public class DetailsFragment extends android.app.Fragment {
             }
         });*/
 
-        NotifyingScrollView scrollView = (NotifyingScrollView) view.findViewById(R.id.fragment_details_scroll);
-        scrollView.setOnScrollChangedListener(mOnScrollChangedListener);
+
         return view;
 
     }

@@ -2,6 +2,7 @@ package com.menil.rottenmovies;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -37,18 +38,19 @@ public class Movie implements Parcelable, Serializable {
     @SerializedName("links")
     public Link links;
 
-    public String getId(){
+    public String getId() {
         return this.id;
     }
 
     public Movie(Parcel in) {
         readFromParcel(in);
     }
-    public void readFromParcel (Parcel in)
-    {
+
+    public void readFromParcel(Parcel in) {
         id = in.readString();
         title = in.readString();
     }
+
     @Override
     public int describeContents() {
         return 0;
@@ -59,6 +61,7 @@ public class Movie implements Parcelable, Serializable {
         public Movie createFromParcel(Parcel in) {
             return new Movie(in);
         }
+
         public Movie[] newArray(int size) {
             return new Movie[size];
         }
@@ -68,4 +71,6 @@ public class Movie implements Parcelable, Serializable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(this);
     }
+
+
 }

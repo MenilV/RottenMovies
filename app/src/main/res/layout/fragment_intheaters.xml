@@ -28,12 +28,7 @@
         android:verticalSpacing="3dp">
 
     </GridView>
-    <com.andexert.library.RippleView
-        android:id="@+id/others_ripple"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        ripple:rv_rippleDuration="700">
+
     <com.melnykov.fab.FloatingActionButton
         android:id="@+id/others_gridview_list_fab"
         android:layout_width="wrap_content"
@@ -44,5 +39,4 @@
         fab:fab_colorNormal="@color/green"
         fab:fab_colorPressed="@color/green_900"
         fab:fab_colorRipple="@color/green_700" />
-    </com.andexert.library.RippleView>
 </FrameLayout>

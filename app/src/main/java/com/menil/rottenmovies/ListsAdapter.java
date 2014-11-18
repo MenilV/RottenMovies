@@ -2,8 +2,11 @@ package com.menil.rottenmovies;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Environment;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +15,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
+import com.koushikdutta.ion.ProgressCallback;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +37,7 @@ public class ListsAdapter extends BaseAdapter {
     private String savedDate, tag;
     private ArrayList<String> bannedDates = new ArrayList<String>();
     private ArrayList<Integer> uniquePositionDates= new ArrayList<Integer>();
+
 
     public ListsAdapter(Context context, List<Movie> allMovies, String tag) {
         this.mContext = context;
@@ -105,12 +113,30 @@ public class ListsAdapter extends BaseAdapter {
             setHeader(position, view);//setting the header for upcoming and opening movies
         }
 
+
+
+
+        //SharedPreferences.Editor editor = sharedpreferences.edit();
+        //editor.putString("key", "value");
+       // editor.commit();
+
         String picURL = listMovies.get(position).posters.detailed.replace("tmb", "det");
         ImageView imageView = (ImageView) view.findViewById(R.id.fragment_list_item_img);
         Ion.with(imageView)
                 .placeholder(R.drawable.empty_img)
                 .error(R.drawable.empty_img_error)
                 .load(picURL);
+        Ion.with(view.getContext())
+                .load(picURL)
+                .write(new File(Environment.getExternalStorageDirectory()+ String.valueOf(position)+ "menil.jpg"))
+                .setCallback(new FutureCallback<File>() {
+                    @Override
+                    public void onCompleted(Exception e, File file) {
+                        //Toast.makeText(getView().getContext(),"Image"+position+" downloaded",Toast.LENGTH_LONG).show();
+                        // download done...
+                        // do stuff with the File or error
+                    }
+                });
 
 
         TextView titleView = (TextView) view.findViewById(R.id.fragment_list_item_title);
@@ -183,10 +209,14 @@ public class ListsAdapter extends BaseAdapter {
         //Add to favourites button
         final Button addToFav = (Button)view.findViewById(R.id.fragment_list_add_to_fav);
         addToFav.setVisibility(View.INVISIBLE);
+
+
         ImageView more = (ImageView)view.findViewById(R.id.fragment_list_more);
         more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
                 if (addToFav.getVisibility()==View.INVISIBLE)
                     addToFav.setVisibility(View.VISIBLE);
                 else
@@ -195,5 +225,6 @@ public class ListsAdapter extends BaseAdapter {
         });
         return view;
     }
+
 
 }

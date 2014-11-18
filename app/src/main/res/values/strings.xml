@@ -15,7 +15,7 @@
         -Refresh Button not working\n
         -Favourites not working\n
         -On Click image from Details not expanding\n
-        -Last card on bottom right cant be clicked
+        -Last card on bottom right can\'t be clicked\n
         -Details View needs scrolling down to show full image\n
         -In Theaters no infinite scroll\n
         -Upcoming Movies no infinite scroll\n</string>
@@ -58,5 +58,7 @@
     <string name="powered_by">Powered\nby:</string>
     <string name="thanks_to">Thanks\nto:</string>
     <string name="follow_us">Follow\nus:</string>
+    <string name="slide_arrows">slide arrows</string>
+    <string name="btm_img_icon">bottom image icon</string>
 
 </resources>

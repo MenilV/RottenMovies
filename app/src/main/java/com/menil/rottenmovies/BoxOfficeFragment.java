@@ -8,6 +8,7 @@ import android.app.Dialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
@@ -20,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.melnykov.fab.FloatingActionButton;
@@ -33,6 +35,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
@@ -51,11 +54,13 @@ public class BoxOfficeFragment extends Fragment {//API KEY =pj2z7eyve6mfdtcx4vyn
     private String tag;
 
 
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         // Indicate that this fragment would like to influence the set of actions in the action bar.
         setHasOptionsMenu(true);
+
     }
 
     @Override
@@ -101,58 +106,26 @@ public class BoxOfficeFragment extends Fragment {//API KEY =pj2z7eyve6mfdtcx4vyn
         if (savedInstanceState == null)
             view = inflater.inflate(R.layout.fragment_boxoffice, container, false);
 
+
         mContext = getActivity().getApplicationContext();
 
         mContext2 = view.getContext();
         listView = (ListView) view.findViewById(R.id.boxoffice_list);
-        Bundle args = getArguments();
-
-        /*if (!isConnectedToInternet())
-        {
-            Fragment fragment = new FireMissilesDialogFragment();
-           // fragment.show();
-
-        }*/
-        /*{
-            progressDialog = new ProgressDialog(mContext2, R.style.CustomDialog);
-            progressDialog.setTitle("Loading...");
-            //Set the dialog message to 'Loading application View, please wait...'
-            progressDialog.setMessage("Waiting for Internet connection...");
-            //This dialog can be canceled by pressing the back key
-            progressDialog.setCancelable(true);
-            //This dialog isn't indeterminate
-            progressDialog.setIndeterminate(false);
-            progressDialog.setIndeterminateDrawable(getResources()
-                    .getDrawable(R.drawable.spinner_animation));
-            //The maximum number of items is 100
-            progressDialog.setMax(100);
-            //Set the current progress to zero
-            progressDialog.setProgress(0);
-            //Display the progress dialog
-            progressDialog.show();
-            final Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    // Do something after 5s = 5000ms
-                    progressDialog.dismiss();
-                }
-            }, 5000);
-            //progressDialog.setMessage("Please check your Internet connection...");
-            //progressDialog.show();
-             progressDialog.dismiss();
-
-        }*/
-
-
-            //CallAPI task = new CallAPI();
-        CallAPI task = new CallAPI();
-            ActionBar actionBar = getActivity().getActionBar();
+        ActionBar actionBar = getActivity().getActionBar();
+        try {
+            assert actionBar != null;
             actionBar.show();
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setTitle(R.string.app_name);
             actionBar.setBackgroundDrawable(new ColorDrawable(0xFF399322));//transparent
+        }catch (NullPointerException e) {
+            e.printStackTrace();
+        }
 
-            //
+            Bundle args = getArguments();
 
+
+        CallAPI task = new CallAPI();
         String startURI = "http://api.rottentomatoes.com/api/public/v1.0/lists/movies/";
         String limit = "50";//max amount is 50
         String nrPages = "&page=1";
@@ -233,7 +206,8 @@ public class BoxOfficeFragment extends Fragment {//API KEY =pj2z7eyve6mfdtcx4vyn
                 }
             }
         });
-
+       // Movies movies = new Movies();
+       // movies.sortMoviesAscending(allMovies);
         return view;
     }
 
@@ -248,7 +222,7 @@ public class BoxOfficeFragment extends Fragment {//API KEY =pj2z7eyve6mfdtcx4vyn
             //Set the dialog message to 'Loading application View, please wait...'
             progressDialog.setMessage("Loading Movies, please wait...");
             //This dialog can't be canceled by pressing the back key
-            progressDialog.setCancelable(false);
+            progressDialog.setCancelable(true);
             //This dialog isn't indeterminate
             progressDialog.setIndeterminate(false);
             progressDialog.setIndeterminateDrawable(getResources()

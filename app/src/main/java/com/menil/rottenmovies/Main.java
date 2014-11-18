@@ -9,16 +9,25 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.Window;
 import android.widget.Toast;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 
 
 public class Main extends Activity
@@ -27,7 +36,6 @@ public class Main extends Activity
     final Context mContext = this;
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private CharSequence mTitle;
-    private ProgressDialog progressDialog;
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -72,8 +80,6 @@ public class Main extends Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         /**
          * ovo iznad je zlo!!@!! ali radi :D
@@ -85,10 +91,10 @@ public class Main extends Activity
         mTitle = getTitle();
 
         // Set up the drawer.
-        mNavigationDrawerFragment.setUp(
-                R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout));
+        mNavigationDrawerFragment.setUp(R.id.navigation_drawer,(DrawerLayout) findViewById(R.id.drawer_layout));
         //this does nothing
+
+
     }
 
     public boolean isConnectedToInternet(){
@@ -111,9 +117,6 @@ public class Main extends Activity
     public void onNavigationDrawerItemSelected(int position) {
 
             Fragment fragment;
-            //FragmentManager fragmentManager = getFragmentManager();
-
-            //if (!isConnectedToInternet())
 
             String tag;
             switch (position) {
@@ -167,8 +170,8 @@ public class Main extends Activity
                     break;
                 case 5://favourites (currently displaying detail view)
                     //TODO: make on click event on the images to store to favourites
-                    fragment = new HomeFragment();
-                    tag = "HOME";
+                    fragment = new FavouritesFragment();
+                    tag = "FAVOURITES";
                     break;
                 case 6://about
                     fragment = new AboutFragment();
@@ -202,14 +205,14 @@ public class Main extends Activity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (!mNavigationDrawerFragment.isDrawerOpen()) {
+       // if (!mNavigationDrawerFragment.isDrawerOpen()) {
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
             getMenuInflater().inflate(R.menu.main, menu);
-            restoreActionBar();
-            return true;
-        }
+            //restoreActionBar();
+          //  return true;
+       // }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -219,7 +222,9 @@ public class Main extends Activity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
+        if (item.getItemId()==R.id.action_exit)
+            finish();
         return id == R.id.action_settings || super.onOptionsItemSelected(item);
     }
+
 }

@@ -28,7 +28,7 @@
             android:name="com.menil.rottenmovies.Main"
             android:configChanges="screenSize|orientation"
             android:icon="@drawable/actionbar_icon"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"/>
 
         <!-- Crash report activity -->
         <activity
@@ -39,12 +39,6 @@
             android:theme="@android:style/Theme.Dialog" />
 
         <!-- Details activity -->
-        <activity
-            android:name="com.menil.rottenmovies.DetailsActivity"
-            android:configChanges="screenSize|orientation"
-            android:icon="@drawable/transparent"
-            android:label="@string/app_name" />
-
 
     </application>
 
