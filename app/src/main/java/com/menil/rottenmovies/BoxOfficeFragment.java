@@ -38,7 +38,7 @@ import java.util.List;
 /*
  * Created by menil on 29.10.2014.
  */
-public class BoxOfficeFragment extends Fragment {//API KEY =pj2z7eyve6mfdtcx4vynk26y
+public class BoxOfficeFragment extends Fragment {//API KEY =
 
     public List<Movie> allMovies = new ArrayList<Movie>();
     private ProgressDialog progressDialog;
@@ -46,7 +46,6 @@ public class BoxOfficeFragment extends Fragment {//API KEY =pj2z7eyve6mfdtcx4vyn
     private Context mContext, mContext2;
     private String tag;
     private Boolean sort = false;
-
 
 
     @Override
@@ -112,11 +111,12 @@ public class BoxOfficeFragment extends Fragment {//API KEY =pj2z7eyve6mfdtcx4vyn
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setTitle(R.string.app_name);
             actionBar.setBackgroundDrawable(new ColorDrawable(0xFF399322));//transparent
-        }catch (NullPointerException e) {
+            actionBar.setIcon(R.drawable.actionbar_icon);
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
 
-            Bundle args = getArguments();
+        Bundle args = getArguments();
 
 
         CallAPI task = new CallAPI();
@@ -129,8 +129,8 @@ public class BoxOfficeFragment extends Fragment {//API KEY =pj2z7eyve6mfdtcx4vyn
         String request;
 
 
-        tag=args.getString("tag");
-        switch (tag){
+        tag = args.getString("tag");
+        switch (tag) {
             case "BOXOFFICE":
                 request = startURI + "box_office.json?limit=" + limit + endURI;
                 actionBar.setSubtitle("Box Office");
@@ -138,18 +138,18 @@ public class BoxOfficeFragment extends Fragment {//API KEY =pj2z7eyve6mfdtcx4vyn
             case "OPENING":
                 request = startURI + "opening.json?limit=" + limit + endURI;
                 actionBar.setSubtitle("Opening Movies");
-                sort=!sort;
+                sort = !sort;
                 break;
             case "UPCOMING":
                 request = startURI + "upcoming.json?page_limit=" + limit + nrPages + endURI;
                 actionBar.setSubtitle("Upcoming Movies");
-                sort=!sort;
+                sort = !sort;
                 break;
             default:
                 request = startURI + "box_office.json?limit=" + limit + endURI;
                 actionBar.setSubtitle("Box Office");
         }
-        requestURI=URI.create(request);
+        requestURI = URI.create(request);
         task.execute(requestURI);
         //thread for getting data from the API
 

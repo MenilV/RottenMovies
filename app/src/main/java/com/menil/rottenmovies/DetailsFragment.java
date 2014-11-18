@@ -7,18 +7,19 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.koushikdutta.ion.Ion;
 import com.melnykov.fab.FloatingActionButton;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -35,10 +36,10 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class DetailsFragment extends android.app.Fragment {
 
+    public SharedPreferences preferences;
     private Bundle bundle;
     private Drawable mActionBarBackgroundDrawable;
     private View view;
-    public SharedPreferences preferences;
 
     //private static final String TAG = "DETAILS";
     //TODO:Details fragment crashes on KEYCODE_HOME pressed
@@ -66,19 +67,15 @@ public class DetailsFragment extends android.app.Fragment {
                              Bundle savedInstanceState) {
 
         if (savedInstanceState == null)
-            // Inflate the layout for this fragment
-            //view = inflater.inflate(R.layout.fragment_details, container, false);
-        /**
-        /INFLATED TEST VIEW>>>>>> CHANGE THAT OR DON'T???
-        */
-        view = inflater.inflate(R.layout.fragment_details, container, false);
+        // Inflate the layout for this fragment
+            view = inflater.inflate(R.layout.fragment_details, container, false);
         // Retrieve data from bundle with Parcelable object of type Movie
         bundle = getArguments();
         ActionBar actionBar = getActivity().getActionBar();
         try {
             mActionBarBackgroundDrawable = getResources().getDrawable(R.drawable.actionbar_background);
             mActionBarBackgroundDrawable.setAlpha(0);
-            assert actionBar!=null;
+            assert actionBar != null;
             actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setTitle("");
             actionBar.setBackgroundDrawable(mActionBarBackgroundDrawable);
@@ -96,7 +93,7 @@ public class DetailsFragment extends android.app.Fragment {
          */
 
         TextView title = (TextView) view.findViewById(R.id.fragment_details_title);
-        title.setText(movie.title+ " (" + String.valueOf(movie.year) + ")");
+        title.setText(movie.title + " (" + String.valueOf(movie.year) + ")");
         title.setSelected(true);
         title.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,7 +112,7 @@ public class DetailsFragment extends android.app.Fragment {
         });
 
         TextView synopsis = (TextView) view.findViewById(R.id.fragment_details_synopsis);
-        synopsis.setText("Synopsis:\n\n" + movie.synopsis);
+        synopsis.setText(movie.synopsis);
 
         TextView runtime = (TextView) view.findViewById(R.id.fragment_details_runtime);
         runtime.setText("Runtime: " + String.valueOf(movie.runtime) + " min");
@@ -141,20 +138,13 @@ public class DetailsFragment extends android.app.Fragment {
          */
 
         ImageView imageView = (ImageView) view.findViewById(R.id.fragment_details_img);
-        //imageView.setImageURL(movie.posters.detailed.replace("tmb", "det"), true);
+
         Ion.with(imageView)
                 .placeholder(R.drawable.empty_img)
                 .error(R.drawable.empty_img_error)
                 .load(movie.posters.detailed.replace("tmb", "det"));
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //this is for image fullscreen
-            }
-        });
-
         //getting a resized image from ThumbrIo service
-        final ImageView imageViewTop = (ImageView)view.findViewById(R.id.fragment_details_img_top);
+        final ImageView imageViewTop = (ImageView) view.findViewById(R.id.fragment_details_img_top);
         String rescaledImage = null;
 
         try {//rescale and set picture TOP
@@ -170,19 +160,7 @@ public class DetailsFragment extends android.app.Fragment {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        imageViewTop.setOnClickListener(new View.OnClickListener() {
-            Boolean toggle = true;
-            @Override
-            public void onClick(View v) {
-                RelativeLayout relativeLayoutpane = (RelativeLayout) view.findViewById(R.id.fragment_details_card_relative);
-                if(toggle) {
-                    relativeLayoutpane.setVisibility(View.GONE);
-                }
-                else
-                    relativeLayoutpane.setVisibility(View.VISIBLE);
-                toggle=!toggle;
-            }
-        });
+
 
         /**
          * BUTTONS STUFF COMES HERE
@@ -193,53 +171,29 @@ public class DetailsFragment extends android.app.Fragment {
         final FloatingActionButton floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fragment_details_fab);
         floatingActionButton.setColorNormal(getResources().getColor(R.color.green));
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            Boolean toggle = true;
             @Override
             public void onClick(View v) {
                 preferences = getActivity().getSharedPreferences("favsAreHere", Context.MODE_PRIVATE);
-                if (preferences.getString("id", null)==null)// && floatingActionButton.getColorNormal() == getResources().getColor(R.color.green) )
+                if (toggle)// && floatingActionButton.getColorNormal() == getResources().getColor(R.color.green) )
                 {
                     floatingActionButton.setColorNormal(getResources().getColor(R.color.white));
                     floatingActionButton.setImageResource(R.drawable.ic_navigation_check);
                     ModifyPreferences("id", movie.id, 0);
-                    Toast.makeText(getActivity().getApplicationContext(),"Added to favourites", Toast.LENGTH_LONG).show();
-
+                    Toast.makeText(getActivity().getApplicationContext(), "Added to favourites", Toast.LENGTH_LONG).show();
                 } else {
                     floatingActionButton.setColorNormal(getResources().getColor(R.color.green));
                     floatingActionButton.setImageResource(R.drawable.ic_action_favorite);
                     ModifyPreferences("id", movie.id, 1);
-                    Toast.makeText(getActivity().getApplicationContext(),"Removed from favourites", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity().getApplicationContext(), "Removed from favourites", Toast.LENGTH_LONG).show();
                 }
+                toggle = !toggle;
             }
         });
-
-
-        /**
-         * On Click resize synopsis. Might be useful in the future.
-         */
-        /*synopsis.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TextView t = (TextView) v.findViewById(R.id.fragment_details_synopsis);
-
-                //Toggle synopsis if synopsis is too long
-                if (t.getEllipsize() == TextUtils.TruncateAt.END) {
-                    t.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-                    t.setSingleLine(false);
-
-                } else if (t.getEllipsize() == TextUtils.TruncateAt.MARQUEE) {
-                    t.setMaxLines(10);
-                    t.setEllipsize(TextUtils.TruncateAt.END);
-
-                }
-            }
-        });*/
-
-
         return view;
-
     }
-    private void ModifyPreferences(String key, String value, int option)
-    {
+
+    private void ModifyPreferences(String key, String value, int option) {
         preferences = getActivity().getSharedPreferences("favsAreHere", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
 
@@ -256,15 +210,8 @@ public class DetailsFragment extends android.app.Fragment {
     }
 
 
-    private NotifyingScrollView.OnScrollChangedListener mOnScrollChangedListener = new NotifyingScrollView.OnScrollChangedListener() {
-        public void onScrollChanged(ScrollView who, int l, int t, int oldl, int oldt) {
-            final int headerHeight = view.findViewById(R.id.fragment_details_img_top).getHeight() - getActivity().getActionBar().getHeight();
-            final float ratio = (float) Math.min(Math.max(t, 0), headerHeight) / headerHeight;
-            final int newAlpha = (int) (ratio * 255);
-            mActionBarBackgroundDrawable.setAlpha(newAlpha);
-        }
-    };
 }
+
 class ThumbrIo1 {
 
     private static final String THUMBRIO_API_KEY = "t0AsaoQ1lG-nJaIvOavA";

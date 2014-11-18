@@ -60,5 +60,6 @@
     <string name="follow_us">Follow\nus:</string>
     <string name="slide_arrows">slide arrows</string>
     <string name="btm_img_icon">bottom image icon</string>
+    <string name="synopsis_title">Synopsis:\n</string>
 
 </resources>

@@ -9,8 +9,8 @@ import android.widget.ImageView;
 
 /**
  * Created by menil on 16.11.2014.
- */public class GalleryImageAdapter extends BaseAdapter
-{
+ */
+public class GalleryImageAdapter extends BaseAdapter {
     private Context mContext;
 
     private Integer[] mImageIds = {
@@ -22,8 +22,7 @@ import android.widget.ImageView;
             R.drawable.ic_tw_small
     };
 
-    public GalleryImageAdapter(Context context)
-    {
+    public GalleryImageAdapter(Context context) {
         mContext = context;
     }
 
@@ -41,8 +40,7 @@ import android.widget.ImageView;
 
 
     // Override this method according to your need
-    public View getView(int index, View view, ViewGroup viewGroup)
-    {
+    public View getView(int index, View view, ViewGroup viewGroup) {
         // TODO Auto-generated method stub
         ImageView i = new ImageView(mContext);
 

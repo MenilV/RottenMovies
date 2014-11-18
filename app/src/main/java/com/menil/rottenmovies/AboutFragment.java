@@ -3,17 +3,11 @@ package com.menil.rottenmovies;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 /**
  * Created by menil on 14.11.2014.
@@ -62,7 +56,8 @@ public class AboutFragment extends Fragment {
             actionBar.setTitle(R.string.app_name);
             actionBar.setSubtitle("About");
             actionBar.setBackgroundDrawable(new ColorDrawable(0xFF399322));//transparent
-        }catch (NullPointerException e) {
+            actionBar.setIcon(R.drawable.actionbar_icon);
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
         return view;

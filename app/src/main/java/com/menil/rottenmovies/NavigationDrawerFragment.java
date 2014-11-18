@@ -104,7 +104,7 @@ public class NavigationDrawerFragment extends Fragment {
                     actionBar.setDisplayShowTitleEnabled(false);
                     actionBar.setTitle("");
                     actionBar.setBackgroundDrawable(new ColorDrawable(0xFF399322));//transparent
-                }catch (NullPointerException e) {
+                } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
             }

@@ -4,30 +4,17 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.Window;
 import android.widget.Toast;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 
 
 public class Main extends Activity
@@ -91,21 +78,19 @@ public class Main extends Activity
         mTitle = getTitle();
 
         // Set up the drawer.
-        mNavigationDrawerFragment.setUp(R.id.navigation_drawer,(DrawerLayout) findViewById(R.id.drawer_layout));
+        mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
         //this does nothing
 
 
     }
 
-    public boolean isConnectedToInternet(){
-        ConnectivityManager connectivity = (ConnectivityManager)getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivity != null)
-        {
+    public boolean isConnectedToInternet() {
+        ConnectivityManager connectivity = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
             NetworkInfo[] info = connectivity.getAllNetworkInfo();
             if (info != null)
                 for (int i = 0; i < info.length; i++)
-                    if (info[i].getState() == NetworkInfo.State.CONNECTED)
-                    {
+                    if (info[i].getState() == NetworkInfo.State.CONNECTED) {
                         return true;
                     }
 
@@ -116,77 +101,73 @@ public class Main extends Activity
     @Override
     public void onNavigationDrawerItemSelected(int position) {
 
-            Fragment fragment;
+        Fragment fragment;
 
-            String tag;
-            switch (position) {
-                case 0://home fragment
+        String tag;
+        switch (position) {
+            case 0://home fragment
+                fragment = new HomeFragment();
+                tag = "HOME";
+                break;
+            case 1://box office fragment
+                if (!isConnectedToInternet()) {
                     fragment = new HomeFragment();
                     tag = "HOME";
-                    break;
-                case 1://box office fragment
-                    if (!isConnectedToInternet())
-                    {
-                        fragment = new HomeFragment();
-                        tag = "HOME";
-                        Toast.makeText(getApplicationContext(),"No Internet connection.\nReturning to Home...", Toast.LENGTH_LONG).show();
-                    } else {
-                        fragment = new BoxOfficeFragment();
-                        tag = "BOXOFFICE";
-                    }
-                    break;
-                case 2://in theaters fragment
-                    if (!isConnectedToInternet())
-                    {
-                        fragment = new HomeFragment();
-                        tag = "HOME";
-                        Toast.makeText(getApplicationContext(),"No Internet connection.\nReturning to Home...", Toast.LENGTH_LONG).show();
-                    } else {
-                        fragment = new InTheatersFragment();
-                        tag = "INTHEATERS";
-                    }
-                    break;
-                case 3://opening fragment
-                    if (!isConnectedToInternet())
-                    {
-                        fragment = new HomeFragment();
-                        tag = "HOME";
-                        Toast.makeText(getApplicationContext(),"No Internet connection.\nReturning to Home...", Toast.LENGTH_LONG).show();
-                    } else {
-                        fragment = new BoxOfficeFragment();
-                        tag = "OPENING";
-                    }
-                    break;
-                case 4://upcoming fragment
-                    if (!isConnectedToInternet())
-                    {
-                        fragment = new HomeFragment();
-                        tag = "HOME";
-                        Toast.makeText(getApplicationContext(),"No Internet connection.\nReturning to Home...", Toast.LENGTH_LONG).show();
-                    } else {
-                        fragment = new BoxOfficeFragment();
-                        tag = "UPCOMING";
-                    }
-                    break;
-                case 5://favourites (currently displaying detail view)
-                    //TODO: make on click event on the images to store to favourites
-                    fragment = new FavouritesFragment();
-                    tag = "FAVOURITES";
-                    break;
-                case 6://about
-                    fragment = new AboutFragment();
-                    tag = "ABOUT";
-                    break;
-                default://Home is the default view
+                    Toast.makeText(getApplicationContext(), "No Internet connection.\nReturning to Home...", Toast.LENGTH_LONG).show();
+                } else {
+                    fragment = new BoxOfficeFragment();
+                    tag = "BOXOFFICE";
+                }
+                break;
+            case 2://in theaters fragment
+                if (!isConnectedToInternet()) {
                     fragment = new HomeFragment();
                     tag = "HOME";
-                    break;
-            }
-            Bundle args = new Bundle();
-            args.putInt("position", position);
-            args.putString("tag", tag);
-            fragment.setArguments(args);
-            switchContent(fragment, tag);
+                    Toast.makeText(getApplicationContext(), "No Internet connection.\nReturning to Home...", Toast.LENGTH_LONG).show();
+                } else {
+                    fragment = new InTheatersFragment();
+                    tag = "INTHEATERS";
+                }
+                break;
+            case 3://opening fragment
+                if (!isConnectedToInternet()) {
+                    fragment = new HomeFragment();
+                    tag = "HOME";
+                    Toast.makeText(getApplicationContext(), "No Internet connection.\nReturning to Home...", Toast.LENGTH_LONG).show();
+                } else {
+                    fragment = new BoxOfficeFragment();
+                    tag = "OPENING";
+                }
+                break;
+            case 4://upcoming fragment
+                if (!isConnectedToInternet()) {
+                    fragment = new HomeFragment();
+                    tag = "HOME";
+                    Toast.makeText(getApplicationContext(), "No Internet connection.\nReturning to Home...", Toast.LENGTH_LONG).show();
+                } else {
+                    fragment = new BoxOfficeFragment();
+                    tag = "UPCOMING";
+                }
+                break;
+            case 5://favourites (currently displaying detail view)
+                //TODO: make on click event on the images to store to favourites
+                fragment = new FavouritesFragment();
+                tag = "FAVOURITES";
+                break;
+            case 6://about
+                fragment = new AboutFragment();
+                tag = "ABOUT";
+                break;
+            default://Home is the default view
+                fragment = new HomeFragment();
+                tag = "HOME";
+                break;
+        }
+        Bundle args = new Bundle();
+        args.putInt("position", position);
+        args.putString("tag", tag);
+        fragment.setArguments(args);
+        switchContent(fragment, tag);
 
     }
 
@@ -205,14 +186,14 @@ public class Main extends Activity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-       // if (!mNavigationDrawerFragment.isDrawerOpen()) {
-            // Only show items in the action bar relevant to this screen
-            // if the drawer is not showing. Otherwise, let the drawer
-            // decide what to show in the action bar.
-            getMenuInflater().inflate(R.menu.main, menu);
-            //restoreActionBar();
-          //  return true;
-       // }
+        // if (!mNavigationDrawerFragment.isDrawerOpen()) {
+        // Only show items in the action bar relevant to this screen
+        // if the drawer is not showing. Otherwise, let the drawer
+        // decide what to show in the action bar.
+        getMenuInflater().inflate(R.menu.main, menu);
+        //restoreActionBar();
+        //  return true;
+        // }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -222,7 +203,7 @@ public class Main extends Activity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (item.getItemId()==R.id.action_exit)
+        if (item.getItemId() == R.id.action_exit)
             finish();
         return id == R.id.action_settings || super.onOptionsItemSelected(item);
     }

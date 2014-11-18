@@ -8,7 +8,6 @@ import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +30,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /*
@@ -90,7 +88,7 @@ public class InTheatersFragment extends android.app.Fragment {
         String endURI = "&country=us&apikey=pj2z7eyve6mfdtcx4vynk26y";
 
         CallAPI task = new CallAPI();
-        URI requestURI=URI.create(startURI + "in_theaters.json?page_limit=" + limit + nrPages + endURI);
+        URI requestURI = URI.create(startURI + "in_theaters.json?page_limit=" + limit + nrPages + endURI);
         task.execute(requestURI);
         //thread for getting data from the API
         ActionBar actionBar = getActivity().getActionBar();
@@ -101,7 +99,8 @@ public class InTheatersFragment extends android.app.Fragment {
             actionBar.setTitle(R.string.app_name);
             actionBar.setSubtitle("In Theaters");
             actionBar.setBackgroundDrawable(new ColorDrawable(0xFF399322));//transparent
-        }catch (NullPointerException e) {
+            actionBar.setIcon(R.drawable.actionbar_icon);
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
 

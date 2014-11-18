@@ -7,16 +7,10 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.melnykov.fab.FloatingActionButton;
 
 import java.io.UnsupportedEncodingException;
@@ -33,11 +27,11 @@ import javax.crypto.spec.SecretKeySpec;
  * Created by menil on 13.11.2014.
  */
 public class DetailsActivity extends PreferenceActivity {
+    public SharedPreferences preferences;
     Context context;
     private Bundle bundle;
     private Drawable mActionBarBackgroundDrawable;
     private View view;
-    public SharedPreferences preferences;
 
    /* public void DetailsActivity(Bundle args)
     {
@@ -58,7 +52,7 @@ public class DetailsActivity extends PreferenceActivity {
 
 //        LayoutInflater inflater = (LayoutInflater)context.getSystemService (Context.LAYOUT_INFLATER_SERVICE);
         view = getLayoutInflater().inflate(R.layout.fragment_details, null);
-        bundle=getIntent().getExtras();
+        bundle = getIntent().getExtras();
         try {
             mActionBarBackgroundDrawable = getResources().getDrawable(R.drawable.actionbar_background);
             mActionBarBackgroundDrawable.setAlpha(0);
@@ -153,7 +147,7 @@ public class DetailsActivity extends PreferenceActivity {
             @Override
             public void onClick(View v) {
                 preferences = getSharedPreferences("favsAreHere", Context.MODE_PRIVATE);
-                if (preferences.getString("id", null)==null)// && floatingActionButton.getColorNormal() == getResources().getColor(R.color.green) )
+                if (preferences.getString("id", null) == null)// && floatingActionButton.getColorNormal() == getResources().getColor(R.color.green) )
                 {
                     floatingActionButton.setColorNormal(getResources().getColor(R.color.white));
                     floatingActionButton.setImageResource(R.drawable.ic_navigation_check);
@@ -164,11 +158,10 @@ public class DetailsActivity extends PreferenceActivity {
                     floatingActionButton.setColorNormal(getResources().getColor(R.color.green));
                     floatingActionButton.setImageResource(R.drawable.ic_action_favorite);
                     ModifyPreferences("id", movie.id, 1);
-                    Toast.makeText(getApplicationContext(),"Removed from favourites", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Removed from favourites", Toast.LENGTH_LONG).show();
                 }
             }
         });
-
 
 
         /**
@@ -194,8 +187,8 @@ public class DetailsActivity extends PreferenceActivity {
 
 
     }
-    private void ModifyPreferences(String key, String value, int option)
-    {
+
+    private void ModifyPreferences(String key, String value, int option) {
         preferences = getSharedPreferences("favsAreHere", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
 
@@ -211,18 +204,8 @@ public class DetailsActivity extends PreferenceActivity {
         }
     }
 
-
-    private NotifyingScrollView.OnScrollChangedListener mOnScrollChangedListener = new NotifyingScrollView.OnScrollChangedListener() {
-        public void onScrollChanged(ScrollView who, int l, int t, int oldl, int oldt) {
-            final int headerHeight = view.findViewById(R.id.fragment_details_img_top).getHeight() - getActionBar().getHeight();
-            final float ratio = (float) Math.min(Math.max(t, 0), headerHeight) / headerHeight;
-            final int newAlpha = (int) (ratio * 255);
-            mActionBarBackgroundDrawable.setAlpha(newAlpha);
-        }
-    };
-
-
 }
+
 class ThumbrIo {
 
     private static final String THUMBRIO_API_KEY = "t0AsaoQ1lG-nJaIvOavA";

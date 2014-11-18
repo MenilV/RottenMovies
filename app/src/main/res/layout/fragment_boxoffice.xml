@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
-    xmlns:ripple="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="?android:attr/actionBarSize">
@@ -13,8 +12,9 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:divider="@android:color/transparent"
-        android:headerDividersEnabled="true"
-        android:dividerHeight="0dp" />
+        android:dividerHeight="0dp"
+        android:scrollbarThumbVertical="@drawable/scrollbar_color"
+        android:headerDividersEnabled="true" />
 
     <com.melnykov.fab.FloatingActionButton
         android:id="@+id/boxoffice_list_fab"

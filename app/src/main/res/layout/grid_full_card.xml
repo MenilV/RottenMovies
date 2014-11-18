@@ -34,16 +34,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/movie_title_placeholder"
+                android:ellipsize="marquee"
+                android:paddingEnd="15dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="15dp"
-                android:paddingEnd="15dp"
-                android:singleLine="true"
                 android:scrollHorizontally="true"
-                android:ellipsize="marquee"
+                android:singleLine="true"
                 android:text="@string/app_name"
                 android:textColor="@color/pale_black"
                 android:textSize="18sp"
-                android:textStyle="bold|italic"/>
+                android:textStyle="bold|italic" />
 
             <TextView
                 android:id="@+id/full_card_subtitle"
@@ -59,25 +59,28 @@
 
 
         </LinearLayout>
+
         <Space
             android:id="@+id/full_card_space"
-            android:layout_below="@+id/full_card_under"
             android:layout_width="match_parent"
-            android:layout_height="16dp" />
+            android:layout_height="16dp"
+            android:layout_below="@+id/full_card_under" />
+
         <TextView
             android:id="@+id/full_card_actors"
-            android:layout_below="@id/full_card_space"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/full_card_space"
             android:contentDescription="@string/movie_subtitle_placeholder"
-            android:singleLine="true"
             android:ellipsize="marquee"
-            android:scrollHorizontally="true"
             android:paddingLeft="7dp"
             android:paddingRight="7dp"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
             android:text="@string/app_name"
             android:textColor="@color/green_700"
             android:textSize="13sp" />
+
         <ImageView
             android:id="@+id/fragment_grid_more"
             android:layout_width="wrap_content"
@@ -88,6 +91,7 @@
             android:layout_gravity="end"
             android:contentDescription="@string/fragment_more_description"
             android:src="@drawable/ic_action_navigation_more_vert" />
+
         <ImageView
             android:id="@+id/fragment_grid_fav"
             android:layout_width="wrap_content"

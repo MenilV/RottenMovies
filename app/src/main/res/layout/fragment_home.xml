@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#399322"
     android:orientation="vertical"
     android:paddingTop="?android:attr/actionBarSize"
     tools:context=".HomeFragment">
@@ -14,34 +13,143 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/app_name"
-        android:textColor="@android:color/white"
+        android:textColor="@color/pale_black"
         android:textSize="35sp" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginRight="7dp"
+        android:layout_marginLeft="7dp"
+        android:layout_marginBottom="7dp"
+        android:background="#399322" />
 
-
-    <TextView
-        android:layout_width="fill_parent"
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Favourites"
-        android:textColor="@android:color/white"
-        android:textSize="35sp" />
+        android:padding="5dp">
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:orientation="vertical">
+           <TextView
+               android:layout_width="fill_parent"
+               android:layout_height="wrap_content"
+               android:gravity="center"
+               android:text="Recently Viewed"
+               android:textColor="@color/pale_gray"
+               android:textSize="25sp" />
+           <HorizontalScrollView
+               android:id="@+id/fragment_home_recent_scroll"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content">
+               <LinearLayout
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content">
+                   <ImageView
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:src="@drawable/empty_img"/>
+                   <ImageView
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:src="@drawable/empty_img"/>
+                   <ImageView
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:src="@drawable/empty_img"/>
+                   <ImageView
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:src="@drawable/empty_img"/>
+                   <ImageView
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:src="@drawable/empty_img"/>
+                   <ImageView
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:src="@drawable/empty_img"/>
+                   <ImageView
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:src="@drawable/empty_img"/>
+
+               </LinearLayout>
+           </HorizontalScrollView>
+           </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Favourites"
+                android:textColor="@color/pale_gray"
+                android:textSize="25sp" />
+            <HorizontalScrollView
+                android:id="@+id/fragment_home_fav_scroll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/empty_img"/>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/empty_img"/>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/empty_img"/>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/empty_img"/>
+                    <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/empty_img"/>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/empty_img"/>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/empty_img"/>
+
+                </LinearLayout>
+            </HorizontalScrollView>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
 
     <ImageView
         android:layout_width="wrap_content"
-        android:contentDescription="@string/slide_arrows"
         android:layout_height="wrap_content"
-        android:src="@drawable/slide"
-        android:layout_gravity="top"/>
-
+        android:layout_gravity="top"
+        android:contentDescription="@string/slide_arrows"
+        android:src="@drawable/slide_invert" />
 
 
     <ImageView
-        android:contentDescription="@string/btm_img_icon"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
+        android:contentDescription="@string/btm_img_icon"
         android:scaleType="fitEnd"
-        android:src="@drawable/ic_launcher_1100" />
+        android:src="@drawable/actionbar_icon" />
 
 
 </LinearLayout>

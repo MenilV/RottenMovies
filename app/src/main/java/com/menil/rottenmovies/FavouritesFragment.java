@@ -3,28 +3,23 @@ package com.menil.rottenmovies;
 
 import android.app.ActionBar;
 import android.app.Fragment;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Gallery;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /*
  * Created by menil on 13.11.2014.
  */
-public class FavouritesFragment extends Fragment{
+public class FavouritesFragment extends Fragment {
+    public static final String movie_id = "idKey";
     SharedPreferences sh_Pref;
     ImageView selectedImage;
-    public static final String movie_id = "idKey";
     private Integer[] mImageIds = {
             R.drawable.ic_abh_small,
             R.drawable.ic_fb_small,
@@ -33,6 +28,7 @@ public class FavouritesFragment extends Fragment{
             R.drawable.ic_launcher_small,
             R.drawable.ic_tw_small
     };
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +38,7 @@ public class FavouritesFragment extends Fragment{
         // to their values. When their values change, their summaries are
         // updated to reflect the new value, per the Android Design
         // guidelines.
-       // bindPreferenceSummaryToValue(findPreference("sync_frequency"));
+        // bindPreferenceSummaryToValue(findPreference("sync_frequency"));
     }
 
     @Override
@@ -54,9 +50,8 @@ public class FavouritesFragment extends Fragment{
 
         SharedPreferences sharedpreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
 
-        TextView title = (TextView)view.findViewById(R.id.gallery_title);
-        if(sharedpreferences.contains(movie_id))
-        {
+        TextView title = (TextView) view.findViewById(R.id.gallery_title);
+        if (sharedpreferences.contains(movie_id)) {
             title.setText(sharedpreferences.getString(movie_id, "noMovieID"));
         }
         SharedPreferences.Editor editor = sharedpreferences.edit();
@@ -70,7 +65,8 @@ public class FavouritesFragment extends Fragment{
             actionBar.setTitle(R.string.app_name);
             actionBar.setSubtitle("Favourites");
             actionBar.setBackgroundDrawable(new ColorDrawable(0xFF399322));//transparent
-        }catch (NullPointerException e) {
+            actionBar.setIcon(R.drawable.actionbar_icon);
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
         //editor.commit();
