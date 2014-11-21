@@ -11,8 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -42,6 +44,7 @@ public class SearchFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vynk2
     private ProgressDialog progressDialog;
     private ListView listView;
     private Context mContext, mContext2;
+    private TextView noMoviesTextView;
     View view;
 
     @Override
@@ -77,6 +80,19 @@ public class SearchFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vynk2
         setRetainInstance(true);
     }
 
+
+
+    public void performSearch(String editText){
+
+        if(editText.length()>0)
+        {
+            String request = "http://api.rottentomatoes.com/api/public/v1.0/movies.json?q="+editText.replace(" ", "+")+"&page_limit=50&page=1&apikey=pj2z7eyve6mfdtcx4vynk26y";
+            URI requestURI = URI.create(request);
+            CallAPI task = new CallAPI();
+            task.execute(requestURI);
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -84,25 +100,46 @@ public class SearchFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vynk2
             view = inflater.inflate(R.layout.fragment_search, container, false);
         mContext = getActivity().getApplicationContext();
         listView = (ListView) view.findViewById(R.id.search_listview);
-        final TextView textSearch = (TextView)view.findViewById(R.id.search_textbox);
+
+        /**
+         * HERE STARTS THE SEARCH
+         */
+        final SearchView searchView = (SearchView)view.findViewById(R.id.search_textbox);
+
+        noMoviesTextView = (TextView)view.findViewById(R.id.search_no_movies);
+
+        //((InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // Do something when user his enter on keyboard
+                performSearch(query);
+                view.clearFocus();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                // Do something while user is entering text
+                return false;
+            }
+        });
 
         FloatingActionButton floatingActionButton= (FloatingActionButton) view.findViewById(R.id.search_list_fab);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String request = "http://api.rottentomatoes.com/api/public/v1.0/movies.json?q="+textSearch.getText().toString().replace(" ","+")+"&page_limit=4&page=1&apikey=pj2z7eyve6mfdtcx4vynk26y";
-                URI requestURI = URI.create(request);
-                CallAPI task = new CallAPI();
-                task.execute(requestURI);
+                    performSearch(searchView.getQuery().toString());
+                /*InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(
+                        Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromInputMethod(getActivity().getCurrentFocus().getWindowToken(), 0);*/
             }
         });
-        EditText editText = (EditText)view.findViewById(R.id.search_textbox);
-        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                return (actionId== EditorInfo.IME_ACTION_SEARCH);
-            }
-        });
+        /**
+         * HERE ENDS THE SEARCH
+         */
+
         return view;
     }
 
@@ -111,7 +148,7 @@ public class SearchFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vynk2
         @Override
         protected void onPreExecute() {
 
-           /* progressDialog = new ProgressDialog(getActivity());//, R.style.CustomDialog);
+            progressDialog = new ProgressDialog(getActivity());//, R.style.CustomDialog);
             progressDialog.setTitle("Loading...");
             //Set the dialog message to 'Loading application View, please wait...'
             progressDialog.setMessage("Loading Movies, please wait...");
@@ -127,7 +164,7 @@ public class SearchFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vynk2
             //Set the current progress to zero
             progressDialog.setProgress(0);
             //Display the progress dialog
-            progressDialog.show();*/
+            progressDialog.show();
         }
 
         @Override
@@ -185,8 +222,12 @@ public class SearchFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vynk2
         @Override
         protected void onPostExecute(List<Movie> allMovies) {
 
-            listView.setAdapter(new ListsAdapter(mContext, allMovies, "SEARCH"));
-           // progressDialog.dismiss();
+
+            if (allMovies.isEmpty())
+                noMoviesTextView.setVisibility(View.VISIBLE);
+            else
+                listView.setAdapter(new ListsAdapter(mContext, allMovies, "SEARCH"));
+            progressDialog.dismiss();
         }
     }
 }

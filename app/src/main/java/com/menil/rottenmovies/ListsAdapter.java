@@ -141,12 +141,14 @@ public class ListsAdapter extends BaseAdapter {
         titleView.setText((position + 1) + ". ");
         titleView.append(title);
 
-        String year = Integer.toString(listMovies.get(position).year);
+        String year = listMovies.get(position).year;
         titleView.append(" (" + year + ")");
         titleView.setSelected(true);
 
         TextView runtimeView = (TextView) view.findViewById(R.id.fragment_list_item_runtime);
         String runtime = listMovies.get(position).runtime;
+        if (runtime=="")
+            runtime="NaN";
         runtimeView.setText("Runtime: " + runtime + " min");
 
         TextView releaseView = (TextView) view.findViewById(R.id.fragment_list_item_date);
@@ -159,9 +161,13 @@ public class ListsAdapter extends BaseAdapter {
         }
         releaseView.setText("Release date: " + new_date);
 
+        String criticsScore;
         TextView rating = (TextView) view.findViewById(R.id.fragment_list_item_rating);
-        int criticsScore = (int) listMovies.get(position).ratings.critics_score;
-        rating.setText("Rating: " + String.valueOf(criticsScore));
+        if (listMovies.get(position).ratings==null)
+            criticsScore="Unrated";
+        else
+            criticsScore = listMovies.get(position).ratings.critics_score;
+        rating.setText("Rating: " + criticsScore);
 
         ImageView IMDBImage = (ImageView) view.findViewById(R.id.fragment_list_item_imdb_link);
         final String IMDBiD;

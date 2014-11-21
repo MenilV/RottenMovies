@@ -163,29 +163,6 @@ public class DetailsActivity extends PreferenceActivity {
             }
         });
 
-
-        /**
-         * On Click resize synopsis. Might be useful in the future.
-         */
-        /*synopsis.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TextView t = (TextView) v.findViewById(R.id.fragment_details_synopsis);
-
-                //Toggle synopsis if synopsis is too long
-                if (t.getEllipsize() == TextUtils.TruncateAt.END) {
-                    t.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-                    t.setSingleLine(false);
-
-                } else if (t.getEllipsize() == TextUtils.TruncateAt.MARQUEE) {
-                    t.setMaxLines(10);
-                    t.setEllipsize(TextUtils.TruncateAt.END);
-
-                }
-            }
-        });*/
-
-
     }
 
     private void ModifyPreferences(String key, String value, int option) {

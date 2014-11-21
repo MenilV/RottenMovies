@@ -39,7 +39,7 @@ class Movie implements Parcelable, Serializable, Comparable<Movie> {
     @SerializedName("title")
     public String title;
     @SerializedName("year")
-    public int year;
+    public String year;
     @SerializedName("mpaa_rating")
     public String mpaa_rating;
     @SerializedName("runtime")
@@ -128,7 +128,7 @@ class Posters {
 class Ratings {
 
     @SerializedName("critics_score")
-    public long critics_score;
+    public String critics_score;
 }
 
 class ReleaseDates {

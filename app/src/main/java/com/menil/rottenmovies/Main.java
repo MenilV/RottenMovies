@@ -31,7 +31,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
             Main.this.finish();
         }
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (getFragmentManager().findFragmentByTag("HOME").isVisible()) {
+            if (getFragmentManager().findFragmentByTag("BOXOFFICE").isVisible()) {//TODO: Change this to HOME
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                         mContext);//, R.layout.custom_dialog);
                 // set title
@@ -111,8 +111,10 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
         String tag;
         switch (position) {
             case 0://home fragment
-                fragment = new HomeFragment();
-                tag = "HOME";
+                /*fragment = new HomeFragment();
+                tag = "HOME";*/
+                fragment = new BoxOfficeFragment();
+                tag = "BOXOFFICE";
                 break;
             case 1://box office fragment
                 if (!isConnectedToInternet()) {
@@ -189,28 +191,6 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
             fm.popBackStack(TAG,0);
         else
             ft.replace(R.id.container, fragment, TAG).addToBackStack(TAG).commit();
-
-
-/*
-        FragmentManager fm = getFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-        Boolean found = false;
-        if (fm.getBackStackEntryCount() == 0) {
-            ft.add(R.id.container, fragment, TAG).addToBackStack(TAG).commit();
-        }
-        for (int i = 0; i<fm.getBackStackEntryCount(); i++) {
-            if (fm.findFragmentByTag(TAG) == fm.findFragmentByTag(fm.getBackStackEntryAt(i).getName()))
-                found = true;
-            }
-
-            if(found){
-                ft.hide(fm.findFragmentByTag(fm.getBackStackEntryAt(fm.getBackStackEntryCount()-1).getName()));
-                ft.show(fm.findFragmentByTag(TAG)).commit();
-            }
-            else {
-                ft.hide(fm.findFragmentByTag(fm.getBackStackEntryAt(fm.getBackStackEntryCount()-1).getName()));
-                ft.add(R.id.container, fragment, TAG).addToBackStack(TAG).commit();
-            }*/
     }
 
     @Override
@@ -236,6 +216,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
             finish();
         else if (item.getItemId()==R.id.action_search)
         {
+
             SearchFragment fragment = new SearchFragment();
             switchContent(fragment,"SEARCH");
         }

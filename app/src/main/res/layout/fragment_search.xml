@@ -6,17 +6,24 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingTop="?android:attr/actionBarSize">
-    <EditText
+    <SearchView
         android:id="@+id/search_textbox"
+        android:layout_width="match_parent"
         android:imeOptions="actionSearch"
+        android:queryHint="Search..."
+        android:layout_height="wrap_content">
+        </SearchView>
+
+    <TextView
+        android:id="@+id/search_no_movies"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:maxLines="2"
-        android:hint="Search..."
-        android:textSize="18sp"/>
+        android:textColor="#399322"
+        android:textSize="23sp"
+        android:text="No movies were found.\nTry another search..."
+        android:layout_below="@id/search_textbox"
+        android:visibility="gone"
+        android:gravity="center"/>
 
     <ListView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/search_listview"
