@@ -8,13 +8,14 @@
     android:paddingTop="?android:attr/actionBarSize">
     <EditText
         android:id="@+id/search_textbox"
+        android:imeOptions="actionSearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:maxLines="2"
-        android:text="Search..."
+        android:hint="Search..."
         android:textSize="18sp"/>
 
     <ListView xmlns:android="http://schemas.android.com/apk/res/android"

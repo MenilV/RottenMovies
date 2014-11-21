@@ -23,8 +23,23 @@ public class HomeFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        // Indicate that this fragment would like to influence the set of actions in the action bar.
         setHasOptionsMenu(true);
+        makeActionbar();
+    }
+
+    private void makeActionbar(){
+
+        try{
+            assert getActivity().getActionBar() != null;
+            getActivity().getActionBar().show();
+            getActivity().getActionBar().setDisplayShowTitleEnabled(true);
+            getActivity().getActionBar().setTitle(R.string.app_name);
+            getActivity().getActionBar().setSubtitle("Home");
+            getActivity().getActionBar().setBackgroundDrawable(new ColorDrawable(0xFF399322));//transparent
+            getActivity().getActionBar().setIcon(R.drawable.actionbar_icon);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -53,16 +68,7 @@ public class HomeFragment extends Fragment {
         View view = null;
         if (savedInstanceState == null)
             view = inflater.inflate(R.layout.fragment_home, container, false);
-        ActionBar actionBar = getActivity().getActionBar();
-        try {
-            assert actionBar != null;
-            actionBar.show();
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setTitle(R.string.app_name);
-            actionBar.setBackgroundDrawable(new ColorDrawable(0xFF399322));//transparent
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
+
         assert view != null;
         ImageView AtlantImage = (ImageView) view.findViewById(R.id.fragment_home_abh_link);
         AtlantImage.setOnClickListener(new View.OnClickListener() {

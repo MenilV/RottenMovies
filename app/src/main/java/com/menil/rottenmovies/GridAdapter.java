@@ -7,6 +7,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.koushikdutta.ion.Ion;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +46,7 @@ public class GridAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         View view;
+
         LayoutInflater layoutInflater;
         if (convertView == null) {
             layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -51,9 +55,9 @@ public class GridAdapter extends BaseAdapter {
             view = convertView;
         }
 
-
         TextView titleView = (TextView) view.findViewById(R.id.full_card_title);
         titleView.setText(listMovies.get(position).title);
+        titleView.setSelected(true);
 
         TextView subtitleView = (TextView) view.findViewById(R.id.full_card_subtitle);
         subtitleView.setText("(" + String.valueOf(listMovies.get(position).year) + ")");//+listMovies.get(position).runtime+" min");
@@ -71,15 +75,19 @@ public class GridAdapter extends BaseAdapter {
         actorsView.setText(castText);
         actorsView.setSelected(true);
 
-        RemoteImageView imageView = (RemoteImageView) view.findViewById(R.id.full_card_img);
+        ImageView imageView = (ImageView) view.findViewById(R.id.full_card_img);
         String picURL = listMovies.get(position).posters.detailed.replace("tmb", "det");
-        imageView.setImageURL(picURL, false);
+        Ion.with(imageView)
+                .placeholder(R.drawable.empty_img)
+                .error(R.drawable.empty_img_error)
+                .load(picURL);
 
         ImageView favView = (ImageView) view.findViewById(R.id.fragment_grid_fav);
         favView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                Toast.makeText(mContext,"Added to favourites",Toast.LENGTH_LONG).show();
             }
         });
 

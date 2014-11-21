@@ -84,8 +84,17 @@ public class NavigationDrawerFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        // Indicate that this fragment would like to influence the set of actions in the action bar.
         setHasOptionsMenu(true);
+        ActionBar actionBar = getActivity().getActionBar();
+        try {
+            assert actionBar != null;
+            //actionBar.hide();
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setTitle("");
+            actionBar.setBackgroundDrawable(new ColorDrawable(0xFF399322));//transparent
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -97,21 +106,12 @@ public class NavigationDrawerFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selectItem(position);
-                ActionBar actionBar = getActivity().getActionBar();
-                try {
-                    assert actionBar != null;
-                    actionBar.hide();
-                    actionBar.setDisplayShowTitleEnabled(false);
-                    actionBar.setTitle("");
-                    actionBar.setBackgroundDrawable(new ColorDrawable(0xFF399322));//transparent
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                }
+
             }
         });
         mDrawerListView.setAdapter(new ArrayAdapter<String>(
                 getActionBar().getThemedContext(),
-                android.R.layout.simple_list_item_activated_1,
+                android.R.layout.simple_list_item_activated_1,//HAHAHA nisam promjenio android. xD
                 android.R.id.text1,
                 new String[]{
                         getString(R.string.title_section0),
@@ -153,7 +153,7 @@ public class NavigationDrawerFragment extends Fragment {
         mDrawerToggle = new ActionBarDrawerToggle(
                 getActivity(),                    /* host Activity */
                 mDrawerLayout,                    /* DrawerLayout object */
-                R.drawable.ic_drawer,             /* nav drawer image to replace 'Up' caret */
+                R.drawable.ic_navigation_menu,             /* nav drawer image to replace 'Up' caret */
                 R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
                 R.string.navigation_drawer_close  /* "close drawer" description for accessibility */
         ) {
@@ -262,12 +262,6 @@ public class NavigationDrawerFragment extends Fragment {
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-
-        if (item.getItemId() == R.id.action_refresh) {
-            Toast.makeText(getActivity(), "Refresh", Toast.LENGTH_SHORT).show();
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 

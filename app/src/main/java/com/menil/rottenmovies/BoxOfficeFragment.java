@@ -7,6 +7,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -53,6 +54,8 @@ public class BoxOfficeFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vy
     private Context mContext, mContext2;
     private String tag;
     private Boolean sort = false;
+    private Boolean already_called[] = {false, false, false};
+
     View view;
 
     @Override
@@ -61,70 +64,49 @@ public class BoxOfficeFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vy
         outState.putSerializable("allMovies", (Serializable) allMovies);
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
-        setRetainInstance(true);
-    }
-
-    public boolean isConnectedToInternet(){
-        ConnectivityManager connectivity = (ConnectivityManager)getActivity().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivity != null)
-        {
-            NetworkInfo[] info = connectivity.getAllNetworkInfo();
-            if (info != null)
-                for (int i = 0; i < info.length; i++)
-                    if (info[i].getState() == NetworkInfo.State.CONNECTED)
-                    {
-                        return true;
-                    }
-
-        }
-        return false;
-    }
-
-    private boolean onRestoreInstanceStae(Bundle savedInstanceState){
+    /*private boolean onRestoreInstanceState(Bundle savedInstanceState){
         if(savedInstanceState!=null){
             allMovies = (List<Movie>) savedInstanceState.getSerializable("allMovies");
             return false;
         }
         else return true;
-    }
+    }*/
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Boolean restore = onRestoreInstanceStae(savedInstanceState);
-        //this shows if we need to call the API again
 
-        if (!isConnectedToInternet()) {
-            Toast.makeText(mContext, "You need internet connection...", Toast.LENGTH_LONG).show();
-            return null;
-        }
-
-        if (view == null){
-            view = inflater.inflate(R.layout.fragment_boxoffice, container, false);
-        }
-
-        mContext = getActivity().getApplicationContext();
-        listView = (ListView) view.findViewById(R.id.boxoffice_list);
-        mContext2 = view.getContext();
-
-        ActionBar actionBar = getActivity().getActionBar();
-
+    private void makeActionbar(){
+        String subtitle;
         try {
-            assert actionBar != null;
-            actionBar.show();
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setTitle(R.string.app_name);
-            actionBar.setBackgroundDrawable(new ColorDrawable(0xFF399322));//transparent
-            actionBar.setIcon(R.drawable.actionbar_icon);
+            switch (getArguments().getString("tag")){
+                case "BOXOFFICE":
+                    subtitle="Box Office";
+                    break;
+                case "OPENING":
+                    subtitle="Opening Movies";
+                    break;
+                case "UPCOMING":
+                    subtitle="Upcoming Movies";
+                    break;
+                default:
+                    subtitle="Box Office";
+            }
+            assert getActivity().getActionBar() != null;
+            getActivity().getActionBar().show();
+            getActivity().getActionBar().setDisplayShowTitleEnabled(true);
+            getActivity().getActionBar().setTitle(R.string.app_name);
+            getActivity().getActionBar().setSubtitle(subtitle);
+            getActivity().getActionBar().setBackgroundDrawable(new ColorDrawable(0xFF399322));//transparent
+            getActivity().getActionBar().setIcon(R.drawable.actionbar_icon);
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
 
         Bundle args = getArguments();
-
-
 
         String startURI = "http://api.rottentomatoes.com/api/public/v1.0/lists/movies/";
         String limit = "50";//max amount is 50
@@ -134,34 +116,53 @@ public class BoxOfficeFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vy
         URI requestURI;
         String request;
 
-
         tag = args.getString("tag");
+        int x;
         switch (tag) {
             case "BOXOFFICE":
                 request = startURI + "box_office.json?limit=" + limit + endURI;
-                actionBar.setSubtitle("Box Office");
+            //    getActivity().getActionBar().setSubtitle("Box Office");
+                x =0;
                 break;
             case "OPENING":
                 request = startURI + "opening.json?limit=" + limit + endURI;
-                actionBar.setSubtitle("Opening Movies");
+             //   getActivity().getActionBar().setSubtitle("Opening Movies");
+                x =1;
                 sort = !sort;
                 break;
             case "UPCOMING":
                 request = startURI + "upcoming.json?page_limit=" + limit + nrPages + endURI;
-                actionBar.setSubtitle("Upcoming Movies");
+              //  getActivity().getActionBar().setSubtitle("Upcoming Movies");
+                x =2;
                 sort = !sort;
                 break;
             default:
                 request = startURI + "box_office.json?limit=" + limit + endURI;
-                actionBar.setSubtitle("Box Office");
+              //  getActivity().getActionBar().setSubtitle("Box Office");
+                x =0;
         }
         requestURI = URI.create(request);
-        if(restore) {
+        if(!already_called[x]) {
             CallAPI task = new CallAPI();
             task.execute(requestURI);
-            //thread for getting data from the API
-
+            already_called[x]=true;
+            //thread for getting data from the API only if it's not done once
         }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        //Boolean restore = onRestoreInstanceStae(savedInstanceState);
+
+        if (view == null){
+            view = inflater.inflate(R.layout.fragment_boxoffice, container, false);
+        }
+
+        mContext = getActivity().getApplicationContext();
+        listView = (ListView) view.findViewById(R.id.boxoffice_list);
+        mContext2 = view.getContext();
+
+
         final FloatingActionButton floatingActionButton = (FloatingActionButton) view.findViewById(R.id.boxoffice_list_fab);
         floatingActionButton.attachToListView(listView);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -209,8 +210,15 @@ public class BoxOfficeFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vy
         return view;
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setHasOptionsMenu(true);
+        makeActionbar();
+    }
 
     public class CallAPI extends AsyncTask<URI, String, List<Movie>> {
+
 
         @Override
         protected void onPreExecute() {

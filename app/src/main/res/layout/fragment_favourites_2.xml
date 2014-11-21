@@ -2,22 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingTop="?android:attr/actionBarSize">
 
     <TextView
-        android:id="@+id/gallery_title"
+        android:id="@+id/favourites_gallery_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="nesto"
-        android:textColor="@color/material_blue_500" />
+        android:text="Favourites"
+        android:textSize="30sp"
+        android:textColor="@color/green_700" />
 
-
-    <ImageView
-        android:id="@+id/imageView1"
+    <ListView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/fragment_favourites_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginTop="100dp"
-        android:src="@drawable/actionbar_icon" />
+        android:layout_height="match_parent"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
+        android:scrollbarThumbVertical="@drawable/scrollbar_color"
+        android:headerDividersEnabled="true" />
 
 </LinearLayout>

@@ -38,11 +38,11 @@ public class DetailsFragment extends android.app.Fragment {
 
     public SharedPreferences preferences;
     private Bundle bundle;
-    private Drawable mActionBarBackgroundDrawable;
     private View view;
+    public static final String movie_id = "id";
 
-    //private static final String TAG = "DETAILS";
     //TODO:Details fragment crashes on KEYCODE_HOME pressed
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -62,20 +62,13 @@ public class DetailsFragment extends android.app.Fragment {
         super.onCreate(savedInstanceState);
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        if (savedInstanceState == null)
-        // Inflate the layout for this fragment
-            view = inflater.inflate(R.layout.fragment_details, container, false);
-        // Retrieve data from bundle with Parcelable object of type Movie
-        bundle = getArguments();
+    public void makeActionbar(){
         ActionBar actionBar = getActivity().getActionBar();
         try {
-            mActionBarBackgroundDrawable = getResources().getDrawable(R.drawable.actionbar_background);
+            Drawable mActionBarBackgroundDrawable = getResources().getDrawable(R.drawable.actionbar_background);
             mActionBarBackgroundDrawable.setAlpha(0);
             assert actionBar != null;
+            actionBar.hide();
             actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setTitle("");
             actionBar.setBackgroundDrawable(mActionBarBackgroundDrawable);
@@ -85,6 +78,18 @@ public class DetailsFragment extends android.app.Fragment {
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
+    }
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        if (savedInstanceState == null)
+        // Inflate the layout for this fragment
+            view = inflater.inflate(R.layout.fragment_details, container, false);
+        makeActionbar();
+        // Retrieve data from bundle with Parcelable object of type Movie
+        bundle = getArguments();
+
 
         final Movie movie = bundle.getParcelable("movie");
 
@@ -169,46 +174,68 @@ public class DetailsFragment extends android.app.Fragment {
         String fav = gson.toJson(movie);
 
         final FloatingActionButton floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fragment_details_fab);
-        floatingActionButton.setColorNormal(getResources().getColor(R.color.green));
+
+        //TODO: need to change button if it's already favourited
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            Boolean toggle = true;
+            int option;
             @Override
             public void onClick(View v) {
                 preferences = getActivity().getSharedPreferences("favsAreHere", Context.MODE_PRIVATE);
-                if (toggle)// && floatingActionButton.getColorNormal() == getResources().getColor(R.color.green) )
-                {
-                    floatingActionButton.setColorNormal(getResources().getColor(R.color.white));
-                    floatingActionButton.setImageResource(R.drawable.ic_navigation_check);
-                    ModifyPreferences("id", movie.id, 0);
-                    Toast.makeText(getActivity().getApplicationContext(), "Added to favourites", Toast.LENGTH_LONG).show();
-                } else {
-                    floatingActionButton.setColorNormal(getResources().getColor(R.color.green));
-                    floatingActionButton.setImageResource(R.drawable.ic_action_favorite);
-                    ModifyPreferences("id", movie.id, 1);
-                    Toast.makeText(getActivity().getApplicationContext(), "Removed from favourites", Toast.LENGTH_LONG).show();
-                }
-                toggle = !toggle;
+                    if(!preferences.getString(movie_id,"").contains(movie.id))
+                    {
+                        floatingActionButton.setColorNormal(getResources().getColor(R.color.white));
+                        floatingActionButton.setImageResource(R.drawable.ic_navigation_check);
+                        option = 0;
+                    }
+                    else{
+                        floatingActionButton.setColorNormal(getResources().getColor(R.color.green));
+                        floatingActionButton.setImageResource(R.drawable.ic_action_favorite);
+                        option = 1;
+                    }
+                modifyPreferences(movie_id, movie.id, option);
             }
         });
         return view;
     }
 
-    private void ModifyPreferences(String key, String value, int option) {
+    private void modifyPreferences(String key, String value, int option) {
         preferences = getActivity().getSharedPreferences("favsAreHere", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
+        String idFav = preferences.getString(key, "");
+        boolean contains = false;
+        if (idFav.contains(value))
+            contains = true;
 
         switch (option) {
-            case 0://adds item to favs
-                editor.putString(key, value);
-                editor.apply();
+            case 0://adds item to favourites if there isn't one already
+                if (!contains)
+                {
+                    idFav += (","+value);
+                    editor.putString(key, idFav);
+                    editor.apply();
+                    Toast.makeText(getActivity().getApplicationContext(),"Added to favourites", Toast.LENGTH_LONG).show();
+                }
+                else{
+                    Toast.makeText(getActivity().getApplicationContext(),"Already in favourites", Toast.LENGTH_LONG).show();
+                }
+
                 break;
-            case 1://deletes item from favs
-                editor.remove(key);
-                editor.apply();
+            case 1://deletes item from favourites if there is one already
+                if (contains)
+                {
+                    editor.remove(key);
+                    editor.apply();
+                    idFav=idFav.replace(","+value,"");
+                    editor.putString(key, idFav);
+                    editor.apply();
+                    Toast.makeText(getActivity().getApplicationContext(), "Removed from favourites", Toast.LENGTH_LONG).show();
+                }
+                else{
+                    Toast.makeText(getActivity().getApplicationContext(), "Can't remove. It was not a favourite", Toast.LENGTH_LONG).show();
+                }
                 break;
         }
     }
-
 
 }
 

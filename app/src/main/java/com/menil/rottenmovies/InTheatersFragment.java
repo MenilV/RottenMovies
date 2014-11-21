@@ -28,6 +28,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,24 +41,56 @@ public class InTheatersFragment extends android.app.Fragment {
     public List<Movie> allMovies = new ArrayList<Movie>();
     private ProgressDialog progressDialog;
     private GridView gridView;
+    private Boolean already_called=false;
     //private View view;
     private Context mContext, mContext2;
+    View view;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {//API KEY = pj2z7eyve6mfdtcx4vynk26y
         super.onActivityCreated(savedInstanceState);
         // Indicate that this fragment would like to influence the set of actions in the action bar.
         setHasOptionsMenu(true);
+        makeActionbar();
+    }
+
+    private void makeActionbar(){
+        try {
+            assert getActivity().getActionBar() != null;
+            getActivity().getActionBar().show();
+            getActivity().getActionBar().setDisplayShowTitleEnabled(true);
+            getActivity().getActionBar().setTitle(R.string.app_name);
+            getActivity().getActionBar().setSubtitle("In Theaters");
+            getActivity().getActionBar().setBackgroundDrawable(new ColorDrawable(0xFF399322));//transparent
+            getActivity().getActionBar().setIcon(R.drawable.actionbar_icon);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putSerializable("allMovies", (Serializable) allMovies);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+
+        String startURI = "http://api.rottentomatoes.com/api/public/v1.0/lists/movies/";
+        String limit = "50";//max amount is 50
+        String nrPages = "&page=1";
+        String endURI = "&country=us&apikey=pj2z7eyve6mfdtcx4vynk26y";
+
+        if(!already_called) {
+            CallAPI task = new CallAPI();
+            URI requestURI = URI.create(startURI + "in_theaters.json?page_limit=" + limit + nrPages + endURI);
+            task.execute(requestURI);
+            //thread for getting data from the API
+            already_called=true;
+        }
     }
 
     @Override
@@ -73,38 +106,23 @@ public class InTheatersFragment extends android.app.Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = null;
-        if (savedInstanceState == null)
+
+        if (view == null){
             view = inflater.inflate(R.layout.fragment_intheaters, container, false);
+        }else{
+        ((ViewGroup)container).removeView(view);
+        /**
+         * THIS IS VERY IMPORTANT
+         */
+    }
+        gridView = (GridView) view.findViewById(R.id.others_gridview);
 
         mContext = getActivity().getApplicationContext();
 
-        Bundle args = getArguments();
+        //Bundle args = getArguments();
         mContext2 = view.getContext();
 
-        String startURI = "http://api.rottentomatoes.com/api/public/v1.0/lists/movies/";
-        String limit = "50";//max amount is 50
-        String nrPages = "&page=1";
-        String endURI = "&country=us&apikey=pj2z7eyve6mfdtcx4vynk26y";
 
-        CallAPI task = new CallAPI();
-        URI requestURI = URI.create(startURI + "in_theaters.json?page_limit=" + limit + nrPages + endURI);
-        task.execute(requestURI);
-        //thread for getting data from the API
-        ActionBar actionBar = getActivity().getActionBar();
-        try {
-            assert actionBar != null;
-            actionBar.show();
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setTitle(R.string.app_name);
-            actionBar.setSubtitle("In Theaters");
-            actionBar.setBackgroundDrawable(new ColorDrawable(0xFF399322));//transparent
-            actionBar.setIcon(R.drawable.actionbar_icon);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
-
-        gridView = (GridView) view.findViewById(R.id.others_gridview);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -122,7 +140,7 @@ public class InTheatersFragment extends android.app.Fragment {
                 }
                 if (mContext2 instanceof Main) {
                     Main main = (Main) mContext2;
-                    main.switchContent(fragment, "INTHEATERS");
+                    main.switchContent(fragment, "DETAILS");
                 }
             }
         });
@@ -141,8 +159,6 @@ public class InTheatersFragment extends android.app.Fragment {
                 }
             }
         });
-
-
         return view;
     }
 

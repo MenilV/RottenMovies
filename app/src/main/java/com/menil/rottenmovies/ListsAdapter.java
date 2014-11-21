@@ -2,6 +2,7 @@ package com.menil.rottenmovies;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
@@ -30,10 +32,9 @@ public class ListsAdapter extends BaseAdapter {
 
     private Context mContext;
     private List<Movie> listMovies = new ArrayList<Movie>();
-    private String savedDate, tag;
+    private String tag;
     private ArrayList<String> bannedDates = new ArrayList<String>();
     private ArrayList<Integer> uniquePositionDates = new ArrayList<Integer>();
-
 
     public ListsAdapter(Context context, List<Movie> allMovies, String tag) {
         this.mContext = context;
@@ -66,6 +67,7 @@ public class ListsAdapter extends BaseAdapter {
         String currentDate;
 
 
+        String savedDate;
         if (position == 0) {
             headerLayout.setVisibility(View.VISIBLE);
             savedDate = listMovies.get(position).release_dates.theater;
@@ -103,10 +105,11 @@ public class ListsAdapter extends BaseAdapter {
             view = convertView;
         }
 
-        if (tag.equals("BOXOFFICE")) {
+        if (tag.equals("BOXOFFICE")||tag.equals("SEARCH")) {
             LinearLayout headerLayout = (LinearLayout) view.findViewById(R.id.header_layout);
             headerLayout.setVisibility(View.GONE);
-        } else {
+        }
+        else {
             setHeader(position, view);//setting the header for upcoming and opening movies
         }
 
@@ -116,7 +119,7 @@ public class ListsAdapter extends BaseAdapter {
                 .placeholder(R.drawable.empty_img)
                 .error(R.drawable.empty_img_error)
                 .load(picURL);
-        Ion.with(view.getContext())
+        /*Ion.with(view.getContext())
                 .load(picURL)
                 .write(new File(Environment.getExternalStorageDirectory() + String.valueOf(position) + "menil.jpg"))
                 .setCallback(new FutureCallback<File>() {
@@ -126,15 +129,19 @@ public class ListsAdapter extends BaseAdapter {
                         // download done...
                         // do stuff with the File or error
                     }
-                });
+                });*/
 
 
         TextView titleView = (TextView) view.findViewById(R.id.fragment_list_item_title);
-        String title = listMovies.get(position).title;
+        String title;
+        if (listMovies.get(position).title==null)
+            title="No Movie title";
+        else
+            title = listMovies.get(position).title;
         titleView.setText((position + 1) + ". ");
         titleView.append(title);
 
-        int year = listMovies.get(position).year;
+        String year = Integer.toString(listMovies.get(position).year);
         titleView.append(" (" + year + ")");
         titleView.setSelected(true);
 
@@ -143,8 +150,13 @@ public class ListsAdapter extends BaseAdapter {
         runtimeView.setText("Runtime: " + runtime + " min");
 
         TextView releaseView = (TextView) view.findViewById(R.id.fragment_list_item_date);
-        String release_date = listMovies.get(position).release_dates.theater;
-        String new_date = release_date.substring(8, 10) + "/" + release_date.substring(5, 7) + "/" + release_date.substring(0, 4);
+        String release_date, new_date="No date found";
+        if (listMovies.get(position).release_dates==null || listMovies.get(position).release_dates.theater==null)
+            release_date="Release date not found";
+        else {
+            release_date = listMovies.get(position).release_dates.theater;
+            new_date = release_date.substring(8, 10) + "/" + release_date.substring(5, 7) + "/" + release_date.substring(0, 4);
+        }
         releaseView.setText("Release date: " + new_date);
 
         TextView rating = (TextView) view.findViewById(R.id.fragment_list_item_rating);
@@ -184,6 +196,7 @@ public class ListsAdapter extends BaseAdapter {
 
         //Rotten Movies direct link to Movie
         ImageView RottenImage = (ImageView) view.findViewById(R.id.fragment_list_item_rtn_link);
+
         final String RottenID = listMovies.get(position).links.alternate;
         RottenImage.setOnClickListener(new View.OnClickListener() {
             @Override

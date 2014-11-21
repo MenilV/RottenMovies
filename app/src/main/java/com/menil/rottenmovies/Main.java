@@ -4,8 +4,11 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -17,13 +20,11 @@ import android.view.Window;
 import android.widget.Toast;
 
 
-public class Main extends Activity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+public class Main extends Activity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     final Context mContext = this;
-    private NavigationDrawerFragment mNavigationDrawerFragment;
     private CharSequence mTitle;
-
+    
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_HOME) {
@@ -32,7 +33,7 @@ public class Main extends Activity
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (getFragmentManager().findFragmentByTag("HOME").isVisible()) {
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                        mContext);//, R.style.CustomDialog);
+                        mContext);//, R.layout.custom_dialog);
                 // set title
                 alertDialogBuilder.setTitle("Exit application?");
 
@@ -73,7 +74,11 @@ public class Main extends Activity
          */
         setContentView(R.layout.activity_main);
 
-        mNavigationDrawerFragment = (NavigationDrawerFragment)
+
+        SharedPreferences preferences = getSharedPreferences("favsAreHere", Context.MODE_PRIVATE);
+
+
+        NavigationDrawerFragment mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
 
@@ -164,6 +169,7 @@ public class Main extends Activity
                 break;
         }
         Bundle args = new Bundle();
+
         args.putInt("position", position);
         args.putString("tag", tag);
         fragment.setArguments(args);
@@ -172,9 +178,39 @@ public class Main extends Activity
     }
 
     public void switchContent(Fragment fragment, String TAG) {
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        Boolean found = false;
+        for (int i = 0; i<fm.getBackStackEntryCount(); i++) {
+            if (fm.findFragmentByTag(TAG) == fm.findFragmentByTag(fm.getBackStackEntryAt(i).getName()))
+                found = true;
+        }
+        if(found)
+            fm.popBackStack(TAG,0);
+        else
+            ft.replace(R.id.container, fragment, TAG).addToBackStack(TAG).commit();
 
-        getFragmentManager().beginTransaction()
-                .replace(R.id.container, fragment, TAG).addToBackStack(TAG).commit();
+
+/*
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        Boolean found = false;
+        if (fm.getBackStackEntryCount() == 0) {
+            ft.add(R.id.container, fragment, TAG).addToBackStack(TAG).commit();
+        }
+        for (int i = 0; i<fm.getBackStackEntryCount(); i++) {
+            if (fm.findFragmentByTag(TAG) == fm.findFragmentByTag(fm.getBackStackEntryAt(i).getName()))
+                found = true;
+            }
+
+            if(found){
+                ft.hide(fm.findFragmentByTag(fm.getBackStackEntryAt(fm.getBackStackEntryCount()-1).getName()));
+                ft.show(fm.findFragmentByTag(TAG)).commit();
+            }
+            else {
+                ft.hide(fm.findFragmentByTag(fm.getBackStackEntryAt(fm.getBackStackEntryCount()-1).getName()));
+                ft.add(R.id.container, fragment, TAG).addToBackStack(TAG).commit();
+            }*/
     }
 
     @Override

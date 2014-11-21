@@ -3,12 +3,15 @@ package com.menil.rottenmovies;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -39,14 +42,47 @@ public class SearchFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vynk2
     private ProgressDialog progressDialog;
     private ListView listView;
     private Context mContext, mContext2;
+    View view;
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {//API KEY = pj2z7eyve6mfdtcx4vynk26y
+        super.onActivityCreated(savedInstanceState);
+        // Indicate that this fragment would like to influence the set of actions in the action bar.
+        setHasOptionsMenu(true);
+        makeActionbar();
+    }
+
+    private void makeActionbar(){
+        try {
+            assert getActivity().getActionBar() != null;
+            getActivity().getActionBar().show();
+            getActivity().getActionBar().setDisplayShowTitleEnabled(true);
+            getActivity().getActionBar().setTitle(R.string.app_name);
+            getActivity().getActionBar().setSubtitle("Search");
+            getActivity().getActionBar().setBackgroundDrawable(new ColorDrawable(0xFF399322));//transparent
+            getActivity().getActionBar().setIcon(R.drawable.actionbar_icon);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = null;
         if (savedInstanceState == null)
             view = inflater.inflate(R.layout.fragment_search, container, false);
-
+        mContext = getActivity().getApplicationContext();
         listView = (ListView) view.findViewById(R.id.search_listview);
         final TextView textSearch = (TextView)view.findViewById(R.id.search_textbox);
 
@@ -54,13 +90,19 @@ public class SearchFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vynk2
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String request = "http://api.rottentomatoes.com/api/public/v1.0/movies.json?q="+textSearch.getText().toString()+"&page_limit=50&page=1&apikey=pj2z7eyve6mfdtcx4vynk26y";
+                String request = "http://api.rottentomatoes.com/api/public/v1.0/movies.json?q="+textSearch.getText().toString().replace(" ","+")+"&page_limit=4&page=1&apikey=pj2z7eyve6mfdtcx4vynk26y";
                 URI requestURI = URI.create(request);
                 CallAPI task = new CallAPI();
                 task.execute(requestURI);
             }
         });
-
+        EditText editText = (EditText)view.findViewById(R.id.search_textbox);
+        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                return (actionId== EditorInfo.IME_ACTION_SEARCH);
+            }
+        });
         return view;
     }
 
@@ -69,7 +111,7 @@ public class SearchFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vynk2
         @Override
         protected void onPreExecute() {
 
-            progressDialog = new ProgressDialog(getActivity());//, R.style.CustomDialog);
+           /* progressDialog = new ProgressDialog(getActivity());//, R.style.CustomDialog);
             progressDialog.setTitle("Loading...");
             //Set the dialog message to 'Loading application View, please wait...'
             progressDialog.setMessage("Loading Movies, please wait...");
@@ -85,7 +127,7 @@ public class SearchFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vynk2
             //Set the current progress to zero
             progressDialog.setProgress(0);
             //Display the progress dialog
-            progressDialog.show();
+            progressDialog.show();*/
         }
 
         @Override
@@ -143,8 +185,8 @@ public class SearchFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vynk2
         @Override
         protected void onPostExecute(List<Movie> allMovies) {
 
-            listView.setAdapter(new ListsAdapter(mContext, allMovies, "BOXOFFICE"));
-            progressDialog.dismiss();
+            listView.setAdapter(new ListsAdapter(mContext, allMovies, "SEARCH"));
+           // progressDialog.dismiss();
         }
     }
 }
