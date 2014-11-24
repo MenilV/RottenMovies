@@ -108,7 +108,11 @@ public class ListsAdapter extends BaseAdapter {
         else {
             setHeader(position, view);//setting the header for upcoming and opening movies
         }
-        String picURL = listMovies.get(position).posters.detailed.replace("tmb", "det");
+        String picURL;
+        if(listMovies.get(position)!=null)
+            picURL=listMovies.get(position).posters.detailed.replace("tmb", "det");
+        else
+            picURL ="http://i.imgur.com/q62dq0z.png";
         ImageView imageView = (ImageView) view.findViewById(R.id.fragment_list_item_img);
         Ion.with(imageView)
                 .placeholder(R.drawable.empty_img)
@@ -198,25 +202,6 @@ public class ListsAdapter extends BaseAdapter {
             }
         });
 
-        //Add to favourites button
-        final Button addToFav = (Button) view.findViewById(R.id.fragment_list_add_to_fav);
-        addToFav.setVisibility(View.INVISIBLE);
-
-
-        ImageView more = (ImageView) view.findViewById(R.id.fragment_list_more);
-        more.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                if (addToFav.getVisibility() == View.INVISIBLE)
-                    addToFav.setVisibility(View.VISIBLE);
-                else
-                    addToFav.setVisibility(View.INVISIBLE);
-            }
-        });
         return view;
     }
-
-
 }

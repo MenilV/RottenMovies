@@ -104,6 +104,7 @@ public class HomeFragment extends Fragment {
                 v.getContext().startActivity(intent);
             }
         });
+
         return view;
     }
 

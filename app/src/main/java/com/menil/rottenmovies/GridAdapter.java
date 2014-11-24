@@ -82,14 +82,8 @@ public class GridAdapter extends BaseAdapter {
                 .error(R.drawable.empty_img_error)
                 .load(picURL);
 
-        ImageView favView = (ImageView) view.findViewById(R.id.fragment_grid_fav);
-        favView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                Toast.makeText(mContext,"Added to favourites",Toast.LENGTH_LONG).show();
-            }
-        });
+
 
         return view;
     }

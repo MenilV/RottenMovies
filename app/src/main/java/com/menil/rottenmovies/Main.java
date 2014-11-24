@@ -33,7 +33,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
             Main.this.finish();
         }
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (getFragmentManager().findFragmentByTag("BOXOFFICE").isVisible()) {//TODO: Change this to HOME
+            if (getFragmentManager().findFragmentByTag("HOME").isVisible()) {
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                         mContext);//, R.layout.custom_dialog);
                 // set title
@@ -77,10 +77,6 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
          */
         setContentView(R.layout.activity_main);
 
-
-        //SharedPreferences preferences = getSharedPreferences("favsAreHere", Context.MODE_PRIVATE);
-
-
         NavigationDrawerFragment mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
@@ -88,8 +84,6 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
         //this does nothing
-
-
     }
 
     public boolean isConnectedToInternet() {
@@ -101,7 +95,6 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
                     if (info[i].getState() == NetworkInfo.State.CONNECTED) {
                         return true;
                     }
-
         }
         return false;
     }
@@ -114,10 +107,10 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
         String tag;
         switch (position) {
             case 0://home fragment
-                /*fragment = new HomeFragment();
-                tag = "HOME";*/
-                fragment = new BoxOfficeFragment();
-                tag = "BOXOFFICE";
+                fragment = new HomeFragment();
+                tag = "HOME";
+                /*fragment = new BoxOfficeFragment();
+                tag = "BOXOFFICE";*/
                 break;
             case 1://box office fragment
                 if (!isConnectedToInternet()) {
@@ -160,7 +153,6 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
                 }
                 break;
             case 5://favourites (currently displaying detail view)
-                //TODO: make on click event on the images to store to favourites
                 fragment = new FavouritesFragment();
                 tag = "FAVOURITES";
                 break;

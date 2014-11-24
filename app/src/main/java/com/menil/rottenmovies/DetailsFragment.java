@@ -1,10 +1,12 @@
 package com.menil.rottenmovies;
 
 import android.app.ActionBar;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 
@@ -21,12 +23,26 @@ import com.koushikdutta.ion.Ion;
 import com.melnykov.fab.FloatingActionButton;
 
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.net.URLEncoder;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.crypto.Mac;
@@ -40,7 +56,9 @@ public class DetailsFragment extends android.app.Fragment {
     public SharedPreferences preferences;
     private Bundle bundle;
     private View view;
+    private List<Review> reviewList;
     public static final String movie_id = "id";
+    private ProgressDialog progressDialog;
 
     //TODO:Details fragment crashes on KEYCODE_HOME pressed
 
@@ -64,8 +82,6 @@ public class DetailsFragment extends android.app.Fragment {
 
     }
 
-
-
     public void makeActionbar(){
         ActionBar actionBar = getActivity().getActionBar();
         try {
@@ -81,6 +97,66 @@ public class DetailsFragment extends android.app.Fragment {
 
         } catch (NullPointerException e) {
             e.printStackTrace();
+        }
+    }
+    public void modifyPreferences(String key, int option, Movie movie) {
+        preferences = getActivity().getSharedPreferences("favsAreHere", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        Gson gson = new Gson();
+        String movieJson = gson.toJson(movie);
+        String idFav = preferences.getString(key, "{\"movies\":[");
+        boolean contains = false;
+        if (idFav.contains(movie.getId()))
+            contains = true;
+
+        switch (option) {
+            case 0://adds item to favourites if there isn't one already
+                if (!contains)
+                {
+                    if (idFav.length()>20) {
+                        idFav = idFav.substring(0, idFav.length() - 2);
+                        idFav+=",";
+                    }
+                    idFav+=gson.toJson(movie);
+                    idFav+="]}";
+                    editor.putString(key, idFav);
+                    editor.apply();
+                    Toast.makeText(getActivity().getApplicationContext(),"Added to favourites", Toast.LENGTH_LONG).show();
+                }
+                else{
+                    Toast.makeText(getActivity().getApplicationContext(),"Already in favourites", Toast.LENGTH_LONG).show();
+                }
+
+                break;
+            case 1://deletes item from favourites if there is one already
+                if (contains)
+                {
+                    /*idFav=idFav.replace(movieJson,"");
+                    editor.putString(key, idFav);
+                    editor.apply();*/
+                    Toast.makeText(getActivity().getApplicationContext(), "Removed from favourites", Toast.LENGTH_LONG).show();
+                }
+                else{
+                    Toast.makeText(getActivity().getApplicationContext(), "Can't remove. It was not a favourite", Toast.LENGTH_LONG).show();
+                }
+                break;
+        }
+    }
+    public void createCritics(List<Review> reviewList){
+        TextView reviewText = (TextView)view.findViewById(R.id.fragment_details_critics);
+        reviewText.setText("");
+        for(Review r : reviewList)
+        {
+            reviewText.append(r.critic + " said: \""+ r.quote + "\" in: " + r.publication+"\n\n");
+        }
+    }
+    public void createSimilar(List<Movie> similarMovies){
+        TextView similarText = (TextView)view.findViewById(R.id.fragment_details_similar);
+        similarText.setText("");
+        for(Movie m : similarMovies)//TODO: make this work
+        {
+            similarText.append(m.title+"("+m.year+")"+"\n");
         }
     }
     @Override
@@ -135,7 +211,6 @@ public class DetailsFragment extends android.app.Fragment {
         List<Cast> castList = movie.casts;
         String castText = "Cast: ";
         for (Cast c : castList) {
-            //cast.append(c.name);
             castText += c.name;
             if (++x < castList.size())
                 castText += ", ";
@@ -171,6 +246,17 @@ public class DetailsFragment extends android.app.Fragment {
             e.printStackTrace();
         }
 
+        String criticsRequest="http://api.rottentomatoes.com/api/public/v1.0/movies/"+movie.getId()+"/reviews.json?apikey=pj2z7eyve6mfdtcx4vynk26y";
+        URI requestURIc = URI.create(criticsRequest);
+            CallAPICritics taskC = new CallAPICritics();
+            taskC.execute(requestURIc);
+        //calling API to get critics reviews;
+/*
+        String similarRequest="http://api.rottentomatoes.com/api/public/v1.0/movies/"+movie.getId()+"/similar.json?limit=10&apikey=pj2z7eyve6mfdtcx4vynk26y";
+        URI requestURIs = URI.create(similarRequest);
+        CallAPISimilar taskS = new CallAPISimilar();
+        taskS.execute(requestURIs);
+        //calling API to get similar movies;*/
 
         /**
          * BUTTONS STUFF COMES HERE
@@ -187,7 +273,7 @@ public class DetailsFragment extends android.app.Fragment {
             floatingActionButton.setColorNormal(getResources().getColor(R.color.green));
             floatingActionButton.setImageResource(R.drawable.ic_action_favorite);
         }
-        //TODO: need to change button if it's already favourited
+
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             int option;
             @Override
@@ -210,48 +296,174 @@ public class DetailsFragment extends android.app.Fragment {
         return view;
     }
 
-    private void modifyPreferences(String key, int option, Movie movie) {
-        preferences = getActivity().getSharedPreferences("favsAreHere", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
 
-        Gson gson = new Gson();
-        String movieJson = gson.toJson(movie);
-        String idFav = preferences.getString(key, "{\"movies\":[");
-        boolean contains = false;
-        if (idFav.contains(movie.getId()))
-            contains = true;
+    public class CallAPICritics extends AsyncTask<URI, String, List<Review>> {
 
-        switch (option) {
-            case 0://adds item to favourites if there isn't one already
-                if (!contains)
-                {
-                    if (idFav.length()>20) {
-                        idFav = idFav.substring(0, idFav.length() - 2);
-                        idFav+=",";
-                    }
-                    idFav+=gson.toJson(movie);
-                    idFav+="]}";
-                    editor.putString(key, idFav);
-                    editor.apply();
-                    Toast.makeText(getActivity().getApplicationContext(),"Added to favourites", Toast.LENGTH_LONG).show();
-                }
-                else{
-                    Toast.makeText(getActivity().getApplicationContext(),"Already in favourites", Toast.LENGTH_LONG).show();
-                }
 
-                break;
-            case 1://deletes item from favourites if there is one already
-                if (contains)
-                {
-                    idFav=idFav.replace(movieJson,"");
-                    editor.putString(key, idFav);
-                    editor.apply();
-                    Toast.makeText(getActivity().getApplicationContext(), "Removed from favourites", Toast.LENGTH_LONG).show();
+        @Override
+        protected void onPreExecute() {
+
+/*
+            progressDialog = new ProgressDialog(getActivity());//, R.style.CustomDialog);
+            progressDialog.setTitle("Loading...");
+            //Set the dialog message to 'Loading application View, please wait...'
+            progressDialog.setMessage("Loading Movies, please wait...");
+            //This dialog can't be canceled by pressing the back key
+            progressDialog.setCancelable(true);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            //This dialog isn't indeterminate
+            progressDialog.setIndeterminate(false);
+            progressDialog.setIndeterminateDrawable(getResources()
+                    .getDrawable(R.drawable.spinner_animation));
+            //The maximum number of items is 100
+            progressDialog.setMax(100);
+            //Set the current progress to zero
+            progressDialog.setProgress(0);
+            //Display the progress dialog
+            progressDialog.show();*/
+        }
+
+        @Override
+        protected List<Review> doInBackground(URI... urls) {
+            DefaultHttpClient httpclient = new DefaultHttpClient(new BasicHttpParams());
+            URI requestURI = urls[0];
+            HttpGet httppost = new HttpGet(String.valueOf(requestURI));
+
+            httppost.setHeader("Content-type", "text/javascript;charset=ISO-8859-1");
+
+            InputStream inputStream = null;
+            String result = null;
+
+            BufferedReader reader;
+            try {
+                HttpResponse response = httpclient.execute(httppost);
+                HttpEntity entity = response.getEntity();
+
+                inputStream = entity.getContent();
+                // json is UTF-8 by default
+                reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"), 8);
+                StringBuilder sb = new StringBuilder();
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line).append("\n");
                 }
-                else{
-                    Toast.makeText(getActivity().getApplicationContext(), "Can't remove. It was not a favourite", Toast.LENGTH_LONG).show();
+                result = sb.toString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (inputStream != null) inputStream.close();
+                } catch (Exception squish) {
+                    squish.printStackTrace();
                 }
-                break;
+            }
+
+            JSONObject jsonObject;
+            List<Review> reviewList = null;
+            try {
+
+                Gson gson = new Gson();
+                jsonObject = new JSONObject(result);
+                Reviews reviews = gson.fromJson(jsonObject.toString(), Reviews.class);
+                reviewList=reviews.getReviews();
+
+            } catch (JSONException e1) {
+                e1.printStackTrace();
+            }
+
+            publishProgress(result);
+            return reviewList;
+        }
+
+        @Override
+        protected void onPostExecute(List<Review> reviewLists) {
+            createCritics(reviewLists);
+        }
+    }
+    public class CallAPISimilar extends AsyncTask<URI, String, List<Movie>> {
+
+
+        @Override
+        protected void onPreExecute() {
+
+/*
+            progressDialog = new ProgressDialog(getActivity());//, R.style.CustomDialog);
+            progressDialog.setTitle("Loading...");
+            //Set the dialog message to 'Loading application View, please wait...'
+            progressDialog.setMessage("Loading Movies, please wait...");
+            //This dialog can't be canceled by pressing the back key
+            progressDialog.setCancelable(true);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            //This dialog isn't indeterminate
+            progressDialog.setIndeterminate(false);
+            progressDialog.setIndeterminateDrawable(getResources()
+                    .getDrawable(R.drawable.spinner_animation));
+            //The maximum number of items is 100
+            progressDialog.setMax(100);
+            //Set the current progress to zero
+            progressDialog.setProgress(0);
+            //Display the progress dialog
+            progressDialog.show();*/
+        }
+
+        @Override
+        protected List<Movie> doInBackground(URI... urls) {
+            DefaultHttpClient httpclient = new DefaultHttpClient(new BasicHttpParams());
+            URI requestURI = urls[0];
+            HttpGet httppost = new HttpGet(String.valueOf(requestURI));
+
+            httppost.setHeader("Content-type", "text/javascript;charset=ISO-8859-1");
+
+            InputStream inputStream = null;
+            String result = null;
+
+            BufferedReader reader;
+            try {
+                HttpResponse response = httpclient.execute(httppost);
+                HttpEntity entity = response.getEntity();
+
+                inputStream = entity.getContent();
+                // json is UTF-8 by default
+                reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"), 8);
+                StringBuilder sb = new StringBuilder();
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line).append("\n");
+                }
+                result = sb.toString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (inputStream != null) inputStream.close();
+                } catch (Exception squish) {
+                    squish.printStackTrace();
+                }
+            }
+
+            JSONObject jsonObject;
+            List<Movie> allMovies = new ArrayList<>();
+            try {
+
+                Gson gson = new Gson();
+                jsonObject = new JSONObject(result);
+                Movies movies = gson.fromJson(jsonObject.toString(), Movies.class); // deserializes json into movies
+                allMovies = movies.getMovies();
+
+            } catch (JSONException e1) {
+                e1.printStackTrace();
+            }
+
+            publishProgress(result);
+            return allMovies;
+        }
+
+        @Override
+        protected void onPostExecute(List<Movie> allMovies) {
+            createSimilar(allMovies);
+            //  progressDialog.dismiss();
         }
     }
 

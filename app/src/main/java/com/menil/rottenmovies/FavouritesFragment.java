@@ -37,6 +37,7 @@ public class FavouritesFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
     }
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {//API KEY = pj2z7eyve6mfdtcx4vynk26y
@@ -65,15 +66,15 @@ public class FavouritesFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         if (savedInstanceState == null)
             view = inflater.inflate(R.layout.fragment_favourites, container, false);
+
         preferences = getActivity().getSharedPreferences("favsAreHere", Context.MODE_PRIVATE);
 
         if(isDeleted) {
             preferences.edit().clear().apply();
             isDeleted=false;
         }
-
         Gson gson = new Gson();
-        final String moviesJson = preferences.getString(movie_id, "No movies in favourites");
+        final String moviesJson = preferences.getString(movie_id, "");
         JSONObject jsonObject;
 
         try {
@@ -83,8 +84,6 @@ public class FavouritesFragment extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
         ListView listView = (ListView) view.findViewById(R.id.fragment_favourites_list);
         String tag = "FAVOURITES";
 

@@ -86,7 +86,7 @@ class Movie implements Parcelable, Serializable, Comparable<Movie> {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeValue(this);
+//        dest.writeValue(this);
     }
 
 
@@ -150,4 +150,24 @@ class Cast {
 
     @SerializedName("id")
     public String id;
+}
+
+class Reviews {
+    List<Review> reviews;
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+}
+
+class Review {
+    @SerializedName("critic")
+    public String critic;
+
+    @SerializedName("quote")
+    public String quote;
+
+    @SerializedName("publication")
+    public String publication;
 }

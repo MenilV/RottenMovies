@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 
 import android.widget.ListView;
@@ -80,8 +81,6 @@ public class SearchFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vynk2
         setRetainInstance(true);
     }
 
-
-
     public void performSearch(String editText){
 
         if(editText.length()>0)
@@ -128,7 +127,6 @@ public class SearchFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vynk2
 
         noMoviesTextView = (TextView)view.findViewById(R.id.search_no_movies);
 
-        //((InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
             @Override
@@ -151,14 +149,14 @@ public class SearchFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vynk2
             @Override
             public void onClick(View v) {
                     performSearch(searchView.getQuery().toString());
+                InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(
+                        Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
                 }
         });
         /**
          * HERE ENDS THE SEARCH
          */
-
-
-
         return view;
     }
 
@@ -227,8 +225,8 @@ public class SearchFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vynk2
 
                 Gson gson = new Gson();
                 jsonObject = new JSONObject(result);
-                Movies filmovi = gson.fromJson(jsonObject.toString(), Movies.class); // deserializes json into filmovi
-                allMovies = filmovi.getMovies();
+                Movies movies = gson.fromJson(jsonObject.toString(), Movies.class); // deserializes json into movies
+                allMovies = movies.getMovies();
 
             } catch (JSONException e1) {
                 e1.printStackTrace();
@@ -240,12 +238,14 @@ public class SearchFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vynk2
 
         @Override
         protected void onPostExecute(List<Movie> allMovies) {
-
-
-            if (allMovies.isEmpty())
+            if (allMovies.isEmpty()){
                 noMoviesTextView.setVisibility(View.VISIBLE);
-            else
+                listView.setVisibility(View.GONE);}
+            else{
+                noMoviesTextView.setVisibility(View.GONE);
+                listView.setVisibility(View.VISIBLE);
                 listView.setAdapter(new ListsAdapter(mContext, allMovies, "SEARCH"));
+            }
             progressDialog.dismiss();
         }
     }
