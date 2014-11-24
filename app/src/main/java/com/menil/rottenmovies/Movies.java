@@ -12,12 +12,19 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-/**
+
+/*
  * Created by menil on 17.10.2014.
  */
 public class Movies {
 
-    public List<Movie> movies;
+    private List<Movie> movies;
+
+    public List<Movie> getMovies(){
+        return movies;
+    }
+
+
 }
 
 /*
@@ -102,7 +109,7 @@ class Movie implements Parcelable, Serializable, Comparable<Movie> {
 
 class IMDB {
     @SerializedName("imdb")
-    public String imdb;
+    private String imdb;
 
     public String getIMDB() {
         return imdb;

@@ -2,9 +2,9 @@ package com.menil.rottenmovies;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+
 import android.net.Uri;
-import android.os.Environment;
+
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,12 +14,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,7 +63,6 @@ public class ListsAdapter extends BaseAdapter {
         String prettyDate;
         String currentDate;
 
-
         String savedDate;
         if (position == 0) {
             headerLayout.setVisibility(View.VISIBLE);
@@ -105,32 +101,19 @@ public class ListsAdapter extends BaseAdapter {
             view = convertView;
         }
 
-        if (tag.equals("BOXOFFICE")||tag.equals("SEARCH")) {
+        if (tag.equals("BOXOFFICE")||tag.equals("SEARCH")||tag.equals("FAVOURITES")) {
             LinearLayout headerLayout = (LinearLayout) view.findViewById(R.id.header_layout);
             headerLayout.setVisibility(View.GONE);
         }
         else {
             setHeader(position, view);//setting the header for upcoming and opening movies
         }
-
         String picURL = listMovies.get(position).posters.detailed.replace("tmb", "det");
         ImageView imageView = (ImageView) view.findViewById(R.id.fragment_list_item_img);
         Ion.with(imageView)
                 .placeholder(R.drawable.empty_img)
                 .error(R.drawable.empty_img_error)
                 .load(picURL);
-        /*Ion.with(view.getContext())
-                .load(picURL)
-                .write(new File(Environment.getExternalStorageDirectory() + String.valueOf(position) + "menil.jpg"))
-                .setCallback(new FutureCallback<File>() {
-                    @Override
-                    public void onCompleted(Exception e, File file) {
-                        //Toast.makeText(getView().getContext(),"Image"+position+" downloaded",Toast.LENGTH_LONG).show();
-                        // download done...
-                        // do stuff with the File or error
-                    }
-                });*/
-
 
         TextView titleView = (TextView) view.findViewById(R.id.fragment_list_item_title);
         String title;
@@ -147,7 +130,7 @@ public class ListsAdapter extends BaseAdapter {
 
         TextView runtimeView = (TextView) view.findViewById(R.id.fragment_list_item_runtime);
         String runtime = listMovies.get(position).runtime;
-        if (runtime=="")
+        if (runtime.equals(""))
             runtime="NaN";
         runtimeView.setText("Runtime: " + runtime + " min");
 

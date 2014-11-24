@@ -7,24 +7,25 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.koushikdutta.ion.Ion;
 import com.melnykov.fab.FloatingActionButton;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -60,7 +61,10 @@ public class DetailsFragment extends android.app.Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
+
+
 
     public void makeActionbar(){
         ActionBar actionBar = getActivity().getActionBar();
@@ -83,9 +87,10 @@ public class DetailsFragment extends android.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        if (savedInstanceState == null)
+        if (view == null)
         // Inflate the layout for this fragment
             view = inflater.inflate(R.layout.fragment_details, container, false);
+
         makeActionbar();
         // Retrieve data from bundle with Parcelable object of type Movie
         bundle = getArguments();
@@ -153,7 +158,7 @@ public class DetailsFragment extends android.app.Fragment {
         String rescaledImage = null;
 
         try {//rescale and set picture TOP
-            rescaledImage = ThumbrIo1.sign(movie.posters.detailed.replace("tmb", "ori"), "510x755c");
+            rescaledImage = ThumbrIo.sign(movie.posters.detailed.replace("tmb", "ori"), "510x755c");
             Ion.with(imageViewTop)
                     .placeholder(R.drawable.empty_img)
                     .error(R.drawable.empty_img_error)
@@ -170,11 +175,18 @@ public class DetailsFragment extends android.app.Fragment {
         /**
          * BUTTONS STUFF COMES HERE
          */
-        Gson gson = new Gson();
-        String fav = gson.toJson(movie);
+
 
         final FloatingActionButton floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fragment_details_fab);
-
+        if(getActivity().getSharedPreferences("favsAreHere", Context.MODE_PRIVATE).getString(movie_id,"").contains(movie.id))
+        {
+            floatingActionButton.setColorNormal(getResources().getColor(R.color.white));
+            floatingActionButton.setImageResource(R.drawable.ic_navigation_check);
+        }
+        else{
+            floatingActionButton.setColorNormal(getResources().getColor(R.color.green));
+            floatingActionButton.setImageResource(R.drawable.ic_action_favorite);
+        }
         //TODO: need to change button if it's already favourited
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             int option;
@@ -192,25 +204,33 @@ public class DetailsFragment extends android.app.Fragment {
                         floatingActionButton.setImageResource(R.drawable.ic_action_favorite);
                         option = 1;
                     }
-                modifyPreferences(movie_id, movie.id, option);
+                modifyPreferences(movie_id, option, movie);
             }
         });
         return view;
     }
 
-    private void modifyPreferences(String key, String value, int option) {
+    private void modifyPreferences(String key, int option, Movie movie) {
         preferences = getActivity().getSharedPreferences("favsAreHere", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-        String idFav = preferences.getString(key, "");
+
+        Gson gson = new Gson();
+        String movieJson = gson.toJson(movie);
+        String idFav = preferences.getString(key, "{\"movies\":[");
         boolean contains = false;
-        if (idFav.contains(value))
+        if (idFav.contains(movie.getId()))
             contains = true;
 
         switch (option) {
             case 0://adds item to favourites if there isn't one already
                 if (!contains)
                 {
-                    idFav += (","+value);
+                    if (idFav.length()>20) {
+                        idFav = idFav.substring(0, idFav.length() - 2);
+                        idFav+=",";
+                    }
+                    idFav+=gson.toJson(movie);
+                    idFav+="]}";
                     editor.putString(key, idFav);
                     editor.apply();
                     Toast.makeText(getActivity().getApplicationContext(),"Added to favourites", Toast.LENGTH_LONG).show();
@@ -223,9 +243,7 @@ public class DetailsFragment extends android.app.Fragment {
             case 1://deletes item from favourites if there is one already
                 if (contains)
                 {
-                    editor.remove(key);
-                    editor.apply();
-                    idFav=idFav.replace(","+value,"");
+                    idFav=idFav.replace(movieJson,"");
                     editor.putString(key, idFav);
                     editor.apply();
                     Toast.makeText(getActivity().getApplicationContext(), "Removed from favourites", Toast.LENGTH_LONG).show();
@@ -239,7 +257,7 @@ public class DetailsFragment extends android.app.Fragment {
 
 }
 
-class ThumbrIo1 {
+class ThumbrIo {
 
     private static final String THUMBRIO_API_KEY = "t0AsaoQ1lG-nJaIvOavA";
     private static final String THUMBRIO_SECRET_KEY = "9YmFRL63IhMqhASdj1fq";
@@ -247,7 +265,7 @@ class ThumbrIo1 {
             "http://api.thumbr.io/", "https://api.thumbr.io/"
     };
 
-    private ThumbrIo1() {
+    private ThumbrIo() {
         throw new AssertionError();
     }
 
@@ -262,7 +280,7 @@ class ThumbrIo1 {
 
     public static String sign(String url, String size)
             throws NoSuchAlgorithmException, InvalidKeyException, UnsupportedEncodingException {
-        return ThumbrIo1.sign(url, size, "thumb.png", null, THUMBRIO_BASE_URLS[0]);
+        return ThumbrIo.sign(url, size, "thumb.png", null, THUMBRIO_BASE_URLS[0]);
     }
 
     public static String sign(String url, String size, String thumbName)
@@ -308,7 +326,7 @@ class ThumbrIo1 {
         Mac mac = Mac.getInstance("HmacMD5");
         mac.init(keySpec);
         byte[] hmacBytes = mac.doFinal((baseUrl + path).getBytes("UTF-8"));
-        String token = ThumbrIo1.toHex(hmacBytes);
+        String token = ThumbrIo.toHex(hmacBytes);
 
         return String.format("%s%s/%s", baseUrl, token, path);
     }

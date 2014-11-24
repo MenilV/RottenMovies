@@ -61,5 +61,9 @@
     <string name="slide_arrows">slide arrows</string>
     <string name="btm_img_icon">bottom image icon</string>
     <string name="synopsis_title">Synopsis:\n</string>
+    <string name="no_movies_searched">No movies were found.\nTry another search...</string>
+    <string name="bck_img_details">Background image details view</string>
+    <string name="details_img">details image</string>
+    <string name="favourites">Favourites</string>
 
 </resources>

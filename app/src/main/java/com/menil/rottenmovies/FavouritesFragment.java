@@ -2,39 +2,24 @@ package com.menil.rottenmovies;
 
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.app.Fragment;
-import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
+import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.gson.Gson;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
+import com.melnykov.fab.FloatingActionButton;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URI;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /*
@@ -43,25 +28,22 @@ import java.util.List;
 public class FavouritesFragment extends Fragment {
     public SharedPreferences preferences;
     public static final String movie_id = "id";
-    View view;
-    ProgressDialog progressDialog;
-    List<Movie> favouritesList=new ArrayList<Movie>();
-    ListView listView;
-    Context mContext;
-    SharedPreferences sh_Pref;
-    ImageView selectedImage;
-    private Integer[] mImageIds = {
-            R.drawable.ic_abh_small,
-            R.drawable.ic_fb_small,
-            R.drawable.ic_imdb_small,
-            R.drawable.ic_rtlogo_small,
-            R.drawable.ic_launcher_small,
-            R.drawable.ic_tw_small
-    };
+    private List<Movie> favouritesList=new ArrayList<Movie>();
+    private Boolean isDeleted=false;
+    private View view;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+    }
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {//API KEY = pj2z7eyve6mfdtcx4vynk26y
+        super.onActivityCreated(savedInstanceState);
+        // Indicate that this fragment would like to influence the set of actions in the action bar.
+        setHasOptionsMenu(true);
+        makeActionbar();
     }
 
     public void makeActionbar() {
@@ -82,132 +64,89 @@ public class FavouritesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         if (savedInstanceState == null)
-            view = inflater.inflate(R.layout.fragment_favourites_2, container, false);
-        makeActionbar();
-
+            view = inflater.inflate(R.layout.fragment_favourites, container, false);
         preferences = getActivity().getSharedPreferences("favsAreHere", Context.MODE_PRIVATE);
-        //SharedPreferences.Editor editor = preferences.edit();
 
-        TextView title = (TextView) view.findViewById(R.id.favourites_gallery_title);
-        //if (preferences.contains(movie_id))
-        String nesto = preferences.getString(movie_id,"noMovieID");
-            title.setText(nesto);
-        Toast.makeText(getActivity().getApplicationContext(),preferences.getString(movie_id,"noMovieID"),Toast.LENGTH_LONG).show();
+        if(isDeleted) {
+            preferences.edit().clear().apply();
+            isDeleted=false;
+        }
 
-        listView = (ListView) view.findViewById(R.id.fragment_favourites_list);
-        nesto = nesto.replace(nesto.substring(0,1),"");//remove the first comma
-        List<String> favouritesList = new ArrayList<String>(Arrays.asList(nesto.split(",")));
-        ArrayAdapter<String> favouritesAdapter = new ArrayAdapter<String>(view.getContext(),android.R.layout.simple_list_item_1, favouritesList);//make seperate adapter
-        //listView.setAdapter(favouritesAdapter);
+        Gson gson = new Gson();
+        final String moviesJson = preferences.getString(movie_id, "No movies in favourites");
+        JSONObject jsonObject;
+
+        try {
+            jsonObject = new JSONObject(moviesJson);
+            Movies movies = gson.fromJson(jsonObject.toString(), Movies.class);
+            favouritesList = movies.getMovies();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        ListView listView = (ListView) view.findViewById(R.id.fragment_favourites_list);
         String tag = "FAVOURITES";
-        //listView.setAdapter(new ListsAdapter(view.getContext(), favouritesList, tag, 0));List<String> favouritesList
+
+            listView.setAdapter(new ListsAdapter(getActivity().getApplicationContext(), favouritesList, tag));
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Bundle args = new Bundle();
+                    args.putParcelable("movie", favouritesList.get(position));
+
+                    Fragment fragment = new DetailsFragment();
+                    fragment.setArguments(args);
+                    switchFragment(fragment);
+                }
+
+                private void switchFragment(Fragment fragment) {
+                    if (view.getContext() == null) {
+                        return;
+                    }
+                    if (view.getContext() instanceof Main) {
+                        Main main = (Main) view.getContext();
+                        main.switchContent(fragment, "DETAILS");
+                    }
+                }
+            });
+
+        final FloatingActionButton floatingActionButton = (FloatingActionButton) view.findViewById(R.id.favourites_list_fab);
+        floatingActionButton.attachToListView(listView);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(view.getContext());
+                // set title
+                alertDialogBuilder.setTitle("Delete all from favourites?");
+
+                // set dialog message
+                AlertDialog.Builder builder = alertDialogBuilder
+                        .setIcon(R.drawable.ic_action_warning)
+                        .setCancelable(false)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // if this button is clicked, delete all favourites
+                                isDeleted=true;
+                                Toast.makeText(view.getContext(),"Upon next opening of the app, favourites will be cleared",Toast.LENGTH_LONG).show();
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // if this button is clicked, just close the dialog box
+                                dialog.cancel();
+                            }
+                        });
+                // create alert dialog
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                // show it
+                alertDialog.show();
+            }
+
+        });
         return view;
 
     }
-  /*  private void ModifyPreferences(String key, String value, int option) {
-        preferences = getActivity().getSharedPreferences("favsAreHere", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        SharedPreferences settings2 = getActivity().getSharedPreferences("favsAreHere", Context.MODE_PRIVATE);
-        String idFav = settings2.getString("id", "0");
-        switch (option) {
-            case 0://adds item to favs
-                editor.putString(key, value);
-                editor.apply();
 
-                Toast.makeText(getActivity().getApplicationContext(), idFav + " added", Toast.LENGTH_LONG).show();
-                break;
-            case 1://deletes item from favs
-                editor.remove(key);
-                editor.apply();
-                Toast.makeText(getActivity().getApplicationContext(), idFav+" added", Toast.LENGTH_LONG).show();
-                break;
-        }
-    }
-*/
-
-    public class CallAPI extends AsyncTask<URI, String, List<Movie>> {
-
-        @Override
-        protected void onPreExecute() {
-
-
-            progressDialog = new ProgressDialog(getActivity());//, R.style.CustomDialog);
-            progressDialog.setTitle("Loading...");
-            //Set the dialog message to 'Loading application View, please wait...'
-            progressDialog.setMessage("Loading Movies, please wait...");
-            //This dialog can't be canceled by pressing the back key
-            progressDialog.setCancelable(true);
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            //This dialog isn't indeterminate
-            progressDialog.setIndeterminate(false);
-            progressDialog.setIndeterminateDrawable(getResources()
-                    .getDrawable(R.drawable.spinner_animation));
-            //The maximum number of items is 100
-            progressDialog.setMax(100);
-            //Set the current progress to zero
-            progressDialog.setProgress(0);
-            //Display the progress dialog
-            progressDialog.show();
-        }
-
-        @Override
-        protected List<Movie> doInBackground(URI... urls) {
-            DefaultHttpClient httpclient = new DefaultHttpClient(new BasicHttpParams());
-            URI requestURI = urls[0];
-            HttpGet httppost = new HttpGet(String.valueOf(requestURI));
-
-            httppost.setHeader("Content-type", "text/javascript;charset=ISO-8859-1");
-
-            InputStream inputStream = null;
-            String result = null;
-
-            BufferedReader reader;
-            try {
-                HttpResponse response = httpclient.execute(httppost);
-                HttpEntity entity = response.getEntity();
-
-                inputStream = entity.getContent();
-                // json is UTF-8 by default
-                reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"), 8);
-                StringBuilder sb = new StringBuilder();
-
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line).append("\n");
-                }
-                result = sb.toString();
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    if (inputStream != null) inputStream.close();
-                } catch (Exception squish) {
-                    squish.printStackTrace();
-                }
-            }
-
-            JSONObject jsonObject;
-            try {
-
-                Gson gson = new Gson();
-                jsonObject = new JSONObject(result);
-                Movie film = gson.fromJson(jsonObject.toString(), Movie.class); // deserializes json into filmovi
-                favouritesList.add(film);
-
-            } catch (JSONException e1) {
-                e1.printStackTrace();
-            }
-
-            publishProgress(result);
-            return favouritesList;
-        }
-
-        @Override
-        protected void onPostExecute(List<Movie> favouritesList) {
-
-            String tag="FAVOURITES";
-            listView.setAdapter(new ListFavouriteAdapter(mContext, favouritesList, tag));
-            progressDialog.dismiss();
-        }
-    }
 }

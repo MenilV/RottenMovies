@@ -14,7 +14,8 @@
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
         android:scaleType="centerCrop"
-        android:src="@drawable/empty_img_big" />
+        android:src="@drawable/empty_img_big"
+        android:contentDescription="@string/bck_img_details" />
 
     <include layout="@layout/fragment_details_pane" />
 

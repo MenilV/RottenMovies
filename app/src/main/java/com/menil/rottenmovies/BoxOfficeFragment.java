@@ -1,27 +1,18 @@
 package com.menil.rottenmovies;
 
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.melnykov.fab.FloatingActionButton;
@@ -73,21 +64,21 @@ public class BoxOfficeFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vy
     }*/
 
 
-    private void makeActionbar(){
+    private void makeActionbar() {
         String subtitle;
         try {
-            switch (getArguments().getString("tag")){
+            switch (getArguments().getString("tag")) {
                 case "BOXOFFICE":
-                    subtitle="Box Office";
+                    subtitle = "Box Office";
                     break;
                 case "OPENING":
-                    subtitle="Opening Movies";
+                    subtitle = "Opening Movies";
                     break;
                 case "UPCOMING":
-                    subtitle="Upcoming Movies";
+                    subtitle = "Upcoming Movies";
                     break;
                 default:
-                    subtitle="Box Office";
+                    subtitle = "Box Office";
             }
             assert getActivity().getActionBar() != null;
             getActivity().getActionBar().show();
@@ -102,7 +93,7 @@ public class BoxOfficeFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vy
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
 
@@ -121,40 +112,40 @@ public class BoxOfficeFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vy
         switch (tag) {
             case "BOXOFFICE":
                 request = startURI + "box_office.json?limit=" + limit + endURI;
-            //    getActivity().getActionBar().setSubtitle("Box Office");
-                x =0;
+                //    getActivity().getActionBar().setSubtitle("Box Office");
+                x = 0;
                 break;
             case "OPENING":
                 request = startURI + "opening.json?limit=" + limit + endURI;
-             //   getActivity().getActionBar().setSubtitle("Opening Movies");
-                x =1;
+                //   getActivity().getActionBar().setSubtitle("Opening Movies");
+                x = 1;
                 sort = !sort;
                 break;
             case "UPCOMING":
                 request = startURI + "upcoming.json?page_limit=" + limit + nrPages + endURI;
-              //  getActivity().getActionBar().setSubtitle("Upcoming Movies");
-                x =2;
+                //  getActivity().getActionBar().setSubtitle("Upcoming Movies");
+                x = 2;
                 sort = !sort;
                 break;
             default:
                 request = startURI + "box_office.json?limit=" + limit + endURI;
-              //  getActivity().getActionBar().setSubtitle("Box Office");
-                x =0;
+                //  getActivity().getActionBar().setSubtitle("Box Office");
+                x = 0;
         }
         requestURI = URI.create(request);
-        if(!already_called[x]) {
+        if (!already_called[x]) {
             CallAPI task = new CallAPI();
             task.execute(requestURI);
-            already_called[x]=true;
+            already_called[x] = true;
             //thread for getting data from the API only if it's not done once
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        //Boolean restore = onRestoreInstanceStae(savedInstanceState);
+        //Boolean restore = onRestoreInstanceState(savedInstanceState);
 
-        if (view == null){
+        if (view == null) {
             view = inflater.inflate(R.layout.fragment_boxoffice, container, false);
         }
 
@@ -285,7 +276,7 @@ public class BoxOfficeFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vy
                 Gson gson = new Gson();
                 jsonObject = new JSONObject(result);
                 Movies filmovi = gson.fromJson(jsonObject.toString(), Movies.class); // deserializes json into filmovi
-                allMovies = filmovi.movies;
+                allMovies = filmovi.getMovies();
 
             } catch (JSONException e1) {
                 e1.printStackTrace();

@@ -6,13 +6,13 @@ import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.KeyEvent;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
+
+import android.widget.AdapterView;
+
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -43,7 +43,7 @@ public class SearchFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vynk2
     public List<Movie> allMovies = new ArrayList<Movie>();
     private ProgressDialog progressDialog;
     private ListView listView;
-    private Context mContext, mContext2;
+    private Context mContext;
     private TextView noMoviesTextView;
     View view;
 
@@ -100,7 +100,27 @@ public class SearchFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vynk2
             view = inflater.inflate(R.layout.fragment_search, container, false);
         mContext = getActivity().getApplicationContext();
         listView = (ListView) view.findViewById(R.id.search_listview);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Bundle args = new Bundle();
+                args.putParcelable("movie", allMovies.get(position));
 
+                Fragment fragment = new DetailsFragment();
+                fragment.setArguments(args);
+                switchFragment(fragment);
+            }
+
+            private void switchFragment(Fragment fragment) {
+                if (view.getContext() == null) {
+                    return;
+                }
+                if (view.getContext() instanceof Main) {
+                    Main main = (Main) view.getContext();
+                    main.switchContent(fragment, "DETAILS");
+                }
+            }
+        });
         /**
          * HERE STARTS THE SEARCH
          */
@@ -131,14 +151,13 @@ public class SearchFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vynk2
             @Override
             public void onClick(View v) {
                     performSearch(searchView.getQuery().toString());
-                /*InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(
-                        Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromInputMethod(getActivity().getCurrentFocus().getWindowToken(), 0);*/
-            }
+                }
         });
         /**
          * HERE ENDS THE SEARCH
          */
+
+
 
         return view;
     }
@@ -209,7 +228,7 @@ public class SearchFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vynk2
                 Gson gson = new Gson();
                 jsonObject = new JSONObject(result);
                 Movies filmovi = gson.fromJson(jsonObject.toString(), Movies.class); // deserializes json into filmovi
-                allMovies = filmovi.movies;
+                allMovies = filmovi.getMovies();
 
             } catch (JSONException e1) {
                 e1.printStackTrace();

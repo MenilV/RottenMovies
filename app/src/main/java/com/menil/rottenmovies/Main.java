@@ -1,6 +1,6 @@
 package com.menil.rottenmovies;
 
-import android.app.ActionBar;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -18,6 +18,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 import android.widget.Toast;
+
+
 
 
 public class Main extends Activity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -68,6 +70,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         /**
          * ovo iznad je zlo!!@!! ali radi :D
@@ -75,7 +78,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
         setContentView(R.layout.activity_main);
 
 
-        SharedPreferences preferences = getSharedPreferences("favsAreHere", Context.MODE_PRIVATE);
+        //SharedPreferences preferences = getSharedPreferences("favsAreHere", Context.MODE_PRIVATE);
 
 
         NavigationDrawerFragment mNavigationDrawerFragment = (NavigationDrawerFragment)
@@ -219,6 +222,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 
             SearchFragment fragment = new SearchFragment();
             switchContent(fragment,"SEARCH");
+            item.expandActionView();
         }
         return id == R.id.action_settings || super.onOptionsItemSelected(item);
     }

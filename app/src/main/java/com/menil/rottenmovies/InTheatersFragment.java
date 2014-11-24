@@ -1,6 +1,6 @@
 package com.menil.rottenmovies;
 
-import android.app.ActionBar;
+
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.ProgressDialog;
@@ -227,9 +227,8 @@ public class InTheatersFragment extends android.app.Fragment {
                 Gson gson = new Gson();
 
                 jsonObject = new JSONObject(result);
-                Movies filmovi = new Movies();
-                filmovi = gson.fromJson(jsonObject.toString(), Movies.class); // deserializes json into filmovi
-                allMovies = filmovi.movies;
+                Movies filmovi = gson.fromJson(jsonObject.toString(), Movies.class); // deserializes json into filmovi
+                allMovies = filmovi.getMovies();
             } catch (JSONException e1) {
                 e1.printStackTrace();
             }

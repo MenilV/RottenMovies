@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:textColor="#399322"
         android:textSize="23sp"
-        android:text="No movies were found.\nTry another search..."
+        android:text="@string/no_movies_searched"
         android:layout_below="@id/search_textbox"
         android:visibility="gone"
         android:gravity="center"/>
@@ -44,6 +44,7 @@
         android:layout_gravity="bottom|end"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_margin="16dp"
         android:src="@drawable/abc_ic_search_api_mtrl_alpha"
         fab:fab_colorNormal="@color/green"
