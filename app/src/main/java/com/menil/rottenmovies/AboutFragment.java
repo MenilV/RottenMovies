@@ -14,6 +14,7 @@ import android.view.ViewGroup;
  */
 public class AboutFragment extends Fragment {
 
+    private View view;
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -44,8 +45,8 @@ public class AboutFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = null;
-        if (savedInstanceState == null)
+
+        if (view == null)
             view = inflater.inflate(R.layout.fragment_about, container, false);
         ActionBar actionBar = getActivity().getActionBar();
         try {

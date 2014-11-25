@@ -82,10 +82,9 @@ public class GridAdapter extends BaseAdapter {
                 .error(R.drawable.empty_img_error)
                 .load(picURL);
 
-
-
-
         return view;
     }
 
 }
+
+/* */

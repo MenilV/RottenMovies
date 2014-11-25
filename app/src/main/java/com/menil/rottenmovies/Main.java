@@ -68,6 +68,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
 
 

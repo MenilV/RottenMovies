@@ -46,23 +46,13 @@ public class BoxOfficeFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vy
     private String tag;
     private Boolean sort = false;
     private Boolean already_called[] = {false, false, false};
-
-    View view;
+    private View view;
 
     @Override
     public void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable("allMovies", (Serializable) allMovies);
     }
-
-    /*private boolean onRestoreInstanceState(Bundle savedInstanceState){
-        if(savedInstanceState!=null){
-            allMovies = (List<Movie>) savedInstanceState.getSerializable("allMovies");
-            return false;
-        }
-        else return true;
-    }*/
-
 
     private void makeActionbar() {
         String subtitle;

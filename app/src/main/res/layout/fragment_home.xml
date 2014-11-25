@@ -43,45 +43,24 @@
                android:text="Recently Viewed"
                android:textColor="@color/pale_gray"
                android:textSize="25sp" />
-           <HorizontalScrollView
-               android:id="@+id/fragment_home_recent_scroll"
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:layout_below="@+id/nesto">
-               <LinearLayout
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content">
-                   <ImageView
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:src="@drawable/empty_img"/>
-                   <ImageView
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:src="@drawable/empty_img"/>
-                   <ImageView
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:src="@drawable/empty_img"/>
-                   <ImageView
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:src="@drawable/empty_img"/>
-                   <ImageView
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:src="@drawable/empty_img"/>
-                   <ImageView
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:src="@drawable/empty_img"/>
-                   <ImageView
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:src="@drawable/empty_img"/>
 
-               </LinearLayout>
-           </HorizontalScrollView>
+               <GridView
+                   android:id="@+id/fragment_home_recent_scroll"
+                   android:layout_below="@id/nesto"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:numColumns="5"
+                   android:background="#f1f1f1"
+                   android:clickable="true"
+                   android:columnWidth="90dp"
+                   android:gravity="center"
+                   android:horizontalSpacing="5dp"
+                   android:stretchMode="columnWidth"
+                   android:textColor="@color/pale_black"
+                   android:scrollbarThumbVertical="@drawable/scrollbar_color"
+                   android:verticalSpacing="3dp">
+               </GridView>
+
            <ImageView
                android:layout_marginTop="-6dp"
                android:layout_width="match_parent"
@@ -134,14 +113,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/empty_img"/>
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/empty_img"/>
-                    <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/empty_img"/>
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.Toast;
 import com.google.gson.Gson;
@@ -31,7 +32,6 @@ public class FavouritesFragment extends Fragment {
     private List<Movie> favouritesList=new ArrayList<Movie>();
     private Boolean isDeleted=false;
     private View view;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,7 +64,7 @@ public class FavouritesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        if (savedInstanceState == null)
+        if (view == null)
             view = inflater.inflate(R.layout.fragment_favourites, container, false);
 
         preferences = getActivity().getSharedPreferences("favsAreHere", Context.MODE_PRIVATE);
@@ -84,11 +84,12 @@ public class FavouritesFragment extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        ListView listView = (ListView) view.findViewById(R.id.fragment_favourites_list);
+        //ListView listView = (ListView) view.findViewById(R.id.fragment_favourites_list);
+        GridView gridview = (GridView) view.findViewById(R.id.fragment_favourites_list);
         String tag = "FAVOURITES";
 
-            listView.setAdapter(new ListsAdapter(getActivity().getApplicationContext(), favouritesList, tag));
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            gridview.setAdapter(new GridAdapter(getActivity().getApplicationContext(), favouritesList));
+            gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Bundle args = new Bundle();
@@ -111,7 +112,7 @@ public class FavouritesFragment extends Fragment {
             });
 
         final FloatingActionButton floatingActionButton = (FloatingActionButton) view.findViewById(R.id.favourites_list_fab);
-        floatingActionButton.attachToListView(listView);
+        floatingActionButton.attachToListView(gridview);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
 
             @Override

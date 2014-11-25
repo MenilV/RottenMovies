@@ -65,6 +65,8 @@ class Movie implements Parcelable, Serializable, Comparable<Movie> {
     public IMDB imdb;
     @SerializedName("links")
     public Link links;
+    @SerializedName("genres")
+    public List<String> genres;
 
     public Movie(Parcel in) {
         readFromParcel(in);
@@ -87,6 +89,9 @@ class Movie implements Parcelable, Serializable, Comparable<Movie> {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
 //        dest.writeValue(this);
+        /**
+         * this might make a lot of trouble later
+         */
     }
 
 
@@ -106,6 +111,13 @@ class Movie implements Parcelable, Serializable, Comparable<Movie> {
 
 }
 
+/*class GenresM {
+    List<String> genresM;
+
+    public List<String> getGenresM() {
+        return genresM;
+    }
+}*/
 
 class IMDB {
     @SerializedName("imdb")
@@ -170,4 +182,21 @@ class Review {
 
     @SerializedName("publication")
     public String publication;
+}
+
+class Clips{
+
+    List<Clip> clips;
+
+    public List<Clip> getClips() {
+        return clips;
+    }
+
+}
+class Clip{
+    String thumbnail;
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
 }

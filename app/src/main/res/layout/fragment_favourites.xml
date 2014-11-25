@@ -6,16 +6,26 @@
     android:paddingTop="?android:attr/actionBarSize">
 
 
-    <ListView xmlns:android="http://schemas.android.com/apk/res/android"
+    <GridView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/fragment_favourites_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
+        android:columnWidth="130dp"
+        android:gravity="center"
+        android:horizontalSpacing="5dp"
+        android:minHeight="@dimen/activity_horizontal_margin"
+        android:minWidth="@dimen/activity_vertical_margin"
+        android:numColumns="auto_fit"
+        android:paddingEnd="4dp"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:paddingStart="4dp"
+        android:stretchMode="columnWidth"
         android:divider="@android:color/transparent"
         android:dividerHeight="0dp"
         android:scrollbarThumbVertical="@drawable/scrollbar_color"
         android:headerDividersEnabled="true" />
+
     <com.melnykov.fab.FloatingActionButton
         android:id="@+id/favourites_list_fab"
         android:layout_width="wrap_content"

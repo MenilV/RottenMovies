@@ -145,18 +145,95 @@ public class DetailsFragment extends android.app.Fragment {
     }
     public void createCritics(List<Review> reviewList){
         TextView reviewText = (TextView)view.findViewById(R.id.fragment_details_critics);
-        reviewText.setText("");
+        reviewText.setText("There are no critics for this movie.");
+        boolean reviewFinished = true;
         for(Review r : reviewList)
         {
+            if(reviewFinished){
+                reviewText.setText("");
+                reviewFinished=false;
+            }
             reviewText.append(r.critic + " said: \""+ r.quote + "\" in: " + r.publication+"\n\n");
         }
     }
     public void createSimilar(List<Movie> similarMovies){
         TextView similarText = (TextView)view.findViewById(R.id.fragment_details_similar);
-        similarText.setText("");
+        similarText.setText("No similar movies found.");
+        int count=0;
+        boolean similarFinished = true;
         for(Movie m : similarMovies)//TODO: make this work
         {
-            similarText.append(m.title+"("+m.year+")"+"\n");
+            if(similarFinished){
+                similarText.setText("");
+                similarFinished=false;
+            }
+            count++;
+            similarText.append(String.valueOf(count)+". "+m.title+"("+m.year+")"+"\n");
+        }
+    }
+    public void createClips(List<Clip> allClips){
+        ImageView clipImg1 = (ImageView)view.findViewById(R.id.fragment_details_clips_img1);
+        ImageView clipImg2 = (ImageView)view.findViewById(R.id.fragment_details_clips_img2);
+        ImageView clipImg3 = (ImageView)view.findViewById(R.id.fragment_details_clips_img3);
+        ImageView clipImg4 = (ImageView)view.findViewById(R.id.fragment_details_clips_img4);
+        ImageView clipImg5 = (ImageView)view.findViewById(R.id.fragment_details_clips_img5);
+        ImageView clipImg6 = (ImageView)view.findViewById(R.id.fragment_details_clips_img6);
+        ImageView clipImg7 = (ImageView)view.findViewById(R.id.fragment_details_clips_img7);
+        ImageView[] clips = {clipImg1,clipImg2,clipImg3,clipImg4,clipImg5,clipImg6,clipImg7};
+        int x=0;
+        for(Clip c:allClips)
+        {
+            String clipLink = c.getThumbnail();
+
+            Ion.with(clips[x++])
+                    .placeholder(R.drawable.empty_img)
+                    //.error(R.drawable.empty_img_error)
+                    .load(clipLink);
+            if (x==clips.length)
+                break;
+        }
+    }
+    public void createGenres(Movie genreMovie){
+        List<String> genereList = new ArrayList<>();
+        String[] genresStrings ={"Action & Adventure", "Animation", "Art House & International", "Classics", "Comedy", "Documentary", "Drama", "Horror", "Kids & Family", "Mistery & Suspense", "Musical & Performing Arts", "Romance", "Science Fiction & Fantasy", "Sports & Fitness", "Special Interest"};
+        for (String s : genresStrings)
+            genereList.add(s);
+        /**
+         * maybe change this so the array gets faster to the list
+         */
+
+
+
+        ImageView genresImg1 = (ImageView)view.findViewById(R.id.fragment_details_genres_img1);
+        ImageView genresImg2 = (ImageView)view.findViewById(R.id.fragment_details_genres_img2);
+        ImageView genresImg3 = (ImageView)view.findViewById(R.id.fragment_details_genres_img3);
+        ImageView genresImg4 = (ImageView)view.findViewById(R.id.fragment_details_genres_img4);
+        ImageView[] imageViews = {genresImg1,genresImg2,genresImg3,genresImg4};
+        int x=0;
+        for (String s : genereList){
+            if(x==imageViews.length)
+                break;
+            if (genreMovie.genres.contains(s))
+            {
+               switch (s){
+                   case "Action & Adventure": { imageViews[x++].setImageResource(R.drawable.action); break;}
+                   case "Animation": {imageViews[x++].setImageResource(R.drawable.animation); break;}
+                   case "Art House & International": {imageViews[x++].setImageResource(R.drawable.art); break;}
+                   case "Classics": {imageViews[x++].setImageResource(R.drawable.classics); break;}
+                   case "Comedy": {imageViews[x++].setImageResource(R.drawable.comedy); break;}
+                   case "Documentary": {imageViews[x++].setImageResource(R.drawable.documentary); break;}
+                   case "Drama": {imageViews[x++].setImageResource(R.drawable.drama); break;}
+                   case "Horror": {imageViews[x++].setImageResource(R.drawable.horror); break;}
+                   case "Kids & Family": {imageViews[x++].setImageResource(R.drawable.kids); break;}
+                   case "Mistery & Suspense": {imageViews[x++].setImageResource(R.drawable.mistery); break;}
+                   case "Musical & Performing Arts": {imageViews[x++].setImageResource(R.drawable.musical); break;}
+                   case "Romance": {imageViews[x++].setImageResource(R.drawable.romance); break;}
+                   case "Science Fiction & Fantasy": {imageViews[x++].setImageResource(R.drawable.scifi); break;}
+                   case "Sports & Fitness": {imageViews[x++].setImageResource(R.drawable.sports); break;}
+                   case "Special Interest": {imageViews[x++].setImageResource(R.drawable.special); break;}
+                   default: break;
+               }
+            }
         }
     }
     @Override
@@ -251,13 +328,24 @@ public class DetailsFragment extends android.app.Fragment {
             CallAPICritics taskC = new CallAPICritics();
             taskC.execute(requestURIc);
         //calling API to get critics reviews;
-/*
-        String similarRequest="http://api.rottentomatoes.com/api/public/v1.0/movies/"+movie.getId()+"/similar.json?limit=10&apikey=pj2z7eyve6mfdtcx4vynk26y";
+
+        String similarRequest="http://api.rottentomatoes.com/api/public/v1.0/movies/"+movie.getId()+"/similar.json?limit=5&apikey=pj2z7eyve6mfdtcx4vynk26y";
         URI requestURIs = URI.create(similarRequest);
         CallAPISimilar taskS = new CallAPISimilar();
         taskS.execute(requestURIs);
-        //calling API to get similar movies;*/
+        //calling API to get similar movies;
 
+        String clipRequest="http://api.rottentomatoes.com/api/public/v1.0/movies/"+movie.getId()+"/clips.json?limit=5&apikey=pj2z7eyve6mfdtcx4vynk26y";
+        URI requestURIclip = URI.create(clipRequest);
+        CallAPIClips taskClip = new CallAPIClips();
+        taskClip.execute(requestURIclip);
+        //calling API to get clips for a movies;
+
+        String movieRequest = "http://api.rottentomatoes.com/api/public/v1.0/movies/"+movie.getId()+".json?apikey=pj2z7eyve6mfdtcx4vynk26y";
+        URI requestURImovie = URI.create(movieRequest);
+        CallAPIGenres taskMovie = new CallAPIGenres();
+        taskMovie.execute(requestURImovie);
+        //calling API to get clips for a movies;
         /**
          * BUTTONS STUFF COMES HERE
          */
@@ -463,6 +551,176 @@ public class DetailsFragment extends android.app.Fragment {
         @Override
         protected void onPostExecute(List<Movie> allMovies) {
             createSimilar(allMovies);
+            //  progressDialog.dismiss();
+        }
+    }
+    public class CallAPIClips extends AsyncTask<URI, String, List<Clip>> {
+
+
+        @Override
+        protected void onPreExecute() {
+
+/*
+            progressDialog = new ProgressDialog(getActivity());//, R.style.CustomDialog);
+            progressDialog.setTitle("Loading...");
+            //Set the dialog message to 'Loading application View, please wait...'
+            progressDialog.setMessage("Loading Movies, please wait...");
+            //This dialog can't be canceled by pressing the back key
+            progressDialog.setCancelable(true);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            //This dialog isn't indeterminate
+            progressDialog.setIndeterminate(false);
+            progressDialog.setIndeterminateDrawable(getResources()
+                    .getDrawable(R.drawable.spinner_animation));
+            //The maximum number of items is 100
+            progressDialog.setMax(100);
+            //Set the current progress to zero
+            progressDialog.setProgress(0);
+            //Display the progress dialog
+            progressDialog.show();*/
+        }
+
+        @Override
+        protected List<Clip> doInBackground(URI... urls) {
+            DefaultHttpClient httpclient = new DefaultHttpClient(new BasicHttpParams());
+            URI requestURI = urls[0];
+            HttpGet httppost = new HttpGet(String.valueOf(requestURI));
+
+            httppost.setHeader("Content-type", "text/javascript;charset=ISO-8859-1");
+
+            InputStream inputStream = null;
+            String result = null;
+
+            BufferedReader reader;
+            try {
+                HttpResponse response = httpclient.execute(httppost);
+                HttpEntity entity = response.getEntity();
+
+                inputStream = entity.getContent();
+                // json is UTF-8 by default
+                reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"), 8);
+                StringBuilder sb = new StringBuilder();
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line).append("\n");
+                }
+                result = sb.toString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (inputStream != null) inputStream.close();
+                } catch (Exception squish) {
+                    squish.printStackTrace();
+                }
+            }
+
+            JSONObject jsonObject;
+            List<Clip> allClips = new ArrayList<>();
+            try {
+
+                Gson gson = new Gson();
+                jsonObject = new JSONObject(result);
+                Clips clips = gson.fromJson(jsonObject.toString(), Clips.class); // deserializes json into movies
+                allClips = clips.getClips();
+
+            } catch (JSONException e1) {
+                e1.printStackTrace();
+            }
+
+            publishProgress(result);
+            return allClips;
+        }
+
+        @Override
+        protected void onPostExecute(List<Clip> allClips) {
+            createClips(allClips);
+            //  progressDialog.dismiss();
+        }
+    }
+    public class CallAPIGenres extends AsyncTask<URI, String, Movie> {
+
+
+        @Override
+        protected void onPreExecute() {
+
+/*
+            progressDialog = new ProgressDialog(getActivity());//, R.style.CustomDialog);
+            progressDialog.setTitle("Loading...");
+            //Set the dialog message to 'Loading application View, please wait...'
+            progressDialog.setMessage("Loading Movies, please wait...");
+            //This dialog can't be canceled by pressing the back key
+            progressDialog.setCancelable(true);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            //This dialog isn't indeterminate
+            progressDialog.setIndeterminate(false);
+            progressDialog.setIndeterminateDrawable(getResources()
+                    .getDrawable(R.drawable.spinner_animation));
+            //The maximum number of items is 100
+            progressDialog.setMax(100);
+            //Set the current progress to zero
+            progressDialog.setProgress(0);
+            //Display the progress dialog
+            progressDialog.show();*/
+        }
+
+        @Override
+        protected Movie doInBackground(URI... urls) {
+            DefaultHttpClient httpclient = new DefaultHttpClient(new BasicHttpParams());
+            URI requestURI = urls[0];
+            HttpGet httppost = new HttpGet(String.valueOf(requestURI));
+
+            httppost.setHeader("Content-type", "text/javascript;charset=ISO-8859-1");
+
+            InputStream inputStream = null;
+            String result = null;
+
+            BufferedReader reader;
+            try {
+                HttpResponse response = httpclient.execute(httppost);
+                HttpEntity entity = response.getEntity();
+
+                inputStream = entity.getContent();
+                // json is UTF-8 by default
+                reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"), 8);
+                StringBuilder sb = new StringBuilder();
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line).append("\n");
+                }
+                result = sb.toString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (inputStream != null) inputStream.close();
+                } catch (Exception squish) {
+                    squish.printStackTrace();
+                }
+            }
+
+            JSONObject jsonObject;
+            Movie movie=null;
+            try {
+
+                Gson gson = new Gson();
+                jsonObject = new JSONObject(result);
+                movie = gson.fromJson(jsonObject.toString(), Movie.class);
+
+
+            } catch (JSONException e1) {
+                e1.printStackTrace();
+            }
+
+            publishProgress(result);
+            return movie;
+        }
+
+        @Override
+        protected void onPostExecute(Movie movie) {
+            createGenres(movie);
             //  progressDialog.dismiss();
         }
     }

@@ -19,7 +19,7 @@ import android.widget.ImageView;
 public class HomeFragment extends Fragment {
 
     private static final String TAG = "HOME";
-
+    private View view;
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -65,8 +65,7 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = null;
-        if (savedInstanceState == null)
+        if (view == null)
             view = inflater.inflate(R.layout.fragment_home, container, false);
 
         assert view != null;

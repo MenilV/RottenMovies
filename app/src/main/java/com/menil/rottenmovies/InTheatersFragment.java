@@ -110,7 +110,7 @@ public class InTheatersFragment extends android.app.Fragment {
         if (view == null){
             view = inflater.inflate(R.layout.fragment_intheaters, container, false);
         }else{
-        ((ViewGroup)container).removeView(view);
+        //((ViewGroup)container).removeView(view);
         /**
          * THIS IS VERY IMPORTANT
          */
