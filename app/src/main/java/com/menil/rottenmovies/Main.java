@@ -69,9 +69,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-
         super.onCreate(savedInstanceState);
-
 
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         /**
@@ -216,9 +214,10 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
 
             SearchFragment fragment = new SearchFragment();
             switchContent(fragment,"SEARCH");
-            item.expandActionView();
+            //item.expandActionView();
         }
-        return id == R.id.action_settings || super.onOptionsItemSelected(item);
+        //return id == R.id.action_settings || super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item);
     }
 
 }

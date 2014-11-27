@@ -32,10 +32,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.3' //for parsing JSON
     compile 'com.melnykov:floatingactionbutton:1.0.6' //for floating action buttons
     compile 'ch.acra:acra:4.5.0' //for crash reports
-    compile 'com.github.traex.rippleeffect:library:1.2.2' //for ripple effects
     compile 'com.sothree.slidinguppanel:library:+' // for details view
     compile 'com.koushikdutta.ion:ion:2.+' //for images
-    compile 'io.realm:realm-android:0.74.0' //for database
-
-
+    compile 'org.lucasr.twowayview:twowayview:0.1.4' // for home
 }

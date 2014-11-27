@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#f1f1f1"
+    android:background="@drawable/gridview_background"
     android:orientation="vertical"
     android:paddingTop="?android:attr/actionBarSize"
     tools:context=".AboutFragment">
@@ -52,6 +52,12 @@
                 android:text="@string/about_msg"
                 android:textColor="@color/pale_gray"
                 android:textSize="20sp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="7dp"
+                android:layout_marginRight="7dp"
+                android:background="#399322" />
 
 
         </LinearLayout>

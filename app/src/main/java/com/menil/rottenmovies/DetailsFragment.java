@@ -34,6 +34,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
@@ -54,25 +55,23 @@ import javax.crypto.spec.SecretKeySpec;
 public class DetailsFragment extends android.app.Fragment {
 
     public SharedPreferences preferences;
-    private Bundle bundle;
-    private View view;
-    private List<Review> reviewList;
-    public static final String movie_id = "id";
-    private ProgressDialog progressDialog;
 
-    //TODO:Details fragment crashes on KEYCODE_HOME pressed
+    private View view;
+    public static final String movie_id = "id";
+    private Movie detailMovie;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         // Indicate that this fragment would like to influence the set of actions in the action bar.
         setHasOptionsMenu(true);
+        makeActionbar();
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putAll(bundle);
+        outState.putSerializable("movie", detailMovie);
         //setUserVisibleHint(true);
     }
 
@@ -132,10 +131,11 @@ public class DetailsFragment extends android.app.Fragment {
             case 1://deletes item from favourites if there is one already
                 if (contains)
                 {
-                    /*idFav=idFav.replace(movieJson,"");
+                    idFav=idFav.replace(movieJson+",","");
                     editor.putString(key, idFav);
-                    editor.apply();*/
-                    Toast.makeText(getActivity().getApplicationContext(), "Removed from favourites", Toast.LENGTH_LONG).show();
+                    editor.apply();
+                    Toast.makeText(getActivity().getApplicationContext(), idFav, Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getActivity().getApplicationContext(), "Removed from favourites", Toast.LENGTH_LONG).show();
                 }
                 else{
                     Toast.makeText(getActivity().getApplicationContext(), "Can't remove. It was not a favourite", Toast.LENGTH_LONG).show();
@@ -236,6 +236,7 @@ public class DetailsFragment extends android.app.Fragment {
             }
         }
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -244,19 +245,17 @@ public class DetailsFragment extends android.app.Fragment {
         // Inflate the layout for this fragment
             view = inflater.inflate(R.layout.fragment_details, container, false);
 
-        makeActionbar();
+
+        Bundle bundle=getArguments();
         // Retrieve data from bundle with Parcelable object of type Movie
-        bundle = getArguments();
-
-
-        final Movie movie = bundle.getParcelable("movie");
+        detailMovie = bundle.getParcelable("movie");
 
         /**
          * TEXT STUFF COMES HERE
          */
 
         TextView title = (TextView) view.findViewById(R.id.fragment_details_title);
-        title.setText(movie.title + " (" + String.valueOf(movie.year) + ")");
+        title.setText(detailMovie.title + " (" + String.valueOf(detailMovie.year) + ")");
         title.setSelected(true);
         title.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -275,17 +274,17 @@ public class DetailsFragment extends android.app.Fragment {
         });
 
         TextView synopsis = (TextView) view.findViewById(R.id.fragment_details_synopsis);
-        synopsis.setText(movie.synopsis);
+        synopsis.setText(detailMovie.synopsis);
 
         TextView runtime = (TextView) view.findViewById(R.id.fragment_details_runtime);
-        runtime.setText("Runtime: " + String.valueOf(movie.runtime) + " min");
+        runtime.setText("Runtime: " + String.valueOf(detailMovie.runtime) + " min");
 
         TextView rating = (TextView) view.findViewById(R.id.fragment_details_rating);
-        rating.setText("Rating: " + movie.mpaa_rating);
+        rating.setText("Rating: " + detailMovie.mpaa_rating);
 
         TextView cast = (TextView) view.findViewById(R.id.fragment_details_cast);
         int x = 0;//just to ensure there are no commas after the last actor
-        List<Cast> castList = movie.casts;
+        List<Cast> castList = detailMovie.casts;
         String castText = "Cast: ";
         for (Cast c : castList) {
             castText += c.name;
@@ -300,17 +299,17 @@ public class DetailsFragment extends android.app.Fragment {
          */
 
         ImageView imageView = (ImageView) view.findViewById(R.id.fragment_details_img);
-
+        String det_pic=detailMovie.posters.detailed.replace("tmb", "det");
         Ion.with(imageView)
                 .placeholder(R.drawable.empty_img)
                 .error(R.drawable.empty_img_error)
-                .load(movie.posters.detailed.replace("tmb", "det"));
+                .load(det_pic);
         //getting a resized image from ThumbrIo service
         final ImageView imageViewTop = (ImageView) view.findViewById(R.id.fragment_details_img_top);
         String rescaledImage = null;
 
         try {//rescale and set picture TOP
-            rescaledImage = ThumbrIo.sign(movie.posters.detailed.replace("tmb", "ori"), "510x755c");
+            rescaledImage = ThumbrIo.sign(detailMovie.posters.detailed.replace("tmb", "ori"), "510x755c");
             Ion.with(imageViewTop)
                     .placeholder(R.drawable.empty_img)
                     .error(R.drawable.empty_img_error)
@@ -323,25 +322,29 @@ public class DetailsFragment extends android.app.Fragment {
             e.printStackTrace();
         }
 
-        String criticsRequest="http://api.rottentomatoes.com/api/public/v1.0/movies/"+movie.getId()+"/reviews.json?apikey=pj2z7eyve6mfdtcx4vynk26y";
+        /**
+         * API CALLS COME HERE
+         */
+
+        String criticsRequest="http://api.rottentomatoes.com/api/public/v1.0/movies/"+detailMovie.getId()+"/reviews.json?apikey=pj2z7eyve6mfdtcx4vynk26y";
         URI requestURIc = URI.create(criticsRequest);
             CallAPICritics taskC = new CallAPICritics();
             taskC.execute(requestURIc);
         //calling API to get critics reviews;
 
-        String similarRequest="http://api.rottentomatoes.com/api/public/v1.0/movies/"+movie.getId()+"/similar.json?limit=5&apikey=pj2z7eyve6mfdtcx4vynk26y";
+        String similarRequest="http://api.rottentomatoes.com/api/public/v1.0/movies/"+detailMovie.getId()+"/similar.json?limit=5&apikey=pj2z7eyve6mfdtcx4vynk26y";
         URI requestURIs = URI.create(similarRequest);
         CallAPISimilar taskS = new CallAPISimilar();
         taskS.execute(requestURIs);
         //calling API to get similar movies;
 
-        String clipRequest="http://api.rottentomatoes.com/api/public/v1.0/movies/"+movie.getId()+"/clips.json?limit=5&apikey=pj2z7eyve6mfdtcx4vynk26y";
+        String clipRequest="http://api.rottentomatoes.com/api/public/v1.0/movies/"+detailMovie.getId()+"/clips.json?limit=5&apikey=pj2z7eyve6mfdtcx4vynk26y";
         URI requestURIclip = URI.create(clipRequest);
         CallAPIClips taskClip = new CallAPIClips();
         taskClip.execute(requestURIclip);
         //calling API to get clips for a movies;
 
-        String movieRequest = "http://api.rottentomatoes.com/api/public/v1.0/movies/"+movie.getId()+".json?apikey=pj2z7eyve6mfdtcx4vynk26y";
+        String movieRequest = "http://api.rottentomatoes.com/api/public/v1.0/movies/"+detailMovie.getId()+".json?apikey=pj2z7eyve6mfdtcx4vynk26y";
         URI requestURImovie = URI.create(movieRequest);
         CallAPIGenres taskMovie = new CallAPIGenres();
         taskMovie.execute(requestURImovie);
@@ -352,7 +355,7 @@ public class DetailsFragment extends android.app.Fragment {
 
 
         final FloatingActionButton floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fragment_details_fab);
-        if(getActivity().getSharedPreferences("favsAreHere", Context.MODE_PRIVATE).getString(movie_id,"").contains(movie.id))
+        if(getActivity().getSharedPreferences("favsAreHere", Context.MODE_PRIVATE).getString(movie_id,"").contains(detailMovie.id))
         {
             floatingActionButton.setColorNormal(getResources().getColor(R.color.white));
             floatingActionButton.setImageResource(R.drawable.ic_navigation_check);
@@ -367,7 +370,7 @@ public class DetailsFragment extends android.app.Fragment {
             @Override
             public void onClick(View v) {
                 preferences = getActivity().getSharedPreferences("favsAreHere", Context.MODE_PRIVATE);
-                    if(!preferences.getString(movie_id,"").contains(movie.id))
+                    if(!preferences.getString(movie_id,"").contains(detailMovie.id))
                     {
                         floatingActionButton.setColorNormal(getResources().getColor(R.color.white));
                         floatingActionButton.setImageResource(R.drawable.ic_navigation_check);
@@ -378,37 +381,20 @@ public class DetailsFragment extends android.app.Fragment {
                         floatingActionButton.setImageResource(R.drawable.ic_action_favorite);
                         option = 1;
                     }
-                modifyPreferences(movie_id, option, movie);
+                modifyPreferences(movie_id, option, detailMovie);
             }
         });
         return view;
     }
 
-
+    /**
+     * ASYNCTASKS COME HERE
+     */
     public class CallAPICritics extends AsyncTask<URI, String, List<Review>> {
 
 
         @Override
         protected void onPreExecute() {
-
-/*
-            progressDialog = new ProgressDialog(getActivity());//, R.style.CustomDialog);
-            progressDialog.setTitle("Loading...");
-            //Set the dialog message to 'Loading application View, please wait...'
-            progressDialog.setMessage("Loading Movies, please wait...");
-            //This dialog can't be canceled by pressing the back key
-            progressDialog.setCancelable(true);
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            //This dialog isn't indeterminate
-            progressDialog.setIndeterminate(false);
-            progressDialog.setIndeterminateDrawable(getResources()
-                    .getDrawable(R.drawable.spinner_animation));
-            //The maximum number of items is 100
-            progressDialog.setMax(100);
-            //Set the current progress to zero
-            progressDialog.setProgress(0);
-            //Display the progress dialog
-            progressDialog.show();*/
         }
 
         @Override
@@ -474,25 +460,6 @@ public class DetailsFragment extends android.app.Fragment {
 
         @Override
         protected void onPreExecute() {
-
-/*
-            progressDialog = new ProgressDialog(getActivity());//, R.style.CustomDialog);
-            progressDialog.setTitle("Loading...");
-            //Set the dialog message to 'Loading application View, please wait...'
-            progressDialog.setMessage("Loading Movies, please wait...");
-            //This dialog can't be canceled by pressing the back key
-            progressDialog.setCancelable(true);
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            //This dialog isn't indeterminate
-            progressDialog.setIndeterminate(false);
-            progressDialog.setIndeterminateDrawable(getResources()
-                    .getDrawable(R.drawable.spinner_animation));
-            //The maximum number of items is 100
-            progressDialog.setMax(100);
-            //Set the current progress to zero
-            progressDialog.setProgress(0);
-            //Display the progress dialog
-            progressDialog.show();*/
         }
 
         @Override
@@ -559,25 +526,6 @@ public class DetailsFragment extends android.app.Fragment {
 
         @Override
         protected void onPreExecute() {
-
-/*
-            progressDialog = new ProgressDialog(getActivity());//, R.style.CustomDialog);
-            progressDialog.setTitle("Loading...");
-            //Set the dialog message to 'Loading application View, please wait...'
-            progressDialog.setMessage("Loading Movies, please wait...");
-            //This dialog can't be canceled by pressing the back key
-            progressDialog.setCancelable(true);
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            //This dialog isn't indeterminate
-            progressDialog.setIndeterminate(false);
-            progressDialog.setIndeterminateDrawable(getResources()
-                    .getDrawable(R.drawable.spinner_animation));
-            //The maximum number of items is 100
-            progressDialog.setMax(100);
-            //Set the current progress to zero
-            progressDialog.setProgress(0);
-            //Display the progress dialog
-            progressDialog.show();*/
         }
 
         @Override
@@ -644,25 +592,6 @@ public class DetailsFragment extends android.app.Fragment {
 
         @Override
         protected void onPreExecute() {
-
-/*
-            progressDialog = new ProgressDialog(getActivity());//, R.style.CustomDialog);
-            progressDialog.setTitle("Loading...");
-            //Set the dialog message to 'Loading application View, please wait...'
-            progressDialog.setMessage("Loading Movies, please wait...");
-            //This dialog can't be canceled by pressing the back key
-            progressDialog.setCancelable(true);
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            //This dialog isn't indeterminate
-            progressDialog.setIndeterminate(false);
-            progressDialog.setIndeterminateDrawable(getResources()
-                    .getDrawable(R.drawable.spinner_animation));
-            //The maximum number of items is 100
-            progressDialog.setMax(100);
-            //Set the current progress to zero
-            progressDialog.setProgress(0);
-            //Display the progress dialog
-            progressDialog.show();*/
         }
 
         @Override
@@ -724,9 +653,11 @@ public class DetailsFragment extends android.app.Fragment {
             //  progressDialog.dismiss();
         }
     }
-
 }
 
+    /**
+     * THUMBR COMES HERE
+     */
 class ThumbrIo {
 
     private static final String THUMBRIO_API_KEY = "t0AsaoQ1lG-nJaIvOavA";

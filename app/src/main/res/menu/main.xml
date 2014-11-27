@@ -7,23 +7,12 @@
         android:orderInCategory="100"
         android:title="Search"
         android:icon="@drawable/abc_ic_search_api_mtrl_alpha"
-        app:showAsAction="collapseActionView|ifRoom"
+        app:showAsAction="always"
         android:actionViewClass="android.widget.SearchView" />
     <item
-        android:id="@+id/action_refresh"
-        android:orderInCategory="200"
-        android:icon="@drawable/ic_action_refresh"
-        android:title="@string/action_refresh"
-        app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="300"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
-    <item
         android:id="@+id/action_exit"
-        android:orderInCategory="400"
+        android:orderInCategory="200"
         android:title="@string/action_exit"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
 
 </menu>

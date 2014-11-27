@@ -1,5 +1,6 @@
 package com.menil.rottenmovies;
 
+import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -17,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.melnykov.fab.FloatingActionButton;
@@ -58,6 +60,7 @@ public class SearchFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vynk2
 
     private void makeActionbar(){
         try {
+            SearchView searchView = (SearchView)view.findViewById(R.id.search_textbox);
             assert getActivity().getActionBar() != null;
             getActivity().getActionBar().show();
             getActivity().getActionBar().setDisplayShowTitleEnabled(true);
@@ -65,6 +68,12 @@ public class SearchFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vynk2
             getActivity().getActionBar().setSubtitle("Search");
             getActivity().getActionBar().setBackgroundDrawable(new ColorDrawable(0xFF399322));//transparent
             getActivity().getActionBar().setIcon(R.drawable.actionbar_icon);
+            getActivity().getActionBar().setCustomView(searchView);
+            //getActivity().getActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+            //searchView.setQuery("test",true);
+            searchView.setFocusable(true);
+            searchView.setIconified(false);
+            searchView.requestFocusFromTouch();
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
@@ -90,6 +99,8 @@ public class SearchFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vynk2
             CallAPI task = new CallAPI();
             task.execute(requestURI);
         }
+        else
+            Toast.makeText(getActivity().getApplicationContext(), "Enter a search query", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -126,6 +137,7 @@ public class SearchFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vynk2
         final SearchView searchView = (SearchView)view.findViewById(R.id.search_textbox);
 
         noMoviesTextView = (TextView)view.findViewById(R.id.search_no_movies);
+        //searchView.focus
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
@@ -133,6 +145,9 @@ public class SearchFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vynk2
             public boolean onQueryTextSubmit(String query) {
                 // Do something when user his enter on keyboard
                 performSearch(query);
+                InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(
+                        Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
                 view.clearFocus();
                 return false;
             }
@@ -151,7 +166,7 @@ public class SearchFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vynk2
                     performSearch(searchView.getQuery().toString());
                 InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(
                         Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 }
         });
         /**

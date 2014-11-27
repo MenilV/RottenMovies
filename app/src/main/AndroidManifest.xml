@@ -29,10 +29,12 @@
             android:configChanges="screenSize|orientation"
             android:icon="@drawable/actionbar_icon"
             android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
             <meta-data
                 android:resource="@xml/searchable"
-                android:name="searchable"
-                />
+                android:name="android.app.searchable"/>
             </activity>
 
         <!-- Crash report activity -->

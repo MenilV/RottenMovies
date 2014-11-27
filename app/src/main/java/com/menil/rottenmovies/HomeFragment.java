@@ -68,7 +68,7 @@ public class HomeFragment extends Fragment {
         if (view == null)
             view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        assert view != null;
+
         ImageView AtlantImage = (ImageView) view.findViewById(R.id.fragment_home_abh_link);
         AtlantImage.setOnClickListener(new View.OnClickListener() {
             @Override

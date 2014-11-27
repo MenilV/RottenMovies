@@ -6,13 +6,20 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingTop="?android:attr/actionBarSize">
+    <android.support.v7.widget.CardView
+        android:id="@+id/search_textbox_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp">
     <SearchView
         android:id="@+id/search_textbox"
         android:layout_width="match_parent"
         android:imeOptions="actionSearch"
         android:queryHint="Search..."
+        android:iconifiedByDefault="false"
         android:layout_height="wrap_content">
         </SearchView>
+    </android.support.v7.widget.CardView>
 
     <TextView
         android:id="@+id/search_no_movies"
@@ -21,13 +28,13 @@
         android:textColor="#399322"
         android:textSize="23sp"
         android:text="@string/no_movies_searched"
-        android:layout_below="@id/search_textbox"
+        android:layout_below="@id/search_textbox_card"
         android:visibility="gone"
         android:gravity="center"/>
 
     <ListView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/search_listview"
-        android:layout_below="@id/search_textbox"
+        android:layout_below="@id/search_textbox_card"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="5dp"
