@@ -10,15 +10,6 @@
     <string name="crash_dialog_comment_prompt">You might add your comments about the problem below:</string>
     <string name="crash_dialog_ok_toast">Thank you for your feedback!</string>
 
-    <string name="known_bugs">Known bugs and missing features:\n\n
-        -On details screen pressing Home button (physical) crashres application\n
-        -Refresh Button not working\n
-        -Favourites not working\n
-        -On Click image from Details not expanding\n
-        -Last card on bottom right can\'t be clicked\n
-        -Details View needs scrolling down to show full image\n
-        -In Theaters no infinite scroll\n
-        -Upcoming Movies no infinite scroll\n</string>
 
     <string name="app_name">Rotten Movies</string>
     <string name="title_section0">Home</string>
@@ -36,7 +27,7 @@
     <string name="action_exit">Exit</string>
     <string name="title_activity_result">ResultActivity</string>
     <string name="synopsis">Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet</string>
-    <string name="splash_subtitle">Movie info all in one place</string>
+    <string name="splash_subtitle">Movie info all in one place\nby: Menil V.</string>
     <string name="movie_title_placeholder">Movie Title</string>
     <string name="movie_subtitle_placeholder">Movie Subtitle</string>
     <string name="runtime_placeholder">Runtime: </string>
@@ -46,7 +37,8 @@
     <string name="add_to_favourites">Add to Favourites</string>
     <string name="crash_button">crash_test_button</string>
     <string name="welcome_msg">Welcome to Home screen\nThe navigation menu is on the left</string>
-    <string name="about_msg">Rotten Movies is a native Android application for all users who like, share and track latest movie info. \n\n Made by: Menil V.(2014)\n Thanks to: AtlantBH</string>
+    <string name="about_msg">Rotten Movies is a native Android application for all users who like, share and track latest movies. It provides making a custom favourite list with modern and beautiful designed views. </string>
+    <string name="about_msg2">Made by: Menil V.(2014)\n Thanks to: AtlantBH</string>
     <string name="title_placeholder">POSITION. TITLE (YEAR)</string>
     <string name="runtime_placeholder2">RUNTIME:</string>
     <string name="release_placeholder">RELEASE DATE:</string>
@@ -61,9 +53,9 @@
     <string name="slide_arrows">slide arrows</string>
     <string name="btm_img_icon">bottom image icon</string>
     <string name="synopsis_title">Synopsis:\n</string>
-    <string name="no_movies_searched">No movies were found.\nTry another search...</string>
+    <string name="no_movies_searched">No movies were found.\nTry another search…</string>
     <string name="bck_img_details">Background image details view</string>
     <string name="details_img">details image</string>
-    <string name="favourites">Favourites</string>
+    <string name="favourites">Favourite movies</string>
 
 </resources>

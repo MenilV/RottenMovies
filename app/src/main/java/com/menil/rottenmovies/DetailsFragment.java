@@ -98,6 +98,30 @@ public class DetailsFragment extends android.app.Fragment {
             e.printStackTrace();
         }
     }
+    public void addToRecent(String key, Movie movie){
+        preferences = getActivity().getSharedPreferences("recentAreHere", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        Gson gson = new Gson();
+        String movieJson = gson.toJson(movie);
+        String idFav = preferences.getString(key, "{\"movies\":[");
+        boolean contains = false;
+        if (idFav.contains(movie.getId()))
+            contains = true;
+                if (!contains)
+                {
+                    if (idFav.length()>20) {
+                        idFav = idFav.substring(0, idFav.length() - 2);
+                        idFav+=",";
+                    }
+                    idFav+=gson.toJson(movie);
+                    idFav+="]}";
+                    editor.putString(key, idFav);
+                    editor.apply();
+
+                }
+    }
+
     public void modifyPreferences(String key, int option, Movie movie) {
         preferences = getActivity().getSharedPreferences("favsAreHere", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
@@ -134,8 +158,8 @@ public class DetailsFragment extends android.app.Fragment {
                     idFav=idFav.replace(movieJson+",","");
                     editor.putString(key, idFav);
                     editor.apply();
-                    Toast.makeText(getActivity().getApplicationContext(), idFav, Toast.LENGTH_LONG).show();
-                    //Toast.makeText(getActivity().getApplicationContext(), "Removed from favourites", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getActivity().getApplicationContext(), idFav, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity().getApplicationContext(), "Removed from favourites", Toast.LENGTH_LONG).show();
                 }
                 else{
                     Toast.makeText(getActivity().getApplicationContext(), "Can't remove. It was not a favourite", Toast.LENGTH_LONG).show();
@@ -249,7 +273,7 @@ public class DetailsFragment extends android.app.Fragment {
         Bundle bundle=getArguments();
         // Retrieve data from bundle with Parcelable object of type Movie
         detailMovie = bundle.getParcelable("movie");
-
+        addToRecent(movie_id, detailMovie);
         /**
          * TEXT STUFF COMES HERE
          */
@@ -274,7 +298,10 @@ public class DetailsFragment extends android.app.Fragment {
         });
 
         TextView synopsis = (TextView) view.findViewById(R.id.fragment_details_synopsis);
-        synopsis.setText(detailMovie.synopsis);
+        if (detailMovie.synopsis.length()<5)
+            synopsis.setText("No synopsis found");
+        else
+            synopsis.setText(detailMovie.synopsis);
 
         TextView runtime = (TextView) view.findViewById(R.id.fragment_details_runtime);
         runtime.setText("Runtime: " + String.valueOf(detailMovie.runtime) + " min");
@@ -291,6 +318,9 @@ public class DetailsFragment extends android.app.Fragment {
             if (++x < castList.size())
                 castText += ", ";
         }
+
+        if (castText.length()<8)
+            castText="Cast: No cast found";
         cast.setText(castText);
         cast.setSelected(true);
 

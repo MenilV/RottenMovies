@@ -139,9 +139,9 @@ public class ListsAdapter extends BaseAdapter {
         runtimeView.setText("Runtime: " + runtime + " min");
 
         TextView releaseView = (TextView) view.findViewById(R.id.fragment_list_item_date);
-        String release_date, new_date="No date found";
+        String release_date, new_date;
         if (listMovies.get(position).release_dates==null || listMovies.get(position).release_dates.theater==null)
-            release_date="Release date not found";
+            new_date="No date found";
         else {
             release_date = listMovies.get(position).release_dates.theater;
             new_date = release_date.substring(8, 10) + "/" + release_date.substring(5, 7) + "/" + release_date.substring(0, 4);
@@ -150,7 +150,7 @@ public class ListsAdapter extends BaseAdapter {
 
         String criticsScore;
         TextView rating = (TextView) view.findViewById(R.id.fragment_list_item_rating);
-        if (listMovies.get(position).ratings==null)
+        if (listMovies.get(position).ratings==null || listMovies.get(position).ratings.critics_score.equals("-1"))
             criticsScore="Unrated";
         else
             criticsScore = listMovies.get(position).ratings.critics_score;

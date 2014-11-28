@@ -3,14 +3,26 @@ package com.menil.rottenmovies;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
+
+import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 
 /*
@@ -20,6 +32,10 @@ public class HomeFragment extends Fragment {
 
     private static final String TAG = "HOME";
     private View view;
+    private List<Movie> movieFavs=new ArrayList<Movie>();
+    private List<Movie> movieRecents=new ArrayList<Movie>();
+    private Context mContext2;
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -62,48 +78,83 @@ public class HomeFragment extends Fragment {
         super.onDetach();
     }
 
+    public void getAndDraw(String preferenceID, HorizontialListView listview){
+        SharedPreferences preferences = getActivity().getSharedPreferences(preferenceID, Context.MODE_PRIVATE);
+
+        String movie_id="id";
+        Gson gson = new Gson();
+        final String moviesJson = preferences.getString(movie_id, "");
+        JSONObject jsonObject;
+
+        try {
+            jsonObject = new JSONObject(moviesJson);
+            Movies movies = gson.fromJson(jsonObject.toString(), Movies.class);
+            if (preferenceID.equals("recentAreHere"))
+                movieRecents = movies.getMovies();
+            else
+                movieFavs=movies.getMovies();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        if (preferenceID.equals("recentAreHere")){
+            Collections.reverse(movieRecents);
+            listview.setAdapter(new GridAdapter(getActivity().getApplicationContext(),movieRecents, true));
+        }
+        else
+            listview.setAdapter(new GridAdapter(getActivity().getApplicationContext(),movieFavs, true));
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         if (view == null)
             view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        mContext2 = view.getContext();
+        HorizontialListView listview_favourite = (HorizontialListView)view.findViewById(R.id.listview_favourite);
+        HorizontialListView listview_recent = (HorizontialListView)view.findViewById(R.id.listview_recent);
+        getAndDraw("recentAreHere", listview_recent);
+        getAndDraw("favsAreHere", listview_favourite);
 
-        ImageView AtlantImage = (ImageView) view.findViewById(R.id.fragment_home_abh_link);
-        AtlantImage.setOnClickListener(new View.OnClickListener() {
+        listview_favourite.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Bundle args = new Bundle();
+                args.putParcelable("movie", movieFavs.get(position));
+                Fragment fragment = new DetailsFragment();
+                fragment.setArguments(args);
+                switchFragment(fragment);
+            }
 
-                Uri uri = Uri.parse("http://www.atlantbh.com/");
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                v.getContext().startActivity(intent);
+            private void switchFragment(Fragment fragment) {
+                if (mContext2 == null) {
+                    return;
+                }
+                if (mContext2 instanceof Main) {
+                    Main main = (Main) mContext2;
+                    main.switchContent(fragment, "DETAILS");
+                }
             }
         });
-        ImageView RottenImage = (ImageView) view.findViewById(R.id.fragment_home_rtn_link);
-        RottenImage.setOnClickListener(new View.OnClickListener() {
+        listview_recent.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Bundle args = new Bundle();
+                args.putParcelable("movie", movieRecents.get(position));
+                Fragment fragment = new DetailsFragment();
+                fragment.setArguments(args);
+                switchFragment(fragment);
+            }
 
-                Uri uri = Uri.parse("http://www.rottentomatoes.com");
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                v.getContext().startActivity(intent);
+            private void switchFragment(Fragment fragment) {
+                if (mContext2 == null) {
+                    return;
+                }
+                if (mContext2 instanceof Main) {
+                    Main main = (Main) mContext2;
+                    main.switchContent(fragment, "DETAILS");
+                }
             }
         });
-
-        ImageView IMDBImage = (ImageView) view.findViewById(R.id.fragment_home_imdb_link);
-        IMDBImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Uri uri = Uri.parse("http://www.imdb.com");
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                v.getContext().startActivity(intent);
-            }
-        });
-
         return view;
     }
 

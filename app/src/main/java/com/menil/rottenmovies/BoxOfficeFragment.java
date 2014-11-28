@@ -133,7 +133,6 @@ public class BoxOfficeFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vy
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        //Boolean restore = onRestoreInstanceState(savedInstanceState);
 
         if (view == null) {
             view = inflater.inflate(R.layout.fragment_boxoffice, container, false);

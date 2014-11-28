@@ -30,7 +30,6 @@ public class FavouritesFragment extends Fragment {
     public SharedPreferences preferences;
     public static final String movie_id = "id";
     private List<Movie> favouritesList=new ArrayList<Movie>();
-    private Boolean isDeleted=false;
     private View view;
 
     @Override
@@ -43,24 +42,7 @@ public class FavouritesFragment extends Fragment {
         // Indicate that this fragment would like to influence the set of actions in the action bar.
         setHasOptionsMenu(true);
         makeActionbar();
-        preferences = getActivity().getSharedPreferences("favsAreHere", Context.MODE_PRIVATE);
 
-        if(isDeleted) {
-            preferences.edit().clear().apply();
-            isDeleted=false;
-        }
-
-        Gson gson = new Gson();
-        final String moviesJson = preferences.getString(movie_id, "");
-        JSONObject jsonObject;
-
-        try {
-            jsonObject = new JSONObject(moviesJson);
-            Movies movies = gson.fromJson(jsonObject.toString(), Movies.class);
-            favouritesList = movies.getMovies();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
     }
 
     public void makeActionbar() {
@@ -83,7 +65,19 @@ public class FavouritesFragment extends Fragment {
         if (view == null)
             view = inflater.inflate(R.layout.fragment_favourites, container, false);
 
+        preferences = getActivity().getSharedPreferences("favsAreHere", Context.MODE_PRIVATE);
 
+        Gson gson = new Gson();
+        final String moviesJson = preferences.getString(movie_id, "");
+        JSONObject jsonObject;
+
+        try {
+            jsonObject = new JSONObject(moviesJson);
+            Movies movies = gson.fromJson(jsonObject.toString(), Movies.class);
+            favouritesList = movies.getMovies();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         GridView gridview = (GridView) view.findViewById(R.id.fragment_favourites_list);
         String tag = "FAVOURITES";
 
@@ -127,7 +121,7 @@ public class FavouritesFragment extends Fragment {
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 // if this button is clicked, delete all favourites
-                                isDeleted=true;
+                                preferences.edit().clear().apply();
                                 Toast.makeText(view.getContext(),"Upon next opening of the app, favourites will be cleared",Toast.LENGTH_LONG).show();
                             }
                         })
