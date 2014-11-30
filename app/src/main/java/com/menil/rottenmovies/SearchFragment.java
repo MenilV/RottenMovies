@@ -1,20 +1,16 @@
 package com.menil.rottenmovies;
 
-import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -44,11 +40,11 @@ import java.util.List;
 public class SearchFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vynk26y
 
     public List<Movie> allMovies = new ArrayList<Movie>();
+    View view;
     private ProgressDialog progressDialog;
     private ListView listView;
     private Context mContext;
     private TextView noMoviesTextView;
-    View view;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {//API KEY = pj2z7eyve6mfdtcx4vynk26y
@@ -58,9 +54,9 @@ public class SearchFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vynk2
         makeActionbar();
     }
 
-    private void makeActionbar(){
+    private void makeActionbar() {
         try {
-            SearchView searchView = (SearchView)view.findViewById(R.id.search_textbox);
+            SearchView searchView = (SearchView) view.findViewById(R.id.search_textbox);
             assert getActivity().getActionBar() != null;
             getActivity().getActionBar().show();
             getActivity().getActionBar().setDisplayShowTitleEnabled(true);
@@ -90,16 +86,14 @@ public class SearchFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vynk2
         setRetainInstance(true);
     }
 
-    public void performSearch(String editText){
+    public void performSearch(String editText) {
 
-        if(editText.length()>0)
-        {
-            String request = "http://api.rottentomatoes.com/api/public/v1.0/movies.json?q="+editText.replace(" ", "+")+"&page_limit=50&page=1&apikey=pj2z7eyve6mfdtcx4vynk26y";
+        if (editText.length() > 0) {
+            String request = "http://api.rottentomatoes.com/api/public/v1.0/movies.json?q=" + editText.replace(" ", "+") + "&page_limit=50&page=1&apikey=pj2z7eyve6mfdtcx4vynk26y";
             URI requestURI = URI.create(request);
             CallAPI task = new CallAPI();
             task.execute(requestURI);
-        }
-        else
+        } else
             Toast.makeText(getActivity().getApplicationContext(), "Enter a search query", Toast.LENGTH_LONG).show();
     }
 
@@ -134,9 +128,9 @@ public class SearchFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vynk2
         /**
          * HERE STARTS THE SEARCH
          */
-        final SearchView searchView = (SearchView)view.findViewById(R.id.search_textbox);
+        final SearchView searchView = (SearchView) view.findViewById(R.id.search_textbox);
 
-        noMoviesTextView = (TextView)view.findViewById(R.id.search_no_movies);
+        noMoviesTextView = (TextView) view.findViewById(R.id.search_no_movies);
         //searchView.focus
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -145,7 +139,7 @@ public class SearchFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vynk2
             public boolean onQueryTextSubmit(String query) {
                 // Do something when user his enter on keyboard
                 performSearch(query);
-                InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
                         Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
                 view.clearFocus();
@@ -159,15 +153,15 @@ public class SearchFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vynk2
             }
         });
 
-        FloatingActionButton floatingActionButton= (FloatingActionButton) view.findViewById(R.id.search_list_fab);
+        FloatingActionButton floatingActionButton = (FloatingActionButton) view.findViewById(R.id.search_list_fab);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    performSearch(searchView.getQuery().toString());
-                InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(
+                performSearch(searchView.getQuery().toString());
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
                         Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                }
+            }
         });
         /**
          * HERE ENDS THE SEARCH
@@ -253,10 +247,10 @@ public class SearchFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vynk2
 
         @Override
         protected void onPostExecute(List<Movie> allMovies) {
-            if (allMovies.isEmpty()){
+            if (allMovies.isEmpty()) {
                 noMoviesTextView.setVisibility(View.VISIBLE);
-                listView.setVisibility(View.GONE);}
-            else{
+                listView.setVisibility(View.GONE);
+            } else {
                 noMoviesTextView.setVisibility(View.GONE);
                 listView.setVisibility(View.VISIBLE);
                 listView.setAdapter(new ListsAdapter(mContext, allMovies, "SEARCH"));

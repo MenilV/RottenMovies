@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 public class AboutFragment extends Fragment {
 
     private View view;
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

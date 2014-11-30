@@ -1,19 +1,15 @@
 package com.menil.rottenmovies;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 
 import com.google.gson.Gson;
 
@@ -32,9 +28,10 @@ public class HomeFragment extends Fragment {
 
     private static final String TAG = "HOME";
     private View view;
-    private List<Movie> movieFavs=new ArrayList<Movie>();
-    private List<Movie> movieRecents=new ArrayList<Movie>();
+    private List<Movie> movieFavs = new ArrayList<Movie>();
+    private List<Movie> movieRecents = new ArrayList<Movie>();
     private Context mContext2;
+    private String movie_id = "id";
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -43,9 +40,9 @@ public class HomeFragment extends Fragment {
         makeActionbar();
     }
 
-    private void makeActionbar(){
+    private void makeActionbar() {
 
-        try{
+        try {
             assert getActivity().getActionBar() != null;
             getActivity().getActionBar().show();
             getActivity().getActionBar().setDisplayShowTitleEnabled(true);
@@ -78,12 +75,11 @@ public class HomeFragment extends Fragment {
         super.onDetach();
     }
 
-    public void getAndDraw(String preferenceID, HorizontialListView listview){
-        SharedPreferences preferences = getActivity().getSharedPreferences(preferenceID, Context.MODE_PRIVATE);
+    public void getAndDraw(String preferenceID, HorizontialListView listview) {
 
-        String movie_id="id";
+        SharedPreferences preferences = getActivity().getSharedPreferences(preferenceID, Context.MODE_PRIVATE);
         Gson gson = new Gson();
-        final String moviesJson = preferences.getString(movie_id, "");
+        String moviesJson = preferences.getString(movie_id, "");
         JSONObject jsonObject;
 
         try {
@@ -92,17 +88,17 @@ public class HomeFragment extends Fragment {
             if (preferenceID.equals("recentAreHere"))
                 movieRecents = movies.getMovies();
             else
-                movieFavs=movies.getMovies();
+                movieFavs = movies.getMovies();
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        if (preferenceID.equals("recentAreHere")){
+        if (preferenceID.equals("recentAreHere")) {
             Collections.reverse(movieRecents);
-            listview.setAdapter(new GridAdapter(getActivity().getApplicationContext(),movieRecents, true));
-        }
-        else
-            listview.setAdapter(new GridAdapter(getActivity().getApplicationContext(),movieFavs, true));
+            listview.setAdapter(new GridAdapter(getActivity().getApplicationContext(), movieRecents, true));
+        } else
+            listview.setAdapter(new GridAdapter(getActivity().getApplicationContext(), movieFavs, true));
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -110,8 +106,8 @@ public class HomeFragment extends Fragment {
             view = inflater.inflate(R.layout.fragment_home, container, false);
 
         mContext2 = view.getContext();
-        HorizontialListView listview_favourite = (HorizontialListView)view.findViewById(R.id.listview_favourite);
-        HorizontialListView listview_recent = (HorizontialListView)view.findViewById(R.id.listview_recent);
+        HorizontialListView listview_favourite = (HorizontialListView) view.findViewById(R.id.listview_favourite);
+        HorizontialListView listview_recent = (HorizontialListView) view.findViewById(R.id.listview_recent);
         getAndDraw("recentAreHere", listview_recent);
         getAndDraw("favsAreHere", listview_favourite);
 

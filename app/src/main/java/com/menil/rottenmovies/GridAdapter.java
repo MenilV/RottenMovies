@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.koushikdutta.ion.Ion;
 
@@ -27,12 +26,13 @@ public class GridAdapter extends BaseAdapter {
     public GridAdapter(Context c, List<Movie> allMovies) {
         this.mContext = c;
         this.listMovies = allMovies;
-        this.isHome=false;
+        this.isHome = false;
     }
+
     public GridAdapter(Context c, List<Movie> allMovies, Boolean isHome) {
         this.mContext = c;
         this.listMovies = allMovies;
-        this.isHome=isHome;
+        this.isHome = isHome;
     }
 
     @Override
@@ -71,27 +71,28 @@ public class GridAdapter extends BaseAdapter {
 
         TextView subtitleView = (TextView) view.findViewById(R.id.full_card_subtitle);
         subtitleView.setText("(" + String.valueOf(listMovies.get(position).year) + ")");//+listMovies.get(position).runtime+" min");
-        if (!isHome){
-        int x = 0;//just to ensure there are no commas after the last actor
-        TextView actorsView = (TextView) view.findViewById(R.id.full_card_actors);
-        List<Cast> castList = listMovies.get(position).casts;
-        String castText = "Cast: ";
-        for (Cast c : castList) {
-            castText += c.name;
-            if (++x < castList.size())
-                castText += ", ";
+        if (!isHome) {
+            int x = 0;//just to ensure there are no commas after the last actor
+            TextView actorsView = (TextView) view.findViewById(R.id.full_card_actors);
+            List<Cast> castList = listMovies.get(position).casts;
+            String castText = "Cast: ";
+            for (Cast c : castList) {
+                castText += c.name;
+                if (++x < castList.size())
+                    castText += ", ";
+            }
+            if (castText.length() < 8)
+                castText = "No cast found";
+            actorsView.setText(castText);
+            actorsView.setSelected(true);
         }
-        if (castText.length()<8)
-            castText="No cast found";
-        actorsView.setText(castText);
-        actorsView.setSelected(true);}
 
         ImageView imageView = (ImageView) view.findViewById(R.id.full_card_img);
-        String picURL=null;
+        String picURL = null;
         /*if (isHome)
             picURL = listMovies.get(position).posters.thumbnail;
         else*/
-            picURL = listMovies.get(position).posters.detailed.replace("tmb", "det");
+        picURL = listMovies.get(position).posters.detailed.replace("tmb", "det");
         Ion.with(imageView)
                 .placeholder(R.drawable.empty_img)
                 .error(R.drawable.empty_img_error)

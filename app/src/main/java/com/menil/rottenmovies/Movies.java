@@ -16,20 +16,36 @@ import java.util.List;
 /*
  * Created by menil on 17.10.2014.
  */
-public class Movies {
+public class Movies implements Parcelable {
+    public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
+
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
+        }
+
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
 
     private List<Movie> movies;
 
-    public List<Movie> getMovies(){
+    public List<Movie> getMovies() {
         return movies;
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+    }
 }
 
-/*
- * Created by menil on 17.10.2014.
- */
 class Movie implements Parcelable, Serializable, Comparable<Movie> {
     public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
 
@@ -111,14 +127,6 @@ class Movie implements Parcelable, Serializable, Comparable<Movie> {
 
 }
 
-/*class GenresM {
-    List<String> genresM;
-
-    public List<String> getGenresM() {
-        return genresM;
-    }
-}*/
-
 class IMDB {
     @SerializedName("imdb")
     private String imdb;
@@ -184,7 +192,7 @@ class Review {
     public String publication;
 }
 
-class Clips{
+class Clips {
 
     List<Clip> clips;
 
@@ -193,7 +201,8 @@ class Clips{
     }
 
 }
-class Clip{
+
+class Clip {
     String thumbnail;
 
     public String getThumbnail() {

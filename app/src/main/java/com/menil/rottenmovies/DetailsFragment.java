@@ -1,7 +1,6 @@
 package com.menil.rottenmovies;
 
 import android.app.ActionBar;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
@@ -9,19 +8,18 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
-
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.koushikdutta.ion.Ion;
 import com.melnykov.fab.FloatingActionButton;
-
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -34,16 +32,13 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import javax.crypto.Mac;
@@ -54,11 +49,12 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class DetailsFragment extends android.app.Fragment {
 
-    public SharedPreferences preferences;
-
-    private View view;
     public static final String movie_id = "id";
+    public SharedPreferences preferences;
+    private View view;
     private Movie detailMovie;
+    private Context mContext2;
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -81,7 +77,7 @@ public class DetailsFragment extends android.app.Fragment {
 
     }
 
-    public void makeActionbar(){
+    public void makeActionbar() {
         ActionBar actionBar = getActivity().getActionBar();
         try {
             Drawable mActionBarBackgroundDrawable = getResources().getDrawable(R.drawable.actionbar_background);
@@ -98,7 +94,8 @@ public class DetailsFragment extends android.app.Fragment {
             e.printStackTrace();
         }
     }
-    public void addToRecent(String key, Movie movie){
+
+    public void addToRecent(String key, Movie movie) {
         preferences = getActivity().getSharedPreferences("recentAreHere", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
 
@@ -108,18 +105,17 @@ public class DetailsFragment extends android.app.Fragment {
         boolean contains = false;
         if (idFav.contains(movie.getId()))
             contains = true;
-                if (!contains)
-                {
-                    if (idFav.length()>20) {
-                        idFav = idFav.substring(0, idFav.length() - 2);
-                        idFav+=",";
-                    }
-                    idFav+=gson.toJson(movie);
-                    idFav+="]}";
-                    editor.putString(key, idFav);
-                    editor.apply();
+        if (!contains) {
+            if (idFav.length() > 20) {
+                idFav = idFav.substring(0, idFav.length() - 2);
+                idFav += ",";
+            }
+            idFav += gson.toJson(movie);
+            idFav += "]}";
+            editor.putString(key, idFav);
+            editor.apply();
 
-                }
+        }
     }
 
     public void modifyPreferences(String key, int option, Movie movie) {
@@ -135,91 +131,90 @@ public class DetailsFragment extends android.app.Fragment {
 
         switch (option) {
             case 0://adds item to favourites if there isn't one already
-                if (!contains)
-                {
-                    if (idFav.length()>20) {
+                if (!contains) {
+                    if (idFav.length() > 20) {
                         idFav = idFav.substring(0, idFav.length() - 2);
-                        idFav+=",";
+                        idFav += ",";
                     }
-                    idFav+=gson.toJson(movie);
-                    idFav+="]}";
+                    idFav += gson.toJson(movie);
+                    idFav += "]}";
                     editor.putString(key, idFav);
                     editor.apply();
-                    Toast.makeText(getActivity().getApplicationContext(),"Added to favourites", Toast.LENGTH_LONG).show();
-                }
-                else{
-                    Toast.makeText(getActivity().getApplicationContext(),"Already in favourites", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity().getApplicationContext(), "Added to favourites", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(), "Already in favourites", Toast.LENGTH_LONG).show();
                 }
 
                 break;
             case 1://deletes item from favourites if there is one already
-                if (contains)
-                {
-                    idFav=idFav.replace(movieJson+",","");
+                if (contains) {
+                    String forReplace = movieJson + ",";
+                    idFav = idFav.replace(forReplace, "");
                     editor.putString(key, idFav);
                     editor.apply();
                     //Toast.makeText(getActivity().getApplicationContext(), idFav, Toast.LENGTH_LONG).show();
                     Toast.makeText(getActivity().getApplicationContext(), "Removed from favourites", Toast.LENGTH_LONG).show();
-                }
-                else{
+                } else {
                     Toast.makeText(getActivity().getApplicationContext(), "Can't remove. It was not a favourite", Toast.LENGTH_LONG).show();
                 }
                 break;
         }
     }
-    public void createCritics(List<Review> reviewList){
-        TextView reviewText = (TextView)view.findViewById(R.id.fragment_details_critics);
+
+    public void createCritics(List<Review> reviewList) {
+        TextView reviewText = (TextView) view.findViewById(R.id.fragment_details_critics);
         reviewText.setText("There are no critics for this movie.");
         boolean reviewFinished = true;
-        for(Review r : reviewList)
-        {
-            if(reviewFinished){
+        for (Review r : reviewList) {
+            if (reviewFinished) {
                 reviewText.setText("");
-                reviewFinished=false;
+                reviewFinished = false;
             }
-            reviewText.append(r.critic + " said: \""+ r.quote + "\" in: " + r.publication+"\n\n");
+            reviewText.append(r.critic + " said: \"" + r.quote + "\" in: " + r.publication + "\n\n");
         }
     }
-    public void createSimilar(List<Movie> similarMovies){
-        TextView similarText = (TextView)view.findViewById(R.id.fragment_details_similar);
+
+    public void createSimilar(List<Movie> similarMovies) {
+        TextView similarText = (TextView) view.findViewById(R.id.fragment_details_similar);
         similarText.setText("No similar movies found.");
-        int count=0;
+        int count = 0;
         boolean similarFinished = true;
-        for(Movie m : similarMovies)//TODO: make this work
+        for (Movie m : similarMovies)//TODO: make this work
         {
-            if(similarFinished){
+            if (similarFinished) {
                 similarText.setText("");
-                similarFinished=false;
+                similarFinished = false;
             }
             count++;
-            similarText.append(String.valueOf(count)+". "+m.title+"("+m.year+")"+"\n");
+            similarText.append(String.valueOf(count) + ". " + m.title + "(" + m.year + ")" + "\n");
         }
     }
-    public void createClips(List<Clip> allClips){
-        ImageView clipImg1 = (ImageView)view.findViewById(R.id.fragment_details_clips_img1);
-        ImageView clipImg2 = (ImageView)view.findViewById(R.id.fragment_details_clips_img2);
-        ImageView clipImg3 = (ImageView)view.findViewById(R.id.fragment_details_clips_img3);
-        ImageView clipImg4 = (ImageView)view.findViewById(R.id.fragment_details_clips_img4);
-        ImageView clipImg5 = (ImageView)view.findViewById(R.id.fragment_details_clips_img5);
-        ImageView clipImg6 = (ImageView)view.findViewById(R.id.fragment_details_clips_img6);
-        ImageView clipImg7 = (ImageView)view.findViewById(R.id.fragment_details_clips_img7);
-        ImageView[] clips = {clipImg1,clipImg2,clipImg3,clipImg4,clipImg5,clipImg6,clipImg7};
-        int x=0;
-        for(Clip c:allClips)
-        {
+
+    public void createClips(List<Clip> allClips) {
+        ImageView clipImg1 = (ImageView) view.findViewById(R.id.fragment_details_clips_img1);
+        ImageView clipImg2 = (ImageView) view.findViewById(R.id.fragment_details_clips_img2);
+        ImageView clipImg3 = (ImageView) view.findViewById(R.id.fragment_details_clips_img3);
+        ImageView clipImg4 = (ImageView) view.findViewById(R.id.fragment_details_clips_img4);
+        ImageView clipImg5 = (ImageView) view.findViewById(R.id.fragment_details_clips_img5);
+        ImageView clipImg6 = (ImageView) view.findViewById(R.id.fragment_details_clips_img6);
+        ImageView clipImg7 = (ImageView) view.findViewById(R.id.fragment_details_clips_img7);
+        ImageView[] clips = {clipImg1, clipImg2, clipImg3, clipImg4, clipImg5, clipImg6, clipImg7};
+        int x = 0;
+        for (Clip c : allClips) {
             String clipLink = c.getThumbnail();
 
             Ion.with(clips[x++])
                     .placeholder(R.drawable.empty_img)
-                    //.error(R.drawable.empty_img_error)
+                            //.error(R.drawable.empty_img_error)
                     .load(clipLink);
-            if (x==clips.length)
+            if (x == clips.length)
                 break;
         }
     }
-    public void createGenres(Movie genreMovie){
+
+    public void createGenres(Movie genreMovie) {
         List<String> genereList = new ArrayList<>();
-        String[] genresStrings ={"Action & Adventure", "Animation", "Art House & International", "Classics", "Comedy", "Documentary", "Drama", "Horror", "Kids & Family", "Mistery & Suspense", "Musical & Performing Arts", "Romance", "Science Fiction & Fantasy", "Sports & Fitness", "Special Interest"};
+        String[] genresStrings = {"Action & Adventure", "Animation", "Art House & International", "Classics", "Comedy", "Documentary", "Drama", "Horror", "Kids & Family", "Mistery & Suspense", "Musical & Performing Arts", "Romance", "Science Fiction & Fantasy", "Sports & Fitness", "Special Interest"};
         for (String s : genresStrings)
             genereList.add(s);
         /**
@@ -227,36 +222,80 @@ public class DetailsFragment extends android.app.Fragment {
          */
 
 
-
-        ImageView genresImg1 = (ImageView)view.findViewById(R.id.fragment_details_genres_img1);
-        ImageView genresImg2 = (ImageView)view.findViewById(R.id.fragment_details_genres_img2);
-        ImageView genresImg3 = (ImageView)view.findViewById(R.id.fragment_details_genres_img3);
-        ImageView genresImg4 = (ImageView)view.findViewById(R.id.fragment_details_genres_img4);
-        ImageView[] imageViews = {genresImg1,genresImg2,genresImg3,genresImg4};
-        int x=0;
-        for (String s : genereList){
-            if(x==imageViews.length)
+        ImageView genresImg1 = (ImageView) view.findViewById(R.id.fragment_details_genres_img1);
+        ImageView genresImg2 = (ImageView) view.findViewById(R.id.fragment_details_genres_img2);
+        ImageView genresImg3 = (ImageView) view.findViewById(R.id.fragment_details_genres_img3);
+        ImageView genresImg4 = (ImageView) view.findViewById(R.id.fragment_details_genres_img4);
+        ImageView[] imageViews = {genresImg1, genresImg2, genresImg3, genresImg4};
+        int x = 0;
+        for (String s : genereList) {
+            if (x == imageViews.length)
                 break;
-            if (genreMovie.genres.contains(s))
-            {
-               switch (s){
-                   case "Action & Adventure": { imageViews[x++].setImageResource(R.drawable.action); break;}
-                   case "Animation": {imageViews[x++].setImageResource(R.drawable.animation); break;}
-                   case "Art House & International": {imageViews[x++].setImageResource(R.drawable.art); break;}
-                   case "Classics": {imageViews[x++].setImageResource(R.drawable.classics); break;}
-                   case "Comedy": {imageViews[x++].setImageResource(R.drawable.comedy); break;}
-                   case "Documentary": {imageViews[x++].setImageResource(R.drawable.documentary); break;}
-                   case "Drama": {imageViews[x++].setImageResource(R.drawable.drama); break;}
-                   case "Horror": {imageViews[x++].setImageResource(R.drawable.horror); break;}
-                   case "Kids & Family": {imageViews[x++].setImageResource(R.drawable.kids); break;}
-                   case "Mistery & Suspense": {imageViews[x++].setImageResource(R.drawable.mistery); break;}
-                   case "Musical & Performing Arts": {imageViews[x++].setImageResource(R.drawable.musical); break;}
-                   case "Romance": {imageViews[x++].setImageResource(R.drawable.romance); break;}
-                   case "Science Fiction & Fantasy": {imageViews[x++].setImageResource(R.drawable.scifi); break;}
-                   case "Sports & Fitness": {imageViews[x++].setImageResource(R.drawable.sports); break;}
-                   case "Special Interest": {imageViews[x++].setImageResource(R.drawable.special); break;}
-                   default: break;
-               }
+            if (genreMovie.genres.contains(s)) {
+                switch (s) {
+                    case "Action & Adventure": {
+                        imageViews[x++].setImageResource(R.drawable.action);
+                        break;
+                    }
+                    case "Animation": {
+                        imageViews[x++].setImageResource(R.drawable.animation);
+                        break;
+                    }
+                    case "Art House & International": {
+                        imageViews[x++].setImageResource(R.drawable.art);
+                        break;
+                    }
+                    case "Classics": {
+                        imageViews[x++].setImageResource(R.drawable.classics);
+                        break;
+                    }
+                    case "Comedy": {
+                        imageViews[x++].setImageResource(R.drawable.comedy);
+                        break;
+                    }
+                    case "Documentary": {
+                        imageViews[x++].setImageResource(R.drawable.documentary);
+                        break;
+                    }
+                    case "Drama": {
+                        imageViews[x++].setImageResource(R.drawable.drama);
+                        break;
+                    }
+                    case "Horror": {
+                        imageViews[x++].setImageResource(R.drawable.horror);
+                        break;
+                    }
+                    case "Kids & Family": {
+                        imageViews[x++].setImageResource(R.drawable.kids);
+                        break;
+                    }
+                    case "Mistery & Suspense": {
+                        imageViews[x++].setImageResource(R.drawable.mistery);
+                        break;
+                    }
+                    case "Musical & Performing Arts": {
+                        imageViews[x++].setImageResource(R.drawable.musical);
+                        break;
+                    }
+                    case "Romance": {
+                        imageViews[x++].setImageResource(R.drawable.romance);
+                        break;
+                    }
+                    case "Science Fiction & Fantasy": {
+                        imageViews[x++].setImageResource(R.drawable.scifi);
+                        break;
+                    }
+                    case "Sports & Fitness": {
+                        imageViews[x++].setImageResource(R.drawable.sports);
+                        break;
+                    }
+                    case "Special Interest": {
+                        imageViews[x++].setImageResource(R.drawable.special);
+                        break;
+                    }
+                    default:
+                        break;
+                }
             }
         }
     }
@@ -266,12 +305,56 @@ public class DetailsFragment extends android.app.Fragment {
                              Bundle savedInstanceState) {
 
         if (view == null)
-        // Inflate the layout for this fragment
+            // Inflate the layout for this fragment
             view = inflater.inflate(R.layout.fragment_details, container, false);
+        mContext2 = view.getContext();
 
 
-        Bundle bundle=getArguments();
-        // Retrieve data from bundle with Parcelable object of type Movie
+        final GestureDetector gesture = new GestureDetector(getActivity(),
+                new GestureDetector.SimpleOnGestureListener() {
+
+                    @Override
+                    public boolean onDown(MotionEvent e) {
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+                                           float velocityY) {
+                        //Log.i(SyncStateContract.Constants.APP_TAG, "onFling has been called!");
+                        //Toast.makeText(getActivity(),"onFling",Toast.LENGTH_SHORT).show();
+                        final int SWIPE_MIN_DISTANCE = 120;
+                        final int SWIPE_MAX_OFF_PATH = 250;
+                        final int SWIPE_THRESHOLD_VELOCITY = 200;
+                        try {
+                            if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
+                                return false;
+                            if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE
+                                    && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+
+                                //Log.i(SyncStateContract.Constants.APP_TAG, "Right to Left");*/
+                                //Toast.makeText(getActivity(),"Right to left",Toast.LENGTH_SHORT).show();
+                            } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE
+                                    && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                                //Log.i(SyncStateContract.Constants.APP_TAG, "Left to Right");
+                                //Toast.makeText(getActivity(),"Left to Right",Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (Exception e) {
+                            // nothing
+                        }
+                        return super.onFling(e1, e2, velocityX, velocityY);
+                    }
+                });
+
+        view.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return gesture.onTouchEvent(event);
+            }
+        });
+
+
+        Bundle bundle = getArguments();
         detailMovie = bundle.getParcelable("movie");
         addToRecent(movie_id, detailMovie);
         /**
@@ -298,7 +381,7 @@ public class DetailsFragment extends android.app.Fragment {
         });
 
         TextView synopsis = (TextView) view.findViewById(R.id.fragment_details_synopsis);
-        if (detailMovie.synopsis.length()<5)
+        if (detailMovie.synopsis.length() < 5)
             synopsis.setText("No synopsis found");
         else
             synopsis.setText(detailMovie.synopsis);
@@ -319,8 +402,8 @@ public class DetailsFragment extends android.app.Fragment {
                 castText += ", ";
         }
 
-        if (castText.length()<8)
-            castText="Cast: No cast found";
+        if (castText.length() < 8)
+            castText = "Cast: No cast found";
         cast.setText(castText);
         cast.setSelected(true);
 
@@ -329,7 +412,7 @@ public class DetailsFragment extends android.app.Fragment {
          */
 
         ImageView imageView = (ImageView) view.findViewById(R.id.fragment_details_img);
-        String det_pic=detailMovie.posters.detailed.replace("tmb", "det");
+        String det_pic = detailMovie.posters.detailed.replace("tmb", "det");
         Ion.with(imageView)
                 .placeholder(R.drawable.empty_img)
                 .error(R.drawable.empty_img_error)
@@ -356,25 +439,25 @@ public class DetailsFragment extends android.app.Fragment {
          * API CALLS COME HERE
          */
 
-        String criticsRequest="http://api.rottentomatoes.com/api/public/v1.0/movies/"+detailMovie.getId()+"/reviews.json?apikey=pj2z7eyve6mfdtcx4vynk26y";
+        String criticsRequest = "http://api.rottentomatoes.com/api/public/v1.0/movies/" + detailMovie.getId() + "/reviews.json?apikey=pj2z7eyve6mfdtcx4vynk26y";
         URI requestURIc = URI.create(criticsRequest);
-            CallAPICritics taskC = new CallAPICritics();
-            taskC.execute(requestURIc);
+        CallAPICritics taskC = new CallAPICritics();
+        taskC.execute(requestURIc);
         //calling API to get critics reviews;
 
-        String similarRequest="http://api.rottentomatoes.com/api/public/v1.0/movies/"+detailMovie.getId()+"/similar.json?limit=5&apikey=pj2z7eyve6mfdtcx4vynk26y";
+        String similarRequest = "http://api.rottentomatoes.com/api/public/v1.0/movies/" + detailMovie.getId() + "/similar.json?limit=5&apikey=pj2z7eyve6mfdtcx4vynk26y";
         URI requestURIs = URI.create(similarRequest);
         CallAPISimilar taskS = new CallAPISimilar();
         taskS.execute(requestURIs);
         //calling API to get similar movies;
 
-        String clipRequest="http://api.rottentomatoes.com/api/public/v1.0/movies/"+detailMovie.getId()+"/clips.json?limit=5&apikey=pj2z7eyve6mfdtcx4vynk26y";
+        String clipRequest = "http://api.rottentomatoes.com/api/public/v1.0/movies/" + detailMovie.getId() + "/clips.json?limit=5&apikey=pj2z7eyve6mfdtcx4vynk26y";
         URI requestURIclip = URI.create(clipRequest);
         CallAPIClips taskClip = new CallAPIClips();
         taskClip.execute(requestURIclip);
         //calling API to get clips for a movies;
 
-        String movieRequest = "http://api.rottentomatoes.com/api/public/v1.0/movies/"+detailMovie.getId()+".json?apikey=pj2z7eyve6mfdtcx4vynk26y";
+        String movieRequest = "http://api.rottentomatoes.com/api/public/v1.0/movies/" + detailMovie.getId() + ".json?apikey=pj2z7eyve6mfdtcx4vynk26y";
         URI requestURImovie = URI.create(movieRequest);
         CallAPIGenres taskMovie = new CallAPIGenres();
         taskMovie.execute(requestURImovie);
@@ -385,32 +468,29 @@ public class DetailsFragment extends android.app.Fragment {
 
 
         final FloatingActionButton floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fragment_details_fab);
-        if(getActivity().getSharedPreferences("favsAreHere", Context.MODE_PRIVATE).getString(movie_id,"").contains(detailMovie.id))
-        {
+        if (getActivity().getSharedPreferences("favsAreHere", Context.MODE_PRIVATE).getString(movie_id, "").contains(detailMovie.id)) {
             floatingActionButton.setColorNormal(getResources().getColor(R.color.white));
             floatingActionButton.setImageResource(R.drawable.ic_navigation_check);
-        }
-        else{
+        } else {
             floatingActionButton.setColorNormal(getResources().getColor(R.color.green));
             floatingActionButton.setImageResource(R.drawable.ic_action_favorite);
         }
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             int option;
+
             @Override
             public void onClick(View v) {
                 preferences = getActivity().getSharedPreferences("favsAreHere", Context.MODE_PRIVATE);
-                    if(!preferences.getString(movie_id,"").contains(detailMovie.id))
-                    {
-                        floatingActionButton.setColorNormal(getResources().getColor(R.color.white));
-                        floatingActionButton.setImageResource(R.drawable.ic_navigation_check);
-                        option = 0;
-                    }
-                    else{
-                        floatingActionButton.setColorNormal(getResources().getColor(R.color.green));
-                        floatingActionButton.setImageResource(R.drawable.ic_action_favorite);
-                        option = 1;
-                    }
+                if (!preferences.getString(movie_id, "").contains(detailMovie.id)) {
+                    floatingActionButton.setColorNormal(getResources().getColor(R.color.white));
+                    floatingActionButton.setImageResource(R.drawable.ic_navigation_check);
+                    option = 0;
+                } else {
+                    floatingActionButton.setColorNormal(getResources().getColor(R.color.green));
+                    floatingActionButton.setImageResource(R.drawable.ic_action_favorite);
+                    option = 1;
+                }
                 modifyPreferences(movie_id, option, detailMovie);
             }
         });
@@ -470,7 +550,7 @@ public class DetailsFragment extends android.app.Fragment {
                 Gson gson = new Gson();
                 jsonObject = new JSONObject(result);
                 Reviews reviews = gson.fromJson(jsonObject.toString(), Reviews.class);
-                reviewList=reviews.getReviews();
+                reviewList = reviews.getReviews();
 
             } catch (JSONException e1) {
                 e1.printStackTrace();
@@ -485,6 +565,7 @@ public class DetailsFragment extends android.app.Fragment {
             createCritics(reviewLists);
         }
     }
+
     public class CallAPISimilar extends AsyncTask<URI, String, List<Movie>> {
 
 
@@ -551,6 +632,7 @@ public class DetailsFragment extends android.app.Fragment {
             //  progressDialog.dismiss();
         }
     }
+
     public class CallAPIClips extends AsyncTask<URI, String, List<Clip>> {
 
 
@@ -617,6 +699,7 @@ public class DetailsFragment extends android.app.Fragment {
             //  progressDialog.dismiss();
         }
     }
+
     public class CallAPIGenres extends AsyncTask<URI, String, Movie> {
 
 
@@ -661,7 +744,7 @@ public class DetailsFragment extends android.app.Fragment {
             }
 
             JSONObject jsonObject;
-            Movie movie=null;
+            Movie movie = null;
             try {
 
                 Gson gson = new Gson();
@@ -685,9 +768,9 @@ public class DetailsFragment extends android.app.Fragment {
     }
 }
 
-    /**
-     * THUMBR COMES HERE
-     */
+/**
+ * THUMBR COMES HERE
+ */
 class ThumbrIo {
 
     private static final String THUMBRIO_API_KEY = "t0AsaoQ1lG-nJaIvOavA";

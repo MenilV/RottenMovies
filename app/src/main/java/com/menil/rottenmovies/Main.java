@@ -8,7 +8,6 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -20,13 +19,11 @@ import android.view.Window;
 import android.widget.Toast;
 
 
-
-
 public class Main extends Activity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     final Context mContext = this;
     private CharSequence mTitle;
-    
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_HOME) {
@@ -64,6 +61,11 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
             }
         }
         return false;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -109,8 +111,6 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
             case 0://home fragment
                 fragment = new HomeFragment();
                 tag = "HOME";
-                /*fragment = new BoxOfficeFragment();
-                tag = "BOXOFFICE";*/
                 break;
             case 1://box office fragment
                 if (!isConnectedToInternet()) {
@@ -152,11 +152,11 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
                     tag = "UPCOMING";
                 }
                 break;
-            case 5://favourites (currently displaying detail view)
+            case 5://favourites fragment
                 fragment = new FavouritesFragment();
                 tag = "FAVOURITES";
                 break;
-            case 6://about
+            case 6://about fragment
                 fragment = new AboutFragment();
                 tag = "ABOUT";
                 break;
@@ -178,12 +178,12 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         Boolean found = false;
-        for (int i = 0; i<fm.getBackStackEntryCount(); i++) {
+        for (int i = 0; i < fm.getBackStackEntryCount(); i++) {
             if (fm.findFragmentByTag(TAG) == fm.findFragmentByTag(fm.getBackStackEntryAt(i).getName()))
                 found = true;
         }
-        if(found)
-            fm.popBackStack(TAG,0);
+        if (found)
+            fm.popBackStack(TAG, 0);
         else
             ft.replace(R.id.container, fragment, TAG).addToBackStack(TAG).commit();
     }
@@ -209,11 +209,10 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
         int id = item.getItemId();
         if (item.getItemId() == R.id.action_exit)
             finish();
-        else if (item.getItemId()==R.id.action_search)
-        {
+        else if (item.getItemId() == R.id.action_search) {
 
             SearchFragment fragment = new SearchFragment();
-            switchContent(fragment,"SEARCH");
+            switchContent(fragment, "SEARCH");
             //item.expandActionView();
         }
         //return id == R.id.action_settings || super.onOptionsItemSelected(item);

@@ -39,12 +39,12 @@ import java.util.List;
 public class InTheatersFragment extends android.app.Fragment {
 
     public List<Movie> allMovies = new ArrayList<Movie>();
+    View view;
     private ProgressDialog progressDialog;
     private GridView gridView;
-    private Boolean already_called=false;
+    private Boolean already_called = false;
     //private View view;
     private Context mContext, mContext2;
-    View view;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {//API KEY = pj2z7eyve6mfdtcx4vynk26y
@@ -54,7 +54,7 @@ public class InTheatersFragment extends android.app.Fragment {
         makeActionbar();
     }
 
-    private void makeActionbar(){
+    private void makeActionbar() {
         try {
             assert getActivity().getActionBar() != null;
             getActivity().getActionBar().show();
@@ -84,12 +84,12 @@ public class InTheatersFragment extends android.app.Fragment {
         String nrPages = "&page=1";
         String endURI = "&country=us&apikey=pj2z7eyve6mfdtcx4vynk26y";
 
-        if(!already_called) {
+        if (!already_called) {
             CallAPI task = new CallAPI();
             URI requestURI = URI.create(startURI + "in_theaters.json?page_limit=" + limit + nrPages + endURI);
             task.execute(requestURI);
             //thread for getting data from the API
-            already_called=true;
+            already_called = true;
         }
     }
 
@@ -107,14 +107,14 @@ public class InTheatersFragment extends android.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 
-        if (view == null){
+        if (view == null) {
             view = inflater.inflate(R.layout.fragment_intheaters, container, false);
-        }else{
-        //((ViewGroup)container).removeView(view);
-        /**
-         * THIS IS VERY IMPORTANT
-         */
-    }
+        } else {
+            //((ViewGroup)container).removeView(view);
+            /**
+             * THIS IS VERY IMPORTANT
+             */
+        }
         gridView = (GridView) view.findViewById(R.id.others_gridview);
 
         mContext = getActivity().getApplicationContext();

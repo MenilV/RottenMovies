@@ -39,7 +39,8 @@ import java.util.List;
  */
 public class BoxOfficeFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vynk26y
 
-    public List<Movie> allMovies = new ArrayList<Movie>();
+    private List<Movie> allMovies = new ArrayList<Movie>();
+    private Movies movies;
     private ProgressDialog progressDialog;
     private ListView listView;
     private Context mContext, mContext2;
@@ -50,8 +51,9 @@ public class BoxOfficeFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vy
 
     @Override
     public void onSaveInstanceState(final Bundle outState) {
-        super.onSaveInstanceState(outState);
         outState.putSerializable("allMovies", (Serializable) allMovies);
+        super.onSaveInstanceState(outState);
+
     }
 
     private void makeActionbar() {
@@ -170,6 +172,8 @@ public class BoxOfficeFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vy
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Bundle args = new Bundle();
                 args.putParcelable("movie", allMovies.get(position));
+                args.putParcelable("movies", movies);
+                args.putInt("position", position);
 
                 Fragment fragment = new DetailsFragment();
                 fragment.setArguments(args);
@@ -265,6 +269,7 @@ public class BoxOfficeFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vy
                 Gson gson = new Gson();
                 jsonObject = new JSONObject(result);
                 Movies filmovi = gson.fromJson(jsonObject.toString(), Movies.class); // deserializes json into filmovi
+                movies = filmovi;
                 allMovies = filmovi.getMovies();
 
             } catch (JSONException e1) {

@@ -4,7 +4,6 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -13,9 +12,9 @@ import android.os.Handler;
  */
 public class SplashScreen extends Activity {
 
-    private void makeActionbar(){
+    private void makeActionbar() {
         ActionBar actionBar = getActionBar();
-        try{
+        try {
             assert actionBar != null;
             actionBar.show();
             actionBar.setDisplayShowTitleEnabled(true);

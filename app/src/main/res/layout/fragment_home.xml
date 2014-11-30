@@ -8,61 +8,12 @@
         android:paddingTop="?android:attr/actionBarSize"
         android:background="#f1f1f1"
         tools:context=".HomeFragment">
-        <RelativeLayout
-            android:id="@+id/fragment_home_recent_relative"
-            android:layout_alignParentTop="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
 
-            <android.support.v7.widget.CardView
-                android:id="@+id/fragment_home_recent_card"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp">
-
-                <LinearLayout
-                    android:id="@+id/fragment_home_recent_card_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="Recently viewed movies"
-                        android:textColor="@color/pale_gray"
-                        android:textSize="20sp" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginRight="7dp"
-                        android:layout_marginLeft="7dp"
-                        android:background="#399322" />
-                </LinearLayout>
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="230dp" />
-
-            </android.support.v7.widget.CardView>
-
-            <com.menil.rottenmovies.HorizontialListView
-                android:id="@+id/listview_recent"
-                android:layout_width="wrap_content"
-                android:layout_height="200dp"
-                android:layout_marginTop="-205dp"
-                android:layout_below="@id/fragment_home_recent_card" />
-
-        </RelativeLayout>
         <RelativeLayout
             android:id="@+id/fragment_home_favourite_relative"
-            android:layout_below="@id/fragment_home_recent_relative"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true">
 
             <android.support.v7.widget.CardView
                 android:id="@+id/fragment_home_favourite_card"
@@ -108,10 +59,60 @@
                 android:layout_below="@id/fragment_home_favourite_card" />
 
         </RelativeLayout>
+        <RelativeLayout
+        android:id="@+id/fragment_home_recent_relative"
+        android:layout_below="@id/fragment_home_favourite_relative"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/fragment_home_recent_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp">
+
+            <LinearLayout
+                android:id="@+id/fragment_home_recent_card_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Recently viewed movies"
+                    android:textColor="@color/pale_gray"
+                    android:textSize="20sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginRight="7dp"
+                    android:layout_marginLeft="7dp"
+                    android:background="#399322" />
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="230dp" />
+
+        </android.support.v7.widget.CardView>
+
+        <com.menil.rottenmovies.HorizontialListView
+            android:id="@+id/listview_recent"
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"
+            android:layout_marginTop="-205dp"
+            android:layout_below="@id/fragment_home_recent_card" />
+
+    </RelativeLayout>
 <ImageView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_below="@+id/fragment_home_favourite_relative"
+    android:layout_below="@+id/fragment_home_recent_relative"
     android:src="@drawable/actionbar_icon"
     android:scaleType="fitEnd"/>
     </RelativeLayout>

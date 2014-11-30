@@ -2,15 +2,12 @@ package com.menil.rottenmovies;
 
 import android.content.Context;
 import android.content.Intent;
-
 import android.net.Uri;
-
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -101,18 +98,17 @@ public class ListsAdapter extends BaseAdapter {
             view = convertView;
         }
 
-        if (tag.equals("BOXOFFICE")||tag.equals("SEARCH")||tag.equals("FAVOURITES")) {
+        if (tag.equals("BOXOFFICE") || tag.equals("SEARCH") || tag.equals("FAVOURITES")) {
             LinearLayout headerLayout = (LinearLayout) view.findViewById(R.id.header_layout);
             headerLayout.setVisibility(View.GONE);
-        }
-        else {
+        } else {
             setHeader(position, view);//setting the header for upcoming and opening movies
         }
         String picURL;
-        if(listMovies.get(position)!=null)
-            picURL=listMovies.get(position).posters.detailed.replace("tmb", "det");
+        if (listMovies.get(position) != null)
+            picURL = listMovies.get(position).posters.detailed.replace("tmb", "det");
         else
-            picURL ="http://i.imgur.com/q62dq0z.png";
+            picURL = "http://i.imgur.com/q62dq0z.png";
         ImageView imageView = (ImageView) view.findViewById(R.id.fragment_list_item_img);
         Ion.with(imageView)
                 .placeholder(R.drawable.empty_img)
@@ -121,8 +117,8 @@ public class ListsAdapter extends BaseAdapter {
 
         TextView titleView = (TextView) view.findViewById(R.id.fragment_list_item_title);
         String title;
-        if (listMovies.get(position).title==null)
-            title="No Movie title";
+        if (listMovies.get(position).title == null)
+            title = "No Movie title";
         else
             title = listMovies.get(position).title;
         titleView.setText((position + 1) + ". ");
@@ -135,13 +131,13 @@ public class ListsAdapter extends BaseAdapter {
         TextView runtimeView = (TextView) view.findViewById(R.id.fragment_list_item_runtime);
         String runtime = listMovies.get(position).runtime;
         if (runtime.equals(""))
-            runtime="NaN";
+            runtime = "NaN";
         runtimeView.setText("Runtime: " + runtime + " min");
 
         TextView releaseView = (TextView) view.findViewById(R.id.fragment_list_item_date);
         String release_date, new_date;
-        if (listMovies.get(position).release_dates==null || listMovies.get(position).release_dates.theater==null)
-            new_date="No date found";
+        if (listMovies.get(position).release_dates == null || listMovies.get(position).release_dates.theater == null)
+            new_date = "No date found";
         else {
             release_date = listMovies.get(position).release_dates.theater;
             new_date = release_date.substring(8, 10) + "/" + release_date.substring(5, 7) + "/" + release_date.substring(0, 4);
@@ -150,8 +146,8 @@ public class ListsAdapter extends BaseAdapter {
 
         String criticsScore;
         TextView rating = (TextView) view.findViewById(R.id.fragment_list_item_rating);
-        if (listMovies.get(position).ratings==null || listMovies.get(position).ratings.critics_score.equals("-1"))
-            criticsScore="Unrated";
+        if (listMovies.get(position).ratings == null || listMovies.get(position).ratings.critics_score.equals("-1"))
+            criticsScore = "Unrated";
         else
             criticsScore = listMovies.get(position).ratings.critics_score;
         rating.setText("Rating: " + criticsScore);
