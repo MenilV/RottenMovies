@@ -1,23 +1,20 @@
 package com.menil.rottenmovies;
 
+
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
+import android.app.SearchManager;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.melnykov.fab.FloatingActionButton;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -35,76 +32,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 /*
- * Created by menil on 18.11.2014.
+ * Created by menil on 02.12.2014.
  */
-public class SearchFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vynk26y
+public class SearchActivity extends Activity {
 
     public List<Movie> allMovies = new ArrayList<Movie>();
     private View view;
     private ProgressDialog progressDialog;
     private ListView listView;
-    private Context mContext;
     private TextView noMoviesTextView;
-
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {//API KEY = pj2z7eyve6mfdtcx4vynk26y
-        super.onActivityCreated(savedInstanceState);
-        // Indicate that this fragment would like to influence the set of actions in the action bar.
-        setHasOptionsMenu(true);
-        makeActionbar();
-    }
-
-    private void makeActionbar() {
-        try {
-            SearchView searchView = (SearchView) view.findViewById(R.id.search_textbox);
-            assert getActivity().getActionBar() != null;
-            getActivity().getActionBar().show();
-            getActivity().getActionBar().setDisplayShowTitleEnabled(true);
-            getActivity().getActionBar().setTitle(R.string.app_name);
-            getActivity().getActionBar().setSubtitle("Search");
-            getActivity().getActionBar().setBackgroundDrawable(new ColorDrawable(0xFF399322));//transparent
-            getActivity().getActionBar().setIcon(R.drawable.actionbar_icon);
-            getActivity().getActionBar().setCustomView(searchView);
-            //getActivity().getActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-            //searchView.setQuery("test",true);
-            searchView.setFocusable(true);
-            searchView.setIconified(false);
-            searchView.requestFocusFromTouch();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
     }
 
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRetainInstance(true);
+        handleIntent(getIntent());
     }
 
-    public void performSearch(String editText) {
-
-        if (editText.length() > 0) {
-            String request = "http://api.rottentomatoes.com/api/public/v1.0/movies.json?q=" + editText.replace(" ", "+") + "&page_limit=50&page=1&apikey=pj2z7eyve6mfdtcx4vynk26y";
-            URI requestURI = URI.create(request);
-            CallAPI task = new CallAPI();
-            task.execute(requestURI);
-        } else
-            Toast.makeText(getActivity().getApplicationContext(), "Enter a search query", Toast.LENGTH_LONG).show();
+    public void onNewIntent(Intent intent) {
+        setIntent(intent);
+        handleIntent(intent);
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public void handleIntent(Intent intent) {
+        //super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_search);
 
-        if (savedInstanceState == null)
-            view = inflater.inflate(R.layout.fragment_search, container, false);
-        mContext = getActivity().getApplicationContext();
-        listView = (ListView) view.findViewById(R.id.search_listview);
+        noMoviesTextView = (TextView) findViewById(R.id.search_textbox);
+        listView = (ListView) findViewById(R.id.search_listview);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -117,58 +75,46 @@ public class SearchFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vynk2
             }
 
             private void switchFragment(Fragment fragment) {
-                if (view.getContext() == null) {
+                if (getApplicationContext() == null) {
                     return;
                 }
-                if (view.getContext() instanceof Main) {
+                if (getApplicationContext() instanceof Main) {
                     Main main = (Main) view.getContext();
                     main.switchContent(fragment, "DETAILS");
                 }
             }
         });
+        // Get the intent, verify the action and get the query
+        //Intent intent = getIntent();
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            performSearch(query);
+        }
 
-        /**
-         * HERE STARTS THE SEARCH
-         */
-        final SearchView searchView = (SearchView) view.findViewById(R.id.search_textbox);
 
-        noMoviesTextView = (TextView) view.findViewById(R.id.search_no_movies);
-        //searchView.focus
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                // Do something when user his enter on keyboard
-                performSearch(query);
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
-                        Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
-                view.clearFocus();
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                // Do something while user is entering text
-                return false;
-            }
-        });
-
-        FloatingActionButton floatingActionButton = (FloatingActionButton) view.findViewById(R.id.search_list_fab);
+        /*FloatingActionButton floatingActionButton = (FloatingActionButton) view.findViewById(R.id.search_list_fab);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                performSearch(searchView.getQuery().toString());
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
-                        Context.INPUT_METHOD_SERVICE);
+                performSearch(query);
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
-        });
+        });*/
         /**
          * HERE ENDS THE SEARCH
          */
-        return view;
+    }
+
+    public void performSearch(String editText) {
+
+        if (editText.length() > 0) {
+            String request = "http://api.rottentomatoes.com/api/public/v1.0/movies.json?q=" + editText.replace(" ", "+") + "&page_limit=50&page=1&apikey=pj2z7eyve6mfdtcx4vynk26y";
+            URI requestURI = URI.create(request);
+            CallAPI task = new CallAPI();
+            task.execute(requestURI);
+        } else
+            Toast.makeText(getApplicationContext(), "Enter a search query", Toast.LENGTH_LONG).show();
     }
 
     public class CallAPI extends AsyncTask<URI, String, List<Movie>> {
@@ -176,10 +122,10 @@ public class SearchFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vynk2
         @Override
         protected void onPreExecute() {
 
-            progressDialog = new ProgressDialog(getActivity());//, R.style.CustomDialog);
+         /*   progressDialog = new ProgressDialog(getApplicationContext());//, R.style.CustomDialog);
             progressDialog.setTitle("Loading...");
             //Set the dialog message to 'Loading application View, please wait...'
-            progressDialog.setMessage("Loading Movies, please wait...");
+            progressDialog.setMessage("Searching Movies, please wait...");
             //This dialog can't be canceled by pressing the back key
             progressDialog.setCancelable(true);
             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -192,7 +138,7 @@ public class SearchFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vynk2
             //Set the current progress to zero
             progressDialog.setProgress(0);
             //Display the progress dialog
-            progressDialog.show();
+            progressDialog.show();*/
         }
 
         @Override
@@ -250,14 +196,14 @@ public class SearchFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vynk2
         @Override
         protected void onPostExecute(List<Movie> allMovies) {
             if (allMovies.isEmpty()) {
-                noMoviesTextView.setVisibility(View.VISIBLE);
+                //           noMoviesTextView.setVisibility(View.VISIBLE);
                 listView.setVisibility(View.GONE);
             } else {
-                noMoviesTextView.setVisibility(View.GONE);
+//                noMoviesTextView.setVisibility(View.GONE);
                 listView.setVisibility(View.VISIBLE);
-                listView.setAdapter(new ListsAdapter(mContext, allMovies, "SEARCH"));
+                listView.setAdapter(new ListsAdapter(getApplicationContext(), allMovies, "SEARCH"));
             }
-            progressDialog.dismiss();
+            //     progressDialog.dismiss();
         }
     }
 }

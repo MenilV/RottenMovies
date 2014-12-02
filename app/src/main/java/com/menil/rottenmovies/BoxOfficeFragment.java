@@ -49,6 +49,7 @@ public class BoxOfficeFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vy
     private Boolean already_called[] = {false, false, false};
     private View view;
 
+
     @Override
     public void onSaveInstanceState(final Bundle outState) {
         outState.putSerializable("allMovies", (Serializable) allMovies);

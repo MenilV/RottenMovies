@@ -12,8 +12,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.koushikdutta.ion.Ion;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +32,7 @@ public class ListsAdapter extends BaseAdapter {
         this.mContext = context;
         this.listMovies = allMovies;
         this.tag = tag;
+
     }
 
 
@@ -109,11 +108,14 @@ public class ListsAdapter extends BaseAdapter {
             picURL = listMovies.get(position).posters.detailed.replace("tmb", "det");
         else
             picURL = "http://i.imgur.com/q62dq0z.png";
-        ImageView imageView = (ImageView) view.findViewById(R.id.fragment_list_item_img);
-        Ion.with(imageView)
+        RemoteImageView imageView = (RemoteImageView) view.findViewById(R.id.fragment_list_item_img);
+        //ImageView imageView = (ImageView) view.findViewById(R.id.fragment_list_item_img);
+        /*Ion.with(imageView)
                 .placeholder(R.drawable.empty_img)
                 .error(R.drawable.empty_img_error)
-                .load(picURL);
+                .load(picURL);*/
+        imageView.setImageURL(picURL);
+
 
         TextView titleView = (TextView) view.findViewById(R.id.fragment_list_item_title);
         String title;
@@ -197,6 +199,7 @@ public class ListsAdapter extends BaseAdapter {
                 v.getContext().startActivity(intent);
             }
         });
+
 
         return view;
     }

@@ -18,7 +18,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.koushikdutta.ion.Ion;
 import com.melnykov.fab.FloatingActionButton;
 
 import org.apache.http.HttpEntity;
@@ -179,34 +178,29 @@ public class DetailsFragment extends android.app.Fragment {
         similarText.setText("No similar movies found.");
         int count = 0;
         boolean similarFinished = true;
-        for (Movie m : similarMovies)//TODO: make this work
-        {
+        for (Movie m : similarMovies) {
             if (similarFinished) {
                 similarText.setText("");
                 similarFinished = false;
             }
             count++;
-            similarText.append(String.valueOf(count) + ". " + m.title + "(" + m.year + ")" + "\n");
+            similarText.append(String.valueOf(count) + ". " + m.title + " (" + m.year + ")" + "\n");
         }
     }
 
     public void createClips(List<Clip> allClips) {
-        ImageView clipImg1 = (ImageView) view.findViewById(R.id.fragment_details_clips_img1);
-        ImageView clipImg2 = (ImageView) view.findViewById(R.id.fragment_details_clips_img2);
-        ImageView clipImg3 = (ImageView) view.findViewById(R.id.fragment_details_clips_img3);
-        ImageView clipImg4 = (ImageView) view.findViewById(R.id.fragment_details_clips_img4);
-        ImageView clipImg5 = (ImageView) view.findViewById(R.id.fragment_details_clips_img5);
-        ImageView clipImg6 = (ImageView) view.findViewById(R.id.fragment_details_clips_img6);
-        ImageView clipImg7 = (ImageView) view.findViewById(R.id.fragment_details_clips_img7);
-        ImageView[] clips = {clipImg1, clipImg2, clipImg3, clipImg4, clipImg5, clipImg6, clipImg7};
+        RemoteImageView clipImg1 = (RemoteImageView) view.findViewById(R.id.fragment_details_clips_img1);
+        RemoteImageView clipImg2 = (RemoteImageView) view.findViewById(R.id.fragment_details_clips_img2);
+        RemoteImageView clipImg3 = (RemoteImageView) view.findViewById(R.id.fragment_details_clips_img3);
+        RemoteImageView clipImg4 = (RemoteImageView) view.findViewById(R.id.fragment_details_clips_img4);
+        RemoteImageView clipImg5 = (RemoteImageView) view.findViewById(R.id.fragment_details_clips_img5);
+        RemoteImageView clipImg6 = (RemoteImageView) view.findViewById(R.id.fragment_details_clips_img6);
+        RemoteImageView clipImg7 = (RemoteImageView) view.findViewById(R.id.fragment_details_clips_img7);
+        RemoteImageView[] clips = {clipImg1, clipImg2, clipImg3, clipImg4, clipImg5, clipImg6, clipImg7};
         int x = 0;
         for (Clip c : allClips) {
             String clipLink = c.getThumbnail();
-
-            Ion.with(clips[x++])
-                    .placeholder(R.drawable.empty_img)
-                            //.error(R.drawable.empty_img_error)
-                    .load(clipLink);
+            clips[x++].setImageURL(clipLink);
             if (x == clips.length)
                 break;
         }
@@ -220,7 +214,6 @@ public class DetailsFragment extends android.app.Fragment {
         /**
          * maybe change this so the array gets faster to the list
          */
-
 
         ImageView genresImg1 = (ImageView) view.findViewById(R.id.fragment_details_genres_img1);
         ImageView genresImg2 = (ImageView) view.findViewById(R.id.fragment_details_genres_img2);
@@ -411,22 +404,19 @@ public class DetailsFragment extends android.app.Fragment {
          * IMAGE STUFF COMES HERE
          */
 
-        ImageView imageView = (ImageView) view.findViewById(R.id.fragment_details_img);
+        RemoteImageView imageView = (RemoteImageView) view.findViewById(R.id.fragment_details_img);
         String det_pic = detailMovie.posters.detailed.replace("tmb", "det");
-        Ion.with(imageView)
-                .placeholder(R.drawable.empty_img)
-                .error(R.drawable.empty_img_error)
-                .load(det_pic);
+
+        imageView.setImageURL(det_pic);
         //getting a resized image from ThumbrIo service
-        final ImageView imageViewTop = (ImageView) view.findViewById(R.id.fragment_details_img_top);
+        final RemoteImageView imageViewTop = (RemoteImageView) view.findViewById(R.id.fragment_details_img_top);
         String rescaledImage = null;
 
         try {//rescale and set picture TOP
             rescaledImage = ThumbrIo.sign(detailMovie.posters.detailed.replace("tmb", "ori"), "510x755c");
-            Ion.with(imageViewTop)
-                    .placeholder(R.drawable.empty_img)
-                    .error(R.drawable.empty_img_error)
-                    .load(rescaledImage);
+
+            imageViewTop.setImageURL(rescaledImage);
+
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (InvalidKeyException e) {

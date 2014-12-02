@@ -12,10 +12,13 @@
         android:icon="@drawable/ic_launcher_1100"
         android:label="@string/app_name"
         android:theme="@style/CustomActionBarTheme">
-
+        <meta-data
+            android:name="android.app.default_searchable"
+            android:value="com.menil.rottenmovies.SearchActivity" />
 
         <activity
             android:name="com.menil.rottenmovies.SplashScreen"
+            android:configChanges="screenSize|orientation"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,13 +32,24 @@
             android:configChanges="screenSize|orientation"
             android:icon="@drawable/actionbar_icon"
             android:label="@string/app_name" >
+
+        </activity>
+
+        <!-- Search activity -->
+        <activity
+            android:name="com.menil.rottenmovies.SearchActivity"
+            android:configChanges="screenSize|orientation"
+            android:icon="@drawable/actionbar_icon"
+            android:label="@string/search_string"
+            android:launchMode="singleTop"
+            android:parentActivityName="com.menil.rottenmovies.Main">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
             <meta-data
-                android:resource="@xml/searchable"
-                android:name="android.app.searchable"/>
-            </activity>
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
 
         <!-- Crash report activity -->
         <activity

@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.net.ConnectivityManager;
@@ -16,6 +17,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 
@@ -74,9 +76,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
         super.onCreate(savedInstanceState);
 
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
-        /**
-         * ovo iznad je zlo!!@!! ali radi :D
-         */
+
         setContentView(R.layout.activity_main);
 
         NavigationDrawerFragment mNavigationDrawerFragment = (NavigationDrawerFragment)
@@ -198,6 +198,13 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
         //restoreActionBar();
         //  return true;
         // }
+        // Get the SearchView and set the searchable configuration
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        // Assumes current activity is the searchable activity
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setIconifiedByDefault(true); // Do not iconify the widget; expand it by default
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -209,12 +216,15 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
         int id = item.getItemId();
         if (item.getItemId() == R.id.action_exit)
             finish();
-        else if (item.getItemId() == R.id.action_search) {
+        // else if (item.getItemId() == R.id.action_search) {
 
-            SearchFragment fragment = new SearchFragment();
-            switchContent(fragment, "SEARCH");
+
+        //Intent intent = new Intent(this, SearchActivity.class);
+        // startActivityForResult(intent,0);
+        //SearchFragment fragment = new SearchFragment();
+        //switchContent(fragment, "SEARCH");
             //item.expandActionView();
-        }
+        //}
         //return id == R.id.action_settings || super.onOptionsItemSelected(item);
         return super.onOptionsItemSelected(item);
     }

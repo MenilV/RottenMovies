@@ -5,10 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.koushikdutta.ion.Ion;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +34,10 @@ public class GridAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return listMovies.size();
+        if (isHome && listMovies.size() > 5)
+            return 5;
+        else
+            return listMovies.size();
     }
 
     @Override
@@ -87,16 +87,12 @@ public class GridAdapter extends BaseAdapter {
             actorsView.setSelected(true);
         }
 
-        ImageView imageView = (ImageView) view.findViewById(R.id.full_card_img);
+        RemoteImageView imageView = (RemoteImageView) view.findViewById(R.id.full_card_img);
         String picURL = null;
-        /*if (isHome)
-            picURL = listMovies.get(position).posters.thumbnail;
-        else*/
+
         picURL = listMovies.get(position).posters.detailed.replace("tmb", "det");
-        Ion.with(imageView)
-                .placeholder(R.drawable.empty_img)
-                .error(R.drawable.empty_img_error)
-                .load(picURL);
+        imageView.setImageURL(picURL);
+
         return view;
     }
 }

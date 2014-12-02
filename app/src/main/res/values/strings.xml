@@ -57,5 +57,6 @@
     <string name="bck_img_details">Background image details view</string>
     <string name="details_img">details image</string>
     <string name="favourites">Favourite movies</string>
+    <string name="search_string">Search</string>
 
 </resources>
