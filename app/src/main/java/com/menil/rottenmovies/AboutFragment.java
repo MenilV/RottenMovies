@@ -3,11 +3,17 @@ package com.menil.rottenmovies;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.SearchManager;
+import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 
 /*
  * Created by menil on 14.11.2014.
@@ -43,10 +49,10 @@ public class AboutFragment extends Fragment {
         super.onDetach();
     }
 
-    /*@Override
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_boxoffice, menu);
+        inflater.inflate(R.menu.menu_noshare, menu);
         SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
 
@@ -59,13 +65,7 @@ public class AboutFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch(item.getItemId()){
-            case R.id.action_share:
-                Intent sendIntent = new Intent();
-                sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Best Movie ever");
-                sendIntent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
-                sendIntent.setType("text/plain");
-                startActivity(sendIntent);
+            case R.id.action_settings:
                 break;
             case R.id.action_about:
                 AboutFragment fragment = new AboutFragment();
@@ -74,10 +74,13 @@ public class AboutFragment extends Fragment {
                     main.switchContent(fragment, "ABOUT");
                 }
                 break;
+            case R.id.action_exit:
+                getActivity().finish();
+                break;
 
         }
         return super.onOptionsItemSelected(item);
-    }*/
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

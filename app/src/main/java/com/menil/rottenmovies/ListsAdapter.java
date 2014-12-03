@@ -127,6 +127,8 @@ public class ListsAdapter extends BaseAdapter {
         titleView.append(title);
 
         String year = listMovies.get(position).year;
+        if (year.length() < 4)
+            year = "noYear";
         titleView.append(" (" + year + ")");
         titleView.setSelected(true);
 
@@ -139,7 +141,7 @@ public class ListsAdapter extends BaseAdapter {
         TextView releaseView = (TextView) view.findViewById(R.id.fragment_list_item_date);
         String release_date, new_date;
         if (listMovies.get(position).release_dates == null || listMovies.get(position).release_dates.theater == null)
-            new_date = "No date found";
+            new_date = "No date";
         else {
             release_date = listMovies.get(position).release_dates.theater;
             new_date = release_date.substring(8, 10) + "/" + release_date.substring(5, 7) + "/" + release_date.substring(0, 4);

@@ -6,19 +6,14 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.Window;
-import android.widget.SearchView;
 import android.widget.Toast;
 
 
@@ -188,7 +183,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
         else
             ft.replace(R.id.container, fragment, TAG).addToBackStack(TAG).commit();
     }
-
+/*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // if (!mNavigationDrawerFragment.isDrawerOpen()) {
@@ -236,6 +231,6 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
 }

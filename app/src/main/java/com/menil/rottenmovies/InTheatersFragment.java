@@ -3,16 +3,21 @@ package com.menil.rottenmovies;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.SearchView;
 
 import com.google.gson.Gson;
 import com.melnykov.fab.FloatingActionButton;
@@ -46,6 +51,38 @@ public class InTheatersFragment extends android.app.Fragment {
     //private View view;
     private Context mContext, mContext2;
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_noshare, menu);
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+
+        // Assumes current activity is the searchable activity
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+        searchView.setIconifiedByDefault(true); // Do not iconify the widget; expand it by default
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                break;
+            case R.id.action_about:
+                AboutFragment fragment = new AboutFragment();
+                if (view.getContext() instanceof Main) {
+                    Main main = (Main) view.getContext();
+                    main.switchContent(fragment, "ABOUT");
+                }
+                break;
+            case R.id.action_exit:
+                getActivity().finish();
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {//API KEY = pj2z7eyve6mfdtcx4vynk26y
         super.onActivityCreated(savedInstanceState);

@@ -66,7 +66,10 @@ public class DetailsActivity extends Activity {
          */
 
         TextView title = (TextView) findViewById(R.id.activity_details_title);
-        title.setText(detailMovie.title + " (" + String.valueOf(detailMovie.year) + ")");
+        String movieYear = detailMovie.year;
+        if (movieYear.length() < 4)
+            movieYear = "noYear";
+        title.setText(detailMovie.title + " (" + movieYear + ")");
         title.setSelected(true);
         title.setOnClickListener(new View.OnClickListener() {
             @Override

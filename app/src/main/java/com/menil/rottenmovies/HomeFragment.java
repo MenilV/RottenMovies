@@ -2,15 +2,20 @@ package com.menil.rottenmovies;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.SearchView;
 
 import com.google.gson.Gson;
 
@@ -32,7 +37,6 @@ public class HomeFragment extends Fragment {
     private List<Movie> movieFavs = new ArrayList<Movie>();
     private List<Movie> movieRecents = new ArrayList<Movie>();
     private Context mContext2;
-    private String movie_id = "id";
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -41,6 +45,38 @@ public class HomeFragment extends Fragment {
         makeActionbar();
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_home, menu);
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+
+        // Assumes current activity is the searchable activity
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+        searchView.setIconifiedByDefault(true); // Do not iconify the widget; expand it by default
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                break;
+            case R.id.action_about:
+                AboutFragment fragment = new AboutFragment();
+                if (view.getContext() instanceof Main) {
+                    Main main = (Main) view.getContext();
+                    main.switchContent(fragment, "ABOUT");
+                }
+                break;
+            case R.id.action_exit:
+                getActivity().finish();
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
     private void makeActionbar() {
 
         try {
@@ -64,6 +100,8 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+        setRetainInstance(true);
     }
 
     @Override
@@ -80,6 +118,7 @@ public class HomeFragment extends Fragment {
 
         SharedPreferences preferences = getActivity().getSharedPreferences(preferenceID, Context.MODE_PRIVATE);
         Gson gson = new Gson();
+        String movie_id = "id";
         String moviesJson = preferences.getString(movie_id, "");
         JSONObject jsonObject;
 

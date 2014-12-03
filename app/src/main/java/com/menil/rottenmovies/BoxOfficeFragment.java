@@ -3,6 +3,7 @@ package com.menil.rottenmovies;
 
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
@@ -10,10 +11,14 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.SearchView;
 
 import com.google.gson.Gson;
 import com.melnykov.fab.FloatingActionButton;
@@ -49,32 +54,23 @@ public class BoxOfficeFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vy
     private Boolean sort = false;
     private Boolean already_called[] = {false, false, false};
     private View view;
-/*
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_boxoffice, menu);
+        inflater.inflate(R.menu.menu_noshare, menu);
         SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
 
         // Assumes current activity is the searchable activity
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
         searchView.setIconifiedByDefault(true); // Do not iconify the widget; expand it by default
-
-
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch(item.getItemId()){
-            case R.id.action_share:
-                Intent sendIntent = new Intent();
-                sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
-                sendIntent.putExtra(Intent.EXTRA_TITLE, "Best Movie ever");
-                sendIntent.setType("text/plain");
-                startActivity(sendIntent);
+            case R.id.action_settings:
                 break;
             case R.id.action_about:
                 AboutFragment fragment = new AboutFragment();
@@ -83,10 +79,13 @@ public class BoxOfficeFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vy
                     main.switchContent(fragment, "ABOUT");
                 }
                 break;
+            case R.id.action_exit:
+                getActivity().finish();
+                break;
 
         }
         return super.onOptionsItemSelected(item);
-    }*/
+    }
 
     @Override
     public void onSaveInstanceState(final Bundle outState) {
@@ -190,10 +189,8 @@ public class BoxOfficeFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vy
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (floatingActionButton.getColorNormal() == getResources().getColor(R.color.green)) {
-                    floatingActionButton.setColorNormal(getResources().getColor(R.color.white));
-                    floatingActionButton.setImageResource(R.drawable.ic_navigation_check);
-                    listView.smoothScrollToPosition(0);
+
+                listView.smoothScrollToPosition(0);
                     final Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
                         @Override
@@ -201,9 +198,7 @@ public class BoxOfficeFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vy
                             //this only gives a small delay
                         }
                     }, 1000);
-                    floatingActionButton.setColorNormal(getResources().getColor(R.color.green));
-                    floatingActionButton.setImageResource(R.drawable.ic_action_up);
-                }
+
             }
         });
 

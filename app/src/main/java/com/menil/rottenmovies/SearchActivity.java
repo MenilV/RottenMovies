@@ -14,6 +14,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.melnykov.fab.FloatingActionButton;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -50,14 +52,13 @@ public class SearchActivity extends Activity implements NavigationDrawerFragment
     private ProgressDialog progressDialog;
     private ListView listView;
     private TextView noMoviesTextView;
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // if (!mNavigationDrawerFragment.isDrawerOpen()) {
         // Only show items in the action bar relevant to this screen
         // if the drawer is not showing. Otherwise, let the drawer
         // decide what to show in the action bar.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.menu_search, menu);
         //restoreActionBar();
         //  return true;
         // }
@@ -70,27 +71,22 @@ public class SearchActivity extends Activity implements NavigationDrawerFragment
 
         return super.onCreateOptionsMenu(menu);
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (item.getItemId() == R.id.action_exit)
-            finish();
-        // else if (item.getItemId() == R.id.action_search) {
-
-
-        //Intent intent = new Intent(this, SearchActivity.class);
-        // startActivityForResult(intent,0);
-        //SearchFragment fragment = new SearchFragment();
-        //switchContent(fragment, "SEARCH");
-        //item.expandActionView();
-        //}
-        //return id == R.id.action_settings || super.onOptionsItemSelected(item);
+        //int id = item.getItemId();
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                break;
+            case R.id.action_exit:
+                finish();
+                break;
+        }
         return super.onOptionsItemSelected(item);
     }
+
 
     public boolean isConnectedToInternet() {
         ConnectivityManager connectivity = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -244,15 +240,21 @@ public class SearchActivity extends Activity implements NavigationDrawerFragment
         }
 
 
-        /*FloatingActionButton floatingActionButton = (FloatingActionButton) view.findViewById(R.id.search_list_fab);
+        FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.search_list_fab);
+        floatingActionButton.attachToListView(listView);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                performSearch(query);
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                listView.smoothScrollToPosition(0);
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //this only gives a small delay
+                    }
+                }, 1000);
             }
-        });*/
+        });
         /**
          * HERE ENDS THE SEARCH
          */
