@@ -31,7 +31,7 @@
             android:name="com.menil.rottenmovies.Main"
             android:configChanges="screenSize|orientation"
             android:icon="@drawable/actionbar_icon"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
 
         </activity>
 
@@ -60,7 +60,12 @@
             android:theme="@android:style/Theme.Dialog" />
 
         <!-- Details activity -->
-
+        <activity
+            android:name="com.menil.rottenmovies.DetailsActivity"
+            android:configChanges="screenSize|orientation"
+            android:icon="@drawable/actionbar_icon"
+            android:label=""
+            android:parentActivityName="com.menil.rottenmovies.Main" />
     </application>
 
 </manifest>

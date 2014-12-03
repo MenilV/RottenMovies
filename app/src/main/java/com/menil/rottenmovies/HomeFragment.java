@@ -3,6 +3,7 @@ package com.menil.rottenmovies;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -114,8 +115,8 @@ public class HomeFragment extends Fragment {
         listview_favourite.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Bundle args = new Bundle();
-                args.putParcelable("movie", movieFavs.get(position));
+             /*   Bundle args = new Bundle();
+                args.putSerializable("movie", movieFavs.get(position));
                 Fragment fragment = new DetailsFragment();
                 fragment.setArguments(args);
                 switchFragment(fragment);
@@ -128,14 +129,17 @@ public class HomeFragment extends Fragment {
                 if (mContext2 instanceof Main) {
                     Main main = (Main) mContext2;
                     main.switchContent(fragment, "DETAILS");
-                }
+                }*/
+                Intent detailsIntent = new Intent(getActivity(), DetailsActivity.class);
+                detailsIntent.putExtra("movie", movieFavs.get(position));
+                startActivity(detailsIntent);
             }
         });
         listview_recent.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Bundle args = new Bundle();
-                args.putParcelable("movie", movieRecents.get(position));
+                /*Bundle args = new Bundle();
+                args.putSerializable("movie", movieRecents.get(position));
                 Fragment fragment = new DetailsFragment();
                 fragment.setArguments(args);
                 switchFragment(fragment);
@@ -148,7 +152,10 @@ public class HomeFragment extends Fragment {
                 if (mContext2 instanceof Main) {
                     Main main = (Main) mContext2;
                     main.switchContent(fragment, "DETAILS");
-                }
+                }*/
+                Intent detailsIntent = new Intent(getActivity(), DetailsActivity.class);
+                detailsIntent.putExtra("movie", movieRecents.get(position));
+                startActivity(detailsIntent);
             }
         });
         return view;

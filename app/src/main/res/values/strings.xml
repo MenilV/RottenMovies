@@ -58,5 +58,7 @@
     <string name="details_img">details image</string>
     <string name="favourites">Favourite movies</string>
     <string name="search_string">Search</string>
+    <string name="action_share">Share</string>
+    <string name="action_about">About</string>
 
 </resources>

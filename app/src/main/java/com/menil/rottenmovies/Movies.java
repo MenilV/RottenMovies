@@ -1,9 +1,6 @@
 package com.menil.rottenmovies;
 
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -16,17 +13,7 @@ import java.util.List;
 /*
  * Created by menil on 17.10.2014.
  */
-public class Movies implements Parcelable {
-    public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
-
-        public Movie createFromParcel(Parcel in) {
-            return new Movie(in);
-        }
-
-        public Movie[] newArray(int size) {
-            return new Movie[size];
-        }
-    };
+public class Movies implements Serializable {
 
     private List<Movie> movies;
 
@@ -34,29 +21,10 @@ public class Movies implements Parcelable {
         return movies;
     }
 
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-
-    }
 }
 
-class Movie implements Parcelable, Serializable, Comparable<Movie> {
-    public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
+class Movie implements Serializable, Comparable<Movie> {
 
-        public Movie createFromParcel(Parcel in) {
-            return new Movie(in);
-        }
-
-        public Movie[] newArray(int size) {
-            return new Movie[size];
-        }
-    };
     @SerializedName("id")
     public String id;
     @SerializedName("title")
@@ -84,40 +52,19 @@ class Movie implements Parcelable, Serializable, Comparable<Movie> {
     @SerializedName("genres")
     public List<String> genres;
 
-    public Movie(Parcel in) {
-        readFromParcel(in);
-    }
 
     public String getId() {
         return this.id;
     }
 
-    public void readFromParcel(Parcel in) {
-        id = in.readString();
-        title = in.readString();
-    }
 
     @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-//        dest.writeValue(this);
-        /**
-         * this might make a lot of trouble later
-         */
-    }
-
-
-    @Override
-    public int compareTo(Movie another) {
+    public int compareTo(Movie m) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Date date = null;
         Date date2 = null;
         try {
-            date = formatter.parse(another.release_dates.theater);
+            date = formatter.parse(m.release_dates.theater);
             date2 = formatter.parse(this.release_dates.theater);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -127,21 +74,25 @@ class Movie implements Parcelable, Serializable, Comparable<Movie> {
 
 }
 
-class IMDB {
+class IMDB implements Serializable {
+
     @SerializedName("imdb")
     private String imdb;
 
     public String getIMDB() {
         return imdb;
     }
+
 }
 
-class Link {
+class Link implements Serializable {
+
     @SerializedName("alternate")
     public String alternate;
+
 }
 
-class Posters {
+class Posters implements Serializable {
 
     @SerializedName("thumbnail")
     public String thumbnail;
@@ -152,24 +103,27 @@ class Posters {
 
 }
 
-class Ratings {
+class Ratings implements Serializable {
 
     @SerializedName("critics_score")
     public String critics_score;
+
 }
 
-class ReleaseDates {
+class ReleaseDates implements Serializable {
 
     @SerializedName("theater")
     public String theater;
+
 }
 
-class Cast {
+class Cast implements Serializable {
     @SerializedName("name")
     public String name;
 
     @SerializedName("id")
     public String id;
+
 }
 
 class Reviews {

@@ -1,9 +1,7 @@
 package com.menil.rottenmovies;
-/**
- * DEPRECATED CODE
- */
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
@@ -11,11 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.GestureDetector;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,46 +30,180 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+
 /*
- * Created by menil on 08.10.2014.
+ * Created by menil on 02.12.2014.
  */
-public class DetailsFragment extends android.app.Fragment {
+public class DetailsActivity extends Activity {
 
     public static final String movie_id = "id";
     public SharedPreferences preferences;
-    private View view;
     private Movie detailMovie;
     private Context mContext2;
 
-
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        // Indicate that this fragment would like to influence the set of actions in the action bar.
-        setHasOptionsMenu(true);
-        makeActionbar();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        //outState.putSerializable("movie", detailMovie);
-        //setUserVisibleHint(true);
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_details);
+        makeActionbar();
+
+        Bundle args = getIntent().getExtras();
+        detailMovie = (Movie) args.getSerializable("movie");
+
+        addToRecent(movie_id, detailMovie);
+
+        /**
+         * TEXT STUFF COMES HERE
+         */
+
+        TextView title = (TextView) findViewById(R.id.activity_details_title);
+        title.setText(detailMovie.title + " (" + String.valueOf(detailMovie.year) + ")");
+        title.setSelected(true);
+        title.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TextView t = (TextView) v.findViewById(R.id.activity_details_title);
+                //Toggle title if title is too long
+                if (t.getEllipsize() == TextUtils.TruncateAt.END) {
+                    t.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+                    t.setSingleLine(false);
+                    t.setMaxLines(3);
+                } else if (t.getEllipsize() == TextUtils.TruncateAt.MARQUEE) {
+                    t.setSingleLine(true);
+                    t.setEllipsize(TextUtils.TruncateAt.END);
+                }
+            }
+        });
+
+        TextView synopsis = (TextView) findViewById(R.id.activity_details_synopsis);
+        if (detailMovie.synopsis.length() < 5)
+            synopsis.setText("No synopsis found");
+        else
+            synopsis.setText(detailMovie.synopsis);
+
+        TextView runtimeView = (TextView) findViewById(R.id.activity_details_runtime);
+        String runtime = detailMovie.runtime;
+        if (runtime.equals(""))
+            runtime = "NaN";
+        runtimeView.setText("Runtime: " + runtime + " min");
+
+
+        TextView rating = (TextView) findViewById(R.id.activity_details_rating);
+        rating.setText("Rating: " + detailMovie.mpaa_rating);
+
+        TextView cast = (TextView) findViewById(R.id.activity_details_cast);
+        int x = 0;//just to ensure there are no commas after the last actor
+        List<Cast> castList = detailMovie.casts;
+        String castText = "Cast: ";
+        for (Cast c : castList) {
+            castText += c.name;
+            if (++x < castList.size())
+                castText += ", ";
+        }
+
+        if (castText.length() < 8)
+            castText = "Cast: No cast found";
+        cast.setText(castText);
+        cast.setSelected(true);
+
+        /**
+         * IMAGE STUFF COMES HERE
+         */
+
+        RemoteImageView imageView = (RemoteImageView) findViewById(R.id.activity_details_img);
+        String det_pic = detailMovie.posters.detailed.replace("tmb", "det");
+
+        imageView.setImageURL(det_pic);
+        //getting a resized image from ThumbrIo service
+        final RemoteImageView imageViewTop = (RemoteImageView) findViewById(R.id.activity_details_img_top);
+        String rescaledImage = null;
+
+        try {//rescale and set picture TOP
+            rescaledImage = ThumbrIo.sign(detailMovie.posters.detailed.replace("tmb", "ori"), "510x755c");
+
+            imageViewTop.setImageURL(rescaledImage);
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        /**
+         * API CALLS COME HERE
+         */
+
+        String criticsRequest = "http://api.rottentomatoes.com/api/public/v1.0/movies/" + detailMovie.getId() + "/reviews.json?apikey=pj2z7eyve6mfdtcx4vynk26y";
+        URI requestURIc = URI.create(criticsRequest);
+        CallAPICritics taskC = new CallAPICritics();
+        taskC.execute(requestURIc);
+        //calling API to get critics reviews;
+
+        String similarRequest = "http://api.rottentomatoes.com/api/public/v1.0/movies/" + detailMovie.getId() + "/similar.json?limit=5&apikey=pj2z7eyve6mfdtcx4vynk26y";
+        URI requestURIs = URI.create(similarRequest);
+        CallAPISimilar taskS = new CallAPISimilar();
+        taskS.execute(requestURIs);
+        //calling API to get similar movies;
+
+        String clipRequest = "http://api.rottentomatoes.com/api/public/v1.0/movies/" + detailMovie.getId() + "/clips.json?limit=5&apikey=pj2z7eyve6mfdtcx4vynk26y";
+        URI requestURIclip = URI.create(clipRequest);
+        CallAPIClips taskClip = new CallAPIClips();
+        taskClip.execute(requestURIclip);
+        //calling API to get clips for a movies;
+
+        String movieRequest = "http://api.rottentomatoes.com/api/public/v1.0/movies/" + detailMovie.getId() + ".json?apikey=pj2z7eyve6mfdtcx4vynk26y";
+        URI requestURImovie = URI.create(movieRequest);
+        CallAPIGenres taskMovie = new CallAPIGenres();
+        taskMovie.execute(requestURImovie);
+        //calling API to get clips for a movies;
+        /**
+         * BUTTONS STUFF COMES HERE
+         */
+
+
+        final FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.activity_details_fab);
+        if (getSharedPreferences("favsAreHere", Context.MODE_PRIVATE).getString(movie_id, "").contains(detailMovie.id)) {
+            floatingActionButton.setColorNormal(getResources().getColor(R.color.white));
+            floatingActionButton.setImageResource(R.drawable.ic_navigation_check);
+        } else {
+            floatingActionButton.setColorNormal(getResources().getColor(R.color.green));
+            floatingActionButton.setImageResource(R.drawable.ic_action_favorite);
+        }
+
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            int option;
+
+            @Override
+            public void onClick(View v) {
+                preferences = getSharedPreferences("favsAreHere", Context.MODE_PRIVATE);
+                if (!preferences.getString(movie_id, "").contains(detailMovie.id)) {
+                    floatingActionButton.setColorNormal(getResources().getColor(R.color.white));
+                    floatingActionButton.setImageResource(R.drawable.ic_navigation_check);
+                    option = 0;
+                } else {
+                    floatingActionButton.setColorNormal(getResources().getColor(R.color.green));
+                    floatingActionButton.setImageResource(R.drawable.ic_action_favorite);
+                    option = 1;
+                }
+                modifyPreferences(movie_id, option, detailMovie);
+            }
+        });
 
     }
 
     public void makeActionbar() {
-        ActionBar actionBar = getActivity().getActionBar();
+        ActionBar actionBar = getActionBar();
         try {
             Drawable mActionBarBackgroundDrawable = getResources().getDrawable(R.drawable.actionbar_background);
             mActionBarBackgroundDrawable.setAlpha(0);
@@ -93,7 +221,7 @@ public class DetailsFragment extends android.app.Fragment {
     }
 
     public void addToRecent(String key, Movie movie) {
-        preferences = getActivity().getSharedPreferences("recentAreHere", Context.MODE_PRIVATE);
+        preferences = getSharedPreferences("recentAreHere", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
 
         Gson gson = new Gson();
@@ -116,7 +244,7 @@ public class DetailsFragment extends android.app.Fragment {
     }
 
     public void modifyPreferences(String key, int option, Movie movie) {
-        preferences = getActivity().getSharedPreferences("favsAreHere", Context.MODE_PRIVATE);
+        preferences = getSharedPreferences("favsAreHere", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
 
         Gson gson = new Gson();
@@ -137,9 +265,9 @@ public class DetailsFragment extends android.app.Fragment {
                     idFav += "]}";
                     editor.putString(key, idFav);
                     editor.apply();
-                    Toast.makeText(getActivity().getApplicationContext(), "Added to favourites", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Added to favourites", Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(getActivity().getApplicationContext(), "Already in favourites", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Already in favourites", Toast.LENGTH_LONG).show();
                 }
 
                 break;
@@ -150,16 +278,16 @@ public class DetailsFragment extends android.app.Fragment {
                     editor.putString(key, idFav);
                     editor.apply();
                     //Toast.makeText(getActivity().getApplicationContext(), idFav, Toast.LENGTH_LONG).show();
-                    Toast.makeText(getActivity().getApplicationContext(), "Removed from favourites", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Removed from favourites", Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(getActivity().getApplicationContext(), "Can't remove. It was not a favourite", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Can't remove. It was not a favourite", Toast.LENGTH_LONG).show();
                 }
                 break;
         }
     }
 
     public void createCritics(List<Review> reviewList) {
-        TextView reviewText = (TextView) view.findViewById(R.id.fragment_details_critics);
+        TextView reviewText = (TextView) findViewById(R.id.activity_details_critics);
         reviewText.setText("There are no critics for this movie.");
         boolean reviewFinished = true;
         for (Review r : reviewList) {
@@ -172,7 +300,7 @@ public class DetailsFragment extends android.app.Fragment {
     }
 
     public void createSimilar(List<Movie> similarMovies) {
-        TextView similarText = (TextView) view.findViewById(R.id.fragment_details_similar);
+        TextView similarText = (TextView) findViewById(R.id.activity_details_similar);
         similarText.setText("No similar movies found.");
         int count = 0;
         boolean similarFinished = true;
@@ -187,13 +315,13 @@ public class DetailsFragment extends android.app.Fragment {
     }
 
     public void createClips(List<Clip> allClips) {
-        RemoteImageView clipImg1 = (RemoteImageView) view.findViewById(R.id.fragment_details_clips_img1);
-        RemoteImageView clipImg2 = (RemoteImageView) view.findViewById(R.id.fragment_details_clips_img2);
-        RemoteImageView clipImg3 = (RemoteImageView) view.findViewById(R.id.fragment_details_clips_img3);
-        RemoteImageView clipImg4 = (RemoteImageView) view.findViewById(R.id.fragment_details_clips_img4);
-        RemoteImageView clipImg5 = (RemoteImageView) view.findViewById(R.id.fragment_details_clips_img5);
-        RemoteImageView clipImg6 = (RemoteImageView) view.findViewById(R.id.fragment_details_clips_img6);
-        RemoteImageView clipImg7 = (RemoteImageView) view.findViewById(R.id.fragment_details_clips_img7);
+        RemoteImageView clipImg1 = (RemoteImageView) findViewById(R.id.activity_details_clips_img1);
+        RemoteImageView clipImg2 = (RemoteImageView) findViewById(R.id.activity_details_clips_img2);
+        RemoteImageView clipImg3 = (RemoteImageView) findViewById(R.id.activity_details_clips_img3);
+        RemoteImageView clipImg4 = (RemoteImageView) findViewById(R.id.activity_details_clips_img4);
+        RemoteImageView clipImg5 = (RemoteImageView) findViewById(R.id.activity_details_clips_img5);
+        RemoteImageView clipImg6 = (RemoteImageView) findViewById(R.id.activity_details_clips_img6);
+        RemoteImageView clipImg7 = (RemoteImageView) findViewById(R.id.activity_details_clips_img7);
         RemoteImageView[] clips = {clipImg1, clipImg2, clipImg3, clipImg4, clipImg5, clipImg6, clipImg7};
         int x = 0;
         for (Clip c : allClips) {
@@ -213,10 +341,10 @@ public class DetailsFragment extends android.app.Fragment {
          * maybe change this so the array gets faster to the list
          */
 
-        ImageView genresImg1 = (ImageView) view.findViewById(R.id.fragment_details_genres_img1);
-        ImageView genresImg2 = (ImageView) view.findViewById(R.id.fragment_details_genres_img2);
-        ImageView genresImg3 = (ImageView) view.findViewById(R.id.fragment_details_genres_img3);
-        ImageView genresImg4 = (ImageView) view.findViewById(R.id.fragment_details_genres_img4);
+        ImageView genresImg1 = (ImageView) findViewById(R.id.activity_details_genres_img1);
+        ImageView genresImg2 = (ImageView) findViewById(R.id.activity_details_genres_img2);
+        ImageView genresImg3 = (ImageView) findViewById(R.id.activity_details_genres_img3);
+        ImageView genresImg4 = (ImageView) findViewById(R.id.activity_details_genres_img4);
         ImageView[] imageViews = {genresImg1, genresImg2, genresImg3, genresImg4};
         int x = 0;
         for (String s : genereList) {
@@ -291,203 +419,11 @@ public class DetailsFragment extends android.app.Fragment {
         }
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        if (view == null)
-            // Inflate the layout for this fragment
-            view = inflater.inflate(R.layout.fragment_details, container, false);
-        mContext2 = view.getContext();
-
-
-        final GestureDetector gesture = new GestureDetector(getActivity(),
-                new GestureDetector.SimpleOnGestureListener() {
-
-                    @Override
-                    public boolean onDown(MotionEvent e) {
-                        return true;
-                    }
-
-                    @Override
-                    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-                                           float velocityY) {
-                        //Log.i(SyncStateContract.Constants.APP_TAG, "onFling has been called!");
-                        //Toast.makeText(getActivity(),"onFling",Toast.LENGTH_SHORT).show();
-                        final int SWIPE_MIN_DISTANCE = 120;
-                        final int SWIPE_MAX_OFF_PATH = 250;
-                        final int SWIPE_THRESHOLD_VELOCITY = 200;
-                        try {
-                            if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
-                                return false;
-                            if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE
-                                    && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-
-                                //Log.i(SyncStateContract.Constants.APP_TAG, "Right to Left");*/
-                                //Toast.makeText(getActivity(),"Right to left",Toast.LENGTH_SHORT).show();
-                            } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE
-                                    && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                                //Log.i(SyncStateContract.Constants.APP_TAG, "Left to Right");
-                                //Toast.makeText(getActivity(),"Left to Right",Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (Exception e) {
-                            // nothing
-                        }
-                        return super.onFling(e1, e2, velocityX, velocityY);
-                    }
-                });
-
-        view.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return gesture.onTouchEvent(event);
-            }
-        });
-
-
-        Bundle bundle = getArguments();
-        detailMovie = (Movie) bundle.getSerializable("movie");
-        addToRecent(movie_id, detailMovie);
-        /**
-         * TEXT STUFF COMES HERE
-         */
-
-        TextView title = (TextView) view.findViewById(R.id.fragment_details_title);
-        title.setText(detailMovie.title + " (" + String.valueOf(detailMovie.year) + ")");
-        title.setSelected(true);
-        title.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TextView t = (TextView) v.findViewById(R.id.fragment_details_title);
-                //Toggle title if title is too long
-                if (t.getEllipsize() == TextUtils.TruncateAt.END) {
-                    t.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-                    t.setSingleLine(false);
-                    t.setMaxLines(3);
-                } else if (t.getEllipsize() == TextUtils.TruncateAt.MARQUEE) {
-                    t.setSingleLine(true);
-                    t.setEllipsize(TextUtils.TruncateAt.END);
-                }
-            }
-        });
-
-        TextView synopsis = (TextView) view.findViewById(R.id.fragment_details_synopsis);
-        if (detailMovie.synopsis.length() < 5)
-            synopsis.setText("No synopsis found");
-        else
-            synopsis.setText(detailMovie.synopsis);
-
-        TextView runtime = (TextView) view.findViewById(R.id.fragment_details_runtime);
-        runtime.setText("Runtime: " + String.valueOf(detailMovie.runtime) + " min");
-
-        TextView rating = (TextView) view.findViewById(R.id.fragment_details_rating);
-        rating.setText("Rating: " + detailMovie.mpaa_rating);
-
-        TextView cast = (TextView) view.findViewById(R.id.fragment_details_cast);
-        int x = 0;//just to ensure there are no commas after the last actor
-        List<Cast> castList = detailMovie.casts;
-        String castText = "Cast: ";
-        for (Cast c : castList) {
-            castText += c.name;
-            if (++x < castList.size())
-                castText += ", ";
-        }
-
-        if (castText.length() < 8)
-            castText = "Cast: No cast found";
-        cast.setText(castText);
-        cast.setSelected(true);
-
-        /**
-         * IMAGE STUFF COMES HERE
-         */
-
-        RemoteImageView imageView = (RemoteImageView) view.findViewById(R.id.fragment_details_img);
-        String det_pic = detailMovie.posters.detailed.replace("tmb", "det");
-
-        imageView.setImageURL(det_pic);
-        //getting a resized image from ThumbrIo service
-        final RemoteImageView imageViewTop = (RemoteImageView) view.findViewById(R.id.fragment_details_img_top);
-        String rescaledImage = null;
-
-        try {//rescale and set picture TOP
-            rescaledImage = ThumbrIo.sign(detailMovie.posters.detailed.replace("tmb", "ori"), "510x755c");
-
-            imageViewTop.setImageURL(rescaledImage);
-
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        /**
-         * API CALLS COME HERE
-         */
-
-        String criticsRequest = "http://api.rottentomatoes.com/api/public/v1.0/movies/" + detailMovie.getId() + "/reviews.json?apikey=pj2z7eyve6mfdtcx4vynk26y";
-        URI requestURIc = URI.create(criticsRequest);
-        CallAPICritics taskC = new CallAPICritics();
-        taskC.execute(requestURIc);
-        //calling API to get critics reviews;
-
-        String similarRequest = "http://api.rottentomatoes.com/api/public/v1.0/movies/" + detailMovie.getId() + "/similar.json?limit=5&apikey=pj2z7eyve6mfdtcx4vynk26y";
-        URI requestURIs = URI.create(similarRequest);
-        CallAPISimilar taskS = new CallAPISimilar();
-        taskS.execute(requestURIs);
-        //calling API to get similar movies;
-
-        String clipRequest = "http://api.rottentomatoes.com/api/public/v1.0/movies/" + detailMovie.getId() + "/clips.json?limit=5&apikey=pj2z7eyve6mfdtcx4vynk26y";
-        URI requestURIclip = URI.create(clipRequest);
-        CallAPIClips taskClip = new CallAPIClips();
-        taskClip.execute(requestURIclip);
-        //calling API to get clips for a movies;
-
-        String movieRequest = "http://api.rottentomatoes.com/api/public/v1.0/movies/" + detailMovie.getId() + ".json?apikey=pj2z7eyve6mfdtcx4vynk26y";
-        URI requestURImovie = URI.create(movieRequest);
-        CallAPIGenres taskMovie = new CallAPIGenres();
-        taskMovie.execute(requestURImovie);
-        //calling API to get clips for a movies;
-        /**
-         * BUTTONS STUFF COMES HERE
-         */
-
-
-        final FloatingActionButton floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fragment_details_fab);
-        if (getActivity().getSharedPreferences("favsAreHere", Context.MODE_PRIVATE).getString(movie_id, "").contains(detailMovie.id)) {
-            floatingActionButton.setColorNormal(getResources().getColor(R.color.white));
-            floatingActionButton.setImageResource(R.drawable.ic_navigation_check);
-        } else {
-            floatingActionButton.setColorNormal(getResources().getColor(R.color.green));
-            floatingActionButton.setImageResource(R.drawable.ic_action_favorite);
-        }
-
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            int option;
-
-            @Override
-            public void onClick(View v) {
-                preferences = getActivity().getSharedPreferences("favsAreHere", Context.MODE_PRIVATE);
-                if (!preferences.getString(movie_id, "").contains(detailMovie.id)) {
-                    floatingActionButton.setColorNormal(getResources().getColor(R.color.white));
-                    floatingActionButton.setImageResource(R.drawable.ic_navigation_check);
-                    option = 0;
-                } else {
-                    floatingActionButton.setColorNormal(getResources().getColor(R.color.green));
-                    floatingActionButton.setImageResource(R.drawable.ic_action_favorite);
-                    option = 1;
-                }
-                modifyPreferences(movie_id, option, detailMovie);
-            }
-        });
-        return view;
-    }
 
     /**
      * ASYNCTASKS COME HERE
      */
+
     public class CallAPICritics extends AsyncTask<URI, String, List<Review>> {
 
 
@@ -756,10 +692,6 @@ public class DetailsFragment extends android.app.Fragment {
     }
 }
 
-/**
- * THUMBR COMES HERE
- */
-/*
 class ThumbrIo {
 
     private static final String THUMBRIO_API_KEY = "t0AsaoQ1lG-nJaIvOavA";
@@ -839,4 +771,4 @@ class ThumbrIo {
         return res.replace("%2F", "/").replace("*", "%2A").replace("+", "%20");
     }
 
-}*/
+}

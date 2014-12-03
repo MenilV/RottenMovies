@@ -2,9 +2,9 @@ package com.menil.rottenmovies;
 
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -126,8 +126,8 @@ public class InTheatersFragment extends android.app.Fragment {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Bundle args = new Bundle();
-                args.putParcelable("movie", allMovies.get(position));
+                /*Bundle args = new Bundle();
+                args.putSerializable("movie", allMovies.get(position));
                 //args.putSerializable("movie", allMovies.get(position));
                 Fragment fragment = new DetailsFragment();
                 fragment.setArguments(args);
@@ -141,7 +141,10 @@ public class InTheatersFragment extends android.app.Fragment {
                 if (mContext2 instanceof Main) {
                     Main main = (Main) mContext2;
                     main.switchContent(fragment, "DETAILS");
-                }
+                }*/
+                Intent detailsIntent = new Intent(getActivity(), DetailsActivity.class);
+                detailsIntent.putExtra("movie", allMovies.get(position));
+                startActivity(detailsIntent);
             }
         });
 

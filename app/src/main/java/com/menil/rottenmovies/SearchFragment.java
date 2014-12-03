@@ -1,4 +1,7 @@
 package com.menil.rottenmovies;
+/**
+ * DEPRECATED CODE
+ */
 
 import android.app.Fragment;
 import android.app.ProgressDialog;
@@ -109,7 +112,7 @@ public class SearchFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vynk2
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Bundle args = new Bundle();
-                args.putParcelable("movie", allMovies.get(position));
+                args.putSerializable("movie", allMovies.get(position));
 
                 Fragment fragment = new DetailsFragment();
                 fragment.setArguments(args);

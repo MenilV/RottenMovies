@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:sothree="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_details_sliding_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom"
+    sothree:panelHeight="141dp"
+    sothree:shadowHeight="4dp">
+
+    <com.menil.rottenmovies.RemoteImageView
+        android:id="@+id/activity_details_img_top"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/bck_img_details"
+        android:scaleType="centerCrop"
+        android:src="@drawable/empty_img_big" />
+
+    <include layout="@layout/activity_details_pane" />
+
+
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>

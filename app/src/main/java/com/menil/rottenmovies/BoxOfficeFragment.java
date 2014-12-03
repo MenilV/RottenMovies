@@ -4,6 +4,7 @@ package com.menil.rottenmovies;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -48,7 +49,44 @@ public class BoxOfficeFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vy
     private Boolean sort = false;
     private Boolean already_called[] = {false, false, false};
     private View view;
+/*
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_boxoffice, menu);
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
 
+        // Assumes current activity is the searchable activity
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+        searchView.setIconifiedByDefault(true); // Do not iconify the widget; expand it by default
+
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch(item.getItemId()){
+            case R.id.action_share:
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
+                sendIntent.putExtra(Intent.EXTRA_TITLE, "Best Movie ever");
+                sendIntent.setType("text/plain");
+                startActivity(sendIntent);
+                break;
+            case R.id.action_about:
+                AboutFragment fragment = new AboutFragment();
+                if (view.getContext() instanceof Main) {
+                    Main main = (Main) view.getContext();
+                    main.switchContent(fragment, "ABOUT");
+                }
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }*/
 
     @Override
     public void onSaveInstanceState(final Bundle outState) {
@@ -88,6 +126,7 @@ public class BoxOfficeFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vy
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         setRetainInstance(true);
 
         Bundle args = getArguments();
@@ -171,24 +210,9 @@ public class BoxOfficeFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vy
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Bundle args = new Bundle();
-                args.putParcelable("movie", allMovies.get(position));
-                args.putParcelable("movies", movies);
-                args.putInt("position", position);
-
-                Fragment fragment = new DetailsFragment();
-                fragment.setArguments(args);
-                switchFragment(fragment);
-            }
-
-            private void switchFragment(Fragment fragment) {
-                if (mContext2 == null) {
-                    return;
-                }
-                if (mContext2 instanceof Main) {
-                    Main main = (Main) mContext2;
-                    main.switchContent(fragment, "DETAILS");
-                }
+                Intent detailsIntent = new Intent(getActivity(), DetailsActivity.class);
+                detailsIntent.putExtra("movie", allMovies.get(position));
+                startActivity(detailsIntent);
             }
         });
 

@@ -9,6 +9,7 @@ import android.app.FragmentTransaction;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -201,6 +202,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
         // Get the SearchView and set the searchable configuration
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+
         // Assumes current activity is the searchable activity
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setIconifiedByDefault(true); // Do not iconify the widget; expand it by default
@@ -213,19 +215,26 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (item.getItemId() == R.id.action_exit)
-            finish();
-        // else if (item.getItemId() == R.id.action_search) {
-
-
-        //Intent intent = new Intent(this, SearchActivity.class);
-        // startActivityForResult(intent,0);
-        //SearchFragment fragment = new SearchFragment();
-        //switchContent(fragment, "SEARCH");
-            //item.expandActionView();
-        //}
-        //return id == R.id.action_settings || super.onOptionsItemSelected(item);
+        //int id = item.getItemId();
+        switch (item.getItemId()) {
+            case R.id.action_share:
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_SUBJECT, "This is my text to send.");
+                sendIntent.putExtra(Intent.EXTRA_TITLE, "Best Movie ever");
+                sendIntent.setType("text/plain");
+                //ShareActionProvider myShareActionProvider = (ShareActionProvider) item.getActionProvider();
+                //myShareActionProvider.setShareIntent(sendIntent);
+                startActivity(sendIntent);
+                break;
+            case R.id.action_about:
+                AboutFragment fragment = new AboutFragment();
+                switchContent(fragment, "ABOUT");
+                break;
+            case R.id.action_exit:
+                finish();
+                break;
+        }
         return super.onOptionsItemSelected(item);
     }
 

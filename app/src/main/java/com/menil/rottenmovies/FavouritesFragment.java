@@ -7,6 +7,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -118,15 +119,18 @@ public class FavouritesFragment extends Fragment {
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Bundle args = new Bundle();
-                args.putParcelable("movie", favouritesList.get(position));
+                /*Bundle args = new Bundle();
+                args.putSerializable("movie", favouritesList.get(position));
 
                 Fragment fragment = new DetailsFragment();
                 fragment.setArguments(args);
-                switchFragment(fragment);
+                switchFragment(fragment);*/
+                Intent detailsIntent = new Intent(getActivity(), DetailsActivity.class);
+                detailsIntent.putExtra("movie", favouritesList.get(position));
+                startActivity(detailsIntent);
             }
 
-            private void switchFragment(Fragment fragment) {
+            /*private void switchFragment(Fragment fragment) {
                 if (view.getContext() == null) {
                     return;
                 }
@@ -134,7 +138,7 @@ public class FavouritesFragment extends Fragment {
                     Main main = (Main) view.getContext();
                     main.switchContent(fragment, "DETAILS");
                 }
-            }
+            }*/
         });
 
         final FloatingActionButton floatingActionButton = (FloatingActionButton) view.findViewById(R.id.favourites_list_fab);
