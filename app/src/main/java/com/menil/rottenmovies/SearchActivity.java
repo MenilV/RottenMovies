@@ -1,10 +1,6 @@
 package com.menil.rottenmovies;
 
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
@@ -15,6 +11,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,13 +42,14 @@ import java.util.List;
 /*
  * Created by menil on 02.12.2014.
  */
-public class SearchActivity extends Activity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+public class SearchActivity extends FragmentActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     public List<Movie> allMovies = new ArrayList<Movie>();
     private View view;
     private ProgressDialog progressDialog;
     private ListView listView;
     private TextView noMoviesTextView;
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // if (!mNavigationDrawerFragment.isDrawerOpen()) {
@@ -71,6 +69,7 @@ public class SearchActivity extends Activity implements NavigationDrawerFragment
 
         return super.onCreateOptionsMenu(menu);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -104,7 +103,8 @@ public class SearchActivity extends Activity implements NavigationDrawerFragment
     @Override
     public void onNavigationDrawerItemSelected(int position) {
 
-        Fragment fragment;
+        //Fragment fragment;
+        android.support.v4.app.Fragment fragment;
 
         String tag;
         switch (position) {
@@ -174,9 +174,9 @@ public class SearchActivity extends Activity implements NavigationDrawerFragment
 
     }
 
-    public void switchContent(Fragment fragment, String TAG) {
-        FragmentManager fm = getFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
+    public void switchContent(android.support.v4.app.Fragment fragment, String TAG) {
+        android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction ft = fm.beginTransaction();
         Boolean found = false;
         for (int i = 0; i < fm.getBackStackEntryCount(); i++) {
             if (fm.findFragmentByTag(TAG) == fm.findFragmentByTag(fm.getBackStackEntryAt(i).getName()))

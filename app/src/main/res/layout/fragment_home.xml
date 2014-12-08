@@ -111,10 +111,10 @@
 
     </RelativeLayout>
 
-    <ImageView
+    <com.facebook.widget.LoginButton
+        android:id="@+id/authButton"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/fragment_home_recent_relative"
-        android:scaleType="fitEnd"
-        android:src="@drawable/actionbar_icon" />
+        android:layout_gravity="center_horizontal" />
 </RelativeLayout>

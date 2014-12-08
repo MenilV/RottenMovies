@@ -4,8 +4,6 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -46,6 +44,8 @@ import javax.crypto.spec.SecretKeySpec;
 public class DetailsActivity extends Activity {
 
     public static final String movie_id = "id";
+    public static final String recent_id = "recent_id";
+    public static final String FAVS_ARE_HERE = "favsAreHere";
     public SharedPreferences preferences;
     private Movie detailMovie;
     private Context mContext2;
@@ -59,7 +59,7 @@ public class DetailsActivity extends Activity {
         Bundle args = getIntent().getExtras();
         detailMovie = (Movie) args.getSerializable("movie");
 
-        addToRecent(movie_id, detailMovie);
+        addToRecent(recent_id, detailMovie);
 
         /**
          * TEXT STUFF COMES HERE
@@ -176,7 +176,7 @@ public class DetailsActivity extends Activity {
 
 
         final FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.activity_details_fab);
-        if (getSharedPreferences("favsAreHere", Context.MODE_PRIVATE).getString(movie_id, "").contains(detailMovie.id)) {
+        if (getSharedPreferences(FAVS_ARE_HERE, Context.MODE_PRIVATE).getString(movie_id, "").contains(detailMovie.id)) {
             floatingActionButton.setColorNormal(getResources().getColor(R.color.white));
             floatingActionButton.setImageResource(R.drawable.ic_navigation_check);
         } else {
@@ -189,7 +189,7 @@ public class DetailsActivity extends Activity {
 
             @Override
             public void onClick(View v) {
-                preferences = getSharedPreferences("favsAreHere", Context.MODE_PRIVATE);
+                preferences = getSharedPreferences(FAVS_ARE_HERE, Context.MODE_PRIVATE);
                 if (!preferences.getString(movie_id, "").contains(detailMovie.id)) {
                     floatingActionButton.setColorNormal(getResources().getColor(R.color.white));
                     floatingActionButton.setImageResource(R.drawable.ic_navigation_check);
@@ -208,15 +208,17 @@ public class DetailsActivity extends Activity {
     public void makeActionbar() {
         ActionBar actionBar = getActionBar();
         try {
-            Drawable mActionBarBackgroundDrawable = getResources().getDrawable(R.drawable.actionbar_background);
-            mActionBarBackgroundDrawable.setAlpha(0);
+            //Drawable mActionBarBackgroundDrawable = getResources().getDrawable(R.drawable.actionbar_background);
+            //mActionBarBackgroundDrawable.setAlpha(0);
             assert actionBar != null;
-            actionBar.hide();
-            actionBar.setDisplayShowTitleEnabled(false);
-            actionBar.setTitle("");
-            actionBar.setBackgroundDrawable(mActionBarBackgroundDrawable);
-            actionBar.setSubtitle(null);
-            actionBar.setIcon(new ColorDrawable(0x00000000));
+            if (actionBar.isShowing())
+                actionBar.hide();
+
+            //actionBar.setDisplayShowTitleEnabled(false);
+            //actionBar.setTitle("");
+            // actionBar.setBackgroundDrawable(mActionBarBackgroundDrawable);
+            //actionBar.setSubtitle(null);
+            //actionBar.setIcon(new ColorDrawable(0x00000000));
 
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -224,7 +226,7 @@ public class DetailsActivity extends Activity {
     }
 
     public void addToRecent(String key, Movie movie) {
-        preferences = getSharedPreferences("recentAreHere", Context.MODE_PRIVATE);
+        preferences = getSharedPreferences(FAVS_ARE_HERE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
 
         Gson gson = new Gson();
@@ -247,7 +249,7 @@ public class DetailsActivity extends Activity {
     }
 
     public void modifyPreferences(String key, int option, Movie movie) {
-        preferences = getSharedPreferences("favsAreHere", Context.MODE_PRIVATE);
+        preferences = getSharedPreferences(FAVS_ARE_HERE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
 
         Gson gson = new Gson();

@@ -3,7 +3,6 @@ package com.menil.rottenmovies;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -16,12 +15,14 @@ public class SplashScreen extends Activity {
         ActionBar actionBar = getActionBar();
         try {
             assert actionBar != null;
-            actionBar.show();
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setTitle(R.string.app_name);
+            if (actionBar.isShowing())
+                actionBar.hide();
+            //actionBar.show();
+            //actionBar.setDisplayShowTitleEnabled(true);
+            // actionBar.setTitle(R.string.app_name);
             //actionBar.setSubtitle("Home");
-            actionBar.setBackgroundDrawable(new ColorDrawable(0xFF399322));//transparent
-            actionBar.setIcon(R.drawable.actionbar_icon);
+            //actionBar.setBackgroundDrawable(new ColorDrawable(0xFF399322));//transparent
+            //actionBar.setIcon(R.drawable.actionbar_icon);
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
@@ -45,5 +46,10 @@ public class SplashScreen extends Activity {
                 finish();
             }
         }, SPLASH_TIME_OUT);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }

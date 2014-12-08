@@ -3,14 +3,13 @@ package com.menil.rottenmovies;
 
 import android.app.ActionBar;
 import android.app.AlertDialog;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +25,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+//import android.app.Fragment;
 
 /*
  * Created by menil on 13.11.2014.
@@ -162,7 +163,7 @@ public class FavouritesFragment extends Fragment {
                                 Toast.makeText(view.getContext(), "Upon next opening of the app, favourites will be cleared", Toast.LENGTH_LONG).show();
                                 Fragment frg = null;
                                 frg = getFragmentManager().findFragmentByTag("FAVOURITES");
-                                final FragmentTransaction ft = getFragmentManager().beginTransaction();
+                                final android.support.v4.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
                                 ft.detach(frg);
                                 ft.attach(frg);
                                 ft.commit();

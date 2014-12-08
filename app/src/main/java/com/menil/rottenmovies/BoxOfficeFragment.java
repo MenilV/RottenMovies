@@ -1,7 +1,8 @@
 package com.menil.rottenmovies;
 
 
-import android.app.Fragment;
+//import android.app.Fragment;
+
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
@@ -10,6 +11,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -54,6 +56,11 @@ public class BoxOfficeFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vy
     private Boolean sort = false;
     private Boolean already_called[] = {false, false, false};
     private View view;
+    //public SharedPreferences preferences;
+    //public static String movie_id="id";
+
+
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -111,11 +118,11 @@ public class BoxOfficeFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vy
                     subtitle = "Box Office";
             }
             assert getActivity().getActionBar() != null;
-            getActivity().getActionBar().show();
+            getActivity().getActionBar().show(); //this is a potential NullPointException
             getActivity().getActionBar().setDisplayShowTitleEnabled(true);
             getActivity().getActionBar().setTitle(R.string.app_name);
             getActivity().getActionBar().setSubtitle(subtitle);
-            getActivity().getActionBar().setBackgroundDrawable(new ColorDrawable(0xFF399322));//transparent
+            getActivity().getActionBar().setBackgroundDrawable(new ColorDrawable(0xFF399322));//transparent and also a potential NullPointException
             getActivity().getActionBar().setIcon(R.drawable.actionbar_icon);
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -191,13 +198,13 @@ public class BoxOfficeFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vy
             public void onClick(View v) {
 
                 listView.smoothScrollToPosition(0);
-                    final Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            //this only gives a small delay
-                        }
-                    }, 1000);
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //this only gives a small delay
+                    }
+                }, 1000);
 
             }
         });

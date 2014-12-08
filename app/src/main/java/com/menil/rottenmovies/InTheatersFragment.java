@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -41,7 +42,7 @@ import java.util.List;
 /*
  * Created by menil on 08.10.2014.
  */
-public class InTheatersFragment extends android.app.Fragment {
+public class InTheatersFragment extends Fragment {
 
     public List<Movie> allMovies = new ArrayList<Movie>();
     View view;
@@ -83,6 +84,7 @@ public class InTheatersFragment extends android.app.Fragment {
         }
         return super.onOptionsItemSelected(item);
     }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {//API KEY = pj2z7eyve6mfdtcx4vynk26y
         super.onActivityCreated(savedInstanceState);
@@ -163,22 +165,7 @@ public class InTheatersFragment extends android.app.Fragment {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                /*Bundle args = new Bundle();
-                args.putSerializable("movie", allMovies.get(position));
-                //args.putSerializable("movie", allMovies.get(position));
-                Fragment fragment = new DetailsFragment();
-                fragment.setArguments(args);
-                switchFragment(fragment);
-            }
 
-            private void switchFragment(Fragment fragment) {
-                if (mContext2 == null) {
-                    return;
-                }
-                if (mContext2 instanceof Main) {
-                    Main main = (Main) mContext2;
-                    main.switchContent(fragment, "DETAILS");
-                }*/
                 Intent detailsIntent = new Intent(getActivity(), DetailsActivity.class);
                 detailsIntent.putExtra("movie", allMovies.get(position));
                 startActivity(detailsIntent);

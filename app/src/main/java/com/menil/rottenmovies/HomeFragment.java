@@ -1,13 +1,16 @@
 package com.menil.rottenmovies;
 
+import android.app.ActionBar;
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,6 +20,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.SearchView;
 
+import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.UiLifecycleHelper;
+import com.facebook.widget.LoginButton;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
@@ -26,23 +33,52 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+//import android.app.Fragment;
+
 
 /*
  * Created by menil on 27.10.2014.
  */
 public class HomeFragment extends Fragment {
 
+    public static final String RECENT_ARE_HERE = "recentAreHere";
+    public static final String FAVS_ARE_HERE = "favsAreHere";
+    public static final String movie_id = "id";
+    public static final String recent_id = "recent_id";
     private static final String TAG = "HOME";
     private View view;
     private List<Movie> movieFavs = new ArrayList<Movie>();
     private List<Movie> movieRecents = new ArrayList<Movie>();
-    private Context mContext2;
+    private HorizontialListView listview_favourite;
+    private HorizontialListView listview_recent;
+    private UiLifecycleHelper uiHelper;
+    private Session.StatusCallback callback = new Session.StatusCallback() {
+        @Override
+        public void call(Session session, SessionState state, Exception exception) {
+            onSessionStateChange(session, state, exception);
+        }
+    };
+
+    private void onSessionStateChange(Session session, SessionState state, Exception exception) {
+        if (state.isOpened()) {
+            Log.i(TAG, "Logged in...");
+        } else if (state.isClosed()) {
+            Log.i(TAG, "Logged out...");
+        }
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
         makeActionbar();
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        uiHelper.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -77,16 +113,18 @@ public class HomeFragment extends Fragment {
         }
         return super.onOptionsItemSelected(item);
     }
-    private void makeActionbar() {
 
+    private void makeActionbar() {
+        ActionBar actionBar = getActivity().getActionBar();
         try {
-            assert getActivity().getActionBar() != null;
-            getActivity().getActionBar().show();
-            getActivity().getActionBar().setDisplayShowTitleEnabled(true);
-            getActivity().getActionBar().setTitle(R.string.app_name);
-            getActivity().getActionBar().setSubtitle("Home");
-            getActivity().getActionBar().setBackgroundDrawable(new ColorDrawable(0xFF399322));//transparent
-            getActivity().getActionBar().setIcon(R.drawable.actionbar_icon);
+            assert actionBar != null;
+            if (!actionBar.isShowing())
+                actionBar.show();
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setTitle(R.string.app_name);
+            actionBar.setSubtitle("Home");
+            actionBar.setBackgroundDrawable(new ColorDrawable(0xFF399322));//transparent
+            actionBar.setIcon(R.drawable.actionbar_icon);
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
@@ -95,6 +133,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        uiHelper.onSaveInstanceState(outState);
     }
 
     @Override
@@ -102,11 +141,33 @@ public class HomeFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         setRetainInstance(true);
+        uiHelper = new UiLifecycleHelper(getActivity(), callback);
+        uiHelper.onCreate(savedInstanceState);
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        uiHelper.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getAndDraw(RECENT_ARE_HERE, listview_recent);
+        getAndDraw(FAVS_ARE_HERE, listview_favourite);
+        Session session = Session.getActiveSession();
+        if (session != null && (session.isOpened() || session.isClosed())) {
+            onSessionStateChange(session, session.getState(), null);
+        }
+        uiHelper.onResume();
+
     }
 
     @Override
@@ -114,89 +175,80 @@ public class HomeFragment extends Fragment {
         super.onDetach();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        uiHelper.onDestroy();
+    }
+
     public void getAndDraw(String preferenceID, HorizontialListView listview) {
 
-        SharedPreferences preferences = getActivity().getSharedPreferences(preferenceID, Context.MODE_PRIVATE);
+        SharedPreferences preferences = getActivity().getSharedPreferences(FAVS_ARE_HERE, Context.MODE_PRIVATE);
+
         Gson gson = new Gson();
-        String movie_id = "id";
-        String moviesJson = preferences.getString(movie_id, "");
+        String moviesJson = preferences.getString(preferenceID, "");
         JSONObject jsonObject;
 
         try {
             jsonObject = new JSONObject(moviesJson);
             Movies movies = gson.fromJson(jsonObject.toString(), Movies.class);
-            if (preferenceID.equals("recentAreHere"))
+            if (preferenceID.equals("recent_id"))
                 movieRecents = movies.getMovies();
             else
                 movieFavs = movies.getMovies();
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        if (preferenceID.equals("recentAreHere")) {
+        if (preferenceID.equals("recent_id")) {
             Collections.reverse(movieRecents);
             listview.setAdapter(new GridAdapter(getActivity().getApplicationContext(), movieRecents, true));
         } else
+            Collections.reverse(movieFavs);
             listview.setAdapter(new GridAdapter(getActivity().getApplicationContext(), movieFavs, true));
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        if (view == null)
-            view = inflater.inflate(R.layout.fragment_home, container, false);
+        //if (view == null)
+        //   view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        mContext2 = view.getContext();
-        HorizontialListView listview_favourite = (HorizontialListView) view.findViewById(R.id.listview_favourite);
-        HorizontialListView listview_recent = (HorizontialListView) view.findViewById(R.id.listview_recent);
-        getAndDraw("recentAreHere", listview_recent);
-        getAndDraw("favsAreHere", listview_favourite);
+        if (view != null) {
+            ViewGroup parent = (ViewGroup) view.getParent();
+            if (parent != null) {
+                parent.removeView(view);
+            }
+        }
+        try {
+            view = inflater.inflate(R.layout.fragment_home, container, false);
+        } catch (InflateException e) {
+
+        }
+        listview_favourite = (HorizontialListView) view.findViewById(R.id.listview_favourite);
+        listview_recent = (HorizontialListView) view.findViewById(R.id.listview_recent);
+        getAndDraw(recent_id, listview_recent);
+        getAndDraw(movie_id, listview_favourite);
 
         listview_favourite.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-             /*   Bundle args = new Bundle();
-                args.putSerializable("movie", movieFavs.get(position));
-                Fragment fragment = new DetailsFragment();
-                fragment.setArguments(args);
-                switchFragment(fragment);
-            }
-
-            private void switchFragment(Fragment fragment) {
-                if (mContext2 == null) {
-                    return;
-                }
-                if (mContext2 instanceof Main) {
-                    Main main = (Main) mContext2;
-                    main.switchContent(fragment, "DETAILS");
-                }*/
                 Intent detailsIntent = new Intent(getActivity(), DetailsActivity.class);
                 detailsIntent.putExtra("movie", movieFavs.get(position));
                 startActivity(detailsIntent);
             }
         });
+
         listview_recent.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                /*Bundle args = new Bundle();
-                args.putSerializable("movie", movieRecents.get(position));
-                Fragment fragment = new DetailsFragment();
-                fragment.setArguments(args);
-                switchFragment(fragment);
-            }
-
-            private void switchFragment(Fragment fragment) {
-                if (mContext2 == null) {
-                    return;
-                }
-                if (mContext2 instanceof Main) {
-                    Main main = (Main) mContext2;
-                    main.switchContent(fragment, "DETAILS");
-                }*/
                 Intent detailsIntent = new Intent(getActivity(), DetailsActivity.class);
                 detailsIntent.putExtra("movie", movieRecents.get(position));
                 startActivity(detailsIntent);
             }
         });
+
+        LoginButton authButton = (LoginButton) view.findViewById(R.id.authButton);
+        //authButton.setFragment(this);
         return view;
     }
 

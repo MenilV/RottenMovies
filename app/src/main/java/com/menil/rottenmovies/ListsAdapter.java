@@ -28,6 +28,7 @@ public class ListsAdapter extends BaseAdapter {
     private ArrayList<String> bannedDates = new ArrayList<String>();
     private ArrayList<Integer> uniquePositionDates = new ArrayList<Integer>();
 
+
     public ListsAdapter(Context context, List<Movie> allMovies, String tag) {
         this.mContext = context;
         this.listMovies = allMovies;

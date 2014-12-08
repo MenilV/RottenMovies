@@ -1,26 +1,37 @@
 package com.menil.rottenmovies;
 
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Base64;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Window;
 import android.widget.Toast;
 
+import com.facebook.AppEventsLogger;
 
-public class Main extends Activity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+//import android.app.Fragment;
+
+
+public class Main extends FragmentActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     final Context mContext = this;
     private CharSequence mTitle;
+    //private HomeFragment homeFragment;
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -28,7 +39,7 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
             Main.this.finish();
         }
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (getFragmentManager().findFragmentByTag("HOME").isVisible()) {
+            if (getSupportFragmentManager().findFragmentByTag("HOME").isVisible()) {
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                         mContext);//, R.layout.custom_dialog);
                 // set title
@@ -54,16 +65,27 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
                 AlertDialog alertDialog = alertDialogBuilder.create();
                 // show it
                 alertDialog.show();
+
             } else {
-                getFragmentManager().popBackStack();
+                getSupportFragmentManager().popBackStack();
             }
         }
         return false;
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+
+        //Logs 'app deactivate' App Event
+        AppEventsLogger.deactivateApp(this);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
+        //Logs 'install' and 'app active' App Events.
+        AppEventsLogger.activateApp(this);
     }
 
     @Override
@@ -72,13 +94,38 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
         super.onCreate(savedInstanceState);
 
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
-
+        /*if (savedInstanceState == null) {
+            // Add the fragment on initial activity setup
+            HomeFragment homeFragment = new HomeFragment();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.container, homeFragment, "HOME")
+                    .commit();
+        } else {
+            // Or set the fragment from restored state info
+           HomeFragment homefragment = (HomeFragment) getSupportFragmentManager()
+                    .findFragmentById(R.id.container);
+        }*/
         setContentView(R.layout.activity_main);
 
         NavigationDrawerFragment mNavigationDrawerFragment = (NavigationDrawerFragment)
-                getFragmentManager().findFragmentById(R.id.navigation_drawer);
+                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
 
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(
+                    "com.menil.rottenmovies", PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+
+        } catch (NoSuchAlgorithmException e) {
+
+        }
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
         //this does nothing
@@ -171,8 +218,8 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
     }
 
     public void switchContent(Fragment fragment, String TAG) {
-        FragmentManager fm = getFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
+        android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction ft = fm.beginTransaction();
         Boolean found = false;
         for (int i = 0; i < fm.getBackStackEntryCount(); i++) {
             if (fm.findFragmentByTag(TAG) == fm.findFragmentByTag(fm.getBackStackEntryAt(i).getName()))
@@ -183,54 +230,5 @@ public class Main extends Activity implements NavigationDrawerFragment.Navigatio
         else
             ft.replace(R.id.container, fragment, TAG).addToBackStack(TAG).commit();
     }
-/*
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // if (!mNavigationDrawerFragment.isDrawerOpen()) {
-        // Only show items in the action bar relevant to this screen
-        // if the drawer is not showing. Otherwise, let the drawer
-        // decide what to show in the action bar.
-        getMenuInflater().inflate(R.menu.main, menu);
-        //restoreActionBar();
-        //  return true;
-        // }
-        // Get the SearchView and set the searchable configuration
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-
-        // Assumes current activity is the searchable activity
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setIconifiedByDefault(true); // Do not iconify the widget; expand it by default
-
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        //int id = item.getItemId();
-        switch (item.getItemId()) {
-            case R.id.action_share:
-                Intent sendIntent = new Intent();
-                sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_SUBJECT, "This is my text to send.");
-                sendIntent.putExtra(Intent.EXTRA_TITLE, "Best Movie ever");
-                sendIntent.setType("text/plain");
-                //ShareActionProvider myShareActionProvider = (ShareActionProvider) item.getActionProvider();
-                //myShareActionProvider.setShareIntent(sendIntent);
-                startActivity(sendIntent);
-                break;
-            case R.id.action_about:
-                AboutFragment fragment = new AboutFragment();
-                switchContent(fragment, "ABOUT");
-                break;
-            case R.id.action_exit:
-                finish();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }*/
 
 }
