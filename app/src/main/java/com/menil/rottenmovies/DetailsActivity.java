@@ -14,8 +14,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.FacebookException;
+import com.facebook.FacebookOperationCanceledException;
+import com.facebook.Session;
+import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.FacebookDialog;
+import com.facebook.widget.WebDialog;
 import com.google.gson.Gson;
 import com.melnykov.fab.FloatingActionButton;
 
@@ -47,6 +52,7 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class DetailsActivity extends Activity {
 
+    public static final String TAG = "Details";
     public static final String movie_id = "id";
     public static final String recent_id = "recent_id";
     public static final String FAVS_ARE_HERE = "favsAreHere";
@@ -54,6 +60,20 @@ public class DetailsActivity extends Activity {
     private Movie detailMovie;
     private Context mContext2;
     private UiLifecycleHelper uiHelper;
+    private Session.StatusCallback callback = new Session.StatusCallback() {
+        @Override
+        public void call(Session session, SessionState state, Exception exception) {
+            onSessionStateChange(session, state, exception);
+        }
+    };
+
+    private void onSessionStateChange(Session session, SessionState state, Exception exception) {
+        if (state.isOpened()) {
+            Log.i(TAG, "Logged in...");
+        } else if (state.isClosed()) {
+            Log.i(TAG, "Logged out...");
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -272,30 +292,81 @@ public class DetailsActivity extends Activity {
         if (castText.length() < 8)
             castText = "Cast: No cast found";
 
-        FacebookDialog shareDialog = new FacebookDialog.ShareDialogBuilder(this)
-                .setLink(detailMovie.links.getAlternate())
-                .setName(detailMovie.title)
-                .setCaption(castText)
-                .setDescription(detailMovie.synopsis)
-                .setPicture(detailMovie.posters.thumbnail.replace("tmb", "det"))
-                .build();
-        uiHelper.trackPendingDialogCall(shareDialog.present());
+        if (Session.getActiveSession().isOpened())
+        //user is logged to facebook proceed
+        {
+            if (FacebookDialog.canPresentShareDialog(this)) {
+                FacebookDialog shareDialog = new FacebookDialog.ShareDialogBuilder(this)
+                        .setLink(detailMovie.links.getAlternate())
+                        .setName(detailMovie.title)
+                        .setCaption(castText)
+                        .setDescription(detailMovie.synopsis)
+                        .setPicture(detailMovie.posters.thumbnail.replace("tmb", "det"))
+                        .build();
+                uiHelper.trackPendingDialogCall(shareDialog.present());
+            } else {
+                //using this if there is no Facebook application installed
+                Bundle params = new Bundle();
+                params.putString("name", detailMovie.title);
+                params.putString("caption", castText);
+                params.putString("description", detailMovie.synopsis);
+                params.putString("link", detailMovie.links.getAlternate());
+                params.putString("picture", detailMovie.posters.thumbnail.replace("tmb", "det"));
+
+                WebDialog feedDialog = (
+                        new WebDialog.FeedDialogBuilder(this,
+                                Session.getActiveSession(),
+                                params))
+                        .setOnCompleteListener(new WebDialog.OnCompleteListener() {
+
+                            @Override
+                            public void onComplete(Bundle values,
+                                                   FacebookException error) {
+                                if (error == null) {
+                                    // When the story is posted, echo the success
+                                    // and the post Id.
+                                    final String postId = values.getString("post_id");
+                                    if (postId != null) {
+                                        Toast.makeText(getApplicationContext(),
+                                                "Posted story, id: " + postId,
+                                                Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        // User clicked the Cancel button
+                                        Toast.makeText(getApplicationContext(),
+                                                "Publish cancelled",
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+                                } else if (error instanceof FacebookOperationCanceledException) {
+                                    // User clicked the "x" button
+                                    Toast.makeText(getApplicationContext(),
+                                            "Publish cancelled",
+                                            Toast.LENGTH_SHORT).show();
+                                } else {
+                                    // Generic, ex: network error
+                                    Toast.makeText(getApplicationContext(),
+                                            "Error posting story",
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                        })
+                        .build();
+                feedDialog.show();
+            }
+        } else {
+            //not logged in. try to login
+            Toast.makeText(this, "Please go to the About page and login with your Facebook account", Toast.LENGTH_LONG).show();
+        }
+
     }
+
     public void makeActionbar() {
         ActionBar actionBar = getActionBar();
         try {
-            //Drawable mActionBarBackgroundDrawable = getResources().getDrawable(R.drawable.actionbar_background);
-            //mActionBarBackgroundDrawable.setAlpha(0);
+
             assert actionBar != null;
             if (actionBar.isShowing())
                 actionBar.hide();
-
-            //actionBar.setDisplayShowTitleEnabled(false);
-            //actionBar.setTitle("");
-            // actionBar.setBackgroundDrawable(mActionBarBackgroundDrawable);
-            //actionBar.setSubtitle(null);
-            //actionBar.setIcon(new ColorDrawable(0x00000000));
-
         } catch (NullPointerException e) {
             e.printStackTrace();
         }

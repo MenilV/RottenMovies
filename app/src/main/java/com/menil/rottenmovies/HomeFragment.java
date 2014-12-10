@@ -24,7 +24,6 @@ import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.FacebookDialog;
-import com.facebook.widget.LoginButton;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
@@ -215,14 +214,12 @@ public class HomeFragment extends Fragment {
             listview.setAdapter(new GridAdapter(getActivity().getApplicationContext(), movieRecents, true));
         } else
             Collections.reverse(movieFavs);
-            listview.setAdapter(new GridAdapter(getActivity().getApplicationContext(), movieFavs, true));
+        listview.setAdapter(new GridAdapter(getActivity().getApplicationContext(), movieFavs, true));
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        //if (view == null)
-        //   view = inflater.inflate(R.layout.fragment_home, container, false);
 
         if (view != null) {
             ViewGroup parent = (ViewGroup) view.getParent();
@@ -258,10 +255,6 @@ public class HomeFragment extends Fragment {
                 startActivity(detailsIntent);
             }
         });
-
-        LoginButton authButton = (LoginButton) view.findViewById(R.id.authButton);
-        authButton.setFragment(this);
-
 
         return view;
     }

@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,13 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.facebook.FacebookException;
+import com.facebook.FacebookOperationCanceledException;
+import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.UiLifecycleHelper;
+import com.facebook.widget.FacebookDialog;
+import com.facebook.widget.WebDialog;
 import com.google.gson.Gson;
 import com.melnykov.fab.FloatingActionButton;
 
@@ -32,15 +40,33 @@ import java.util.List;
  * Created by menil on 13.11.2014.
  */
 public class FavouritesFragment extends Fragment {
+
+    public static final String TAG = "Favourites";
     public static final String movie_id = "id";
     public SharedPreferences preferences;
     private List<Movie> favouritesList = new ArrayList<Movie>();
     private View view;
+    private UiLifecycleHelper uiHelper;
+    private Session.StatusCallback callback = new Session.StatusCallback() {
+        @Override
+        public void call(Session session, SessionState state, Exception exception) {
+            onSessionStateChange(session, state, exception);
+        }
+    };
+
+    private void onSessionStateChange(Session session, SessionState state, Exception exception) {
+        if (state.isOpened()) {
+            Log.i(TAG, "Logged in...");
+        } else if (state.isClosed()) {
+            Log.i(TAG, "Logged out...");
+        }
+    }
 
 
     @Override
     public void onResume() {
         super.onResume();
+        uiHelper.onResume();
 
         preferences = getActivity().getSharedPreferences("favsAreHere", Context.MODE_PRIVATE);
         Gson gson = new Gson();
@@ -64,7 +90,9 @@ public class FavouritesFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        makeActionbar();
+        uiHelper = new UiLifecycleHelper(getActivity(), null);
+        uiHelper.onCreate(savedInstanceState);
     }
 
     @Override
@@ -72,10 +100,44 @@ public class FavouritesFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         // Indicate that this fragment would like to influence the set of actions in the action bar.
         setHasOptionsMenu(true);
-        makeActionbar();
+
 
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        uiHelper.onActivityResult(requestCode, resultCode, data, new FacebookDialog.Callback() {
+            @Override
+            public void onError(FacebookDialog.PendingCall pendingCall, Exception error, Bundle data) {
+                Log.e("Activity", String.format("Error: %s", error.toString()));
+            }
+
+            @Override
+            public void onComplete(FacebookDialog.PendingCall pendingCall, Bundle data) {
+                Log.i("Activity", "Success!");
+            }
+        });
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        uiHelper.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        uiHelper.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        uiHelper.onDestroy();
+    }
     public void makeActionbar() {
         ActionBar actionBar = getActivity().getActionBar();
         try {
@@ -105,6 +167,84 @@ public class FavouritesFragment extends Fragment {
         }
     }
 
+    protected void shareToFB(List<String> selectedMovies, ArrayList<Integer> indexSelected) {
+
+        String list = "";
+        int count = 0;
+        for (Integer i : indexSelected)
+            list += ++count + ". " + selectedMovies.get(i) + "\n";
+
+        if (Session.getActiveSession().isOpened())
+        //logged in to facebook
+        {
+            if (FacebookDialog.canPresentShareDialog(getActivity().getApplicationContext())) {
+
+                FacebookDialog shareDialog = new FacebookDialog.ShareDialogBuilder(getActivity())
+                        .setLink("http://i.imgur.com/xNzJGq1.png")//this is 512x512, replace with link to app
+                        .setName("My favourite movies:")
+                        .setCaption("Shared with: Rotten Movies")
+                        .setDescription(list)
+                        .setPicture("http://i.imgur.com/OHxpbca.png")//this is 128x128
+                        .build();
+                uiHelper.trackPendingDialogCall(shareDialog.present());
+            } else {
+                //using this if there is no Facebook application installed
+                Bundle params = new Bundle();
+                params.putString("name", "My favourite movies:");
+                params.putString("caption", "Shared with: Rotten Movies");
+                params.putString("description", list);
+                params.putString("link", "http://i.imgur.com/xNzJGq1.png");//this is 512x512, replace with link to app
+                params.putString("picture", "http://i.imgur.com/OHxpbca.png");//this is 128x128
+
+                WebDialog feedDialog = (
+                        new WebDialog.FeedDialogBuilder(getActivity(),
+                                Session.getActiveSession(),
+                                params))
+                        .setOnCompleteListener(new WebDialog.OnCompleteListener() {
+
+                            @Override
+                            public void onComplete(Bundle values,
+                                                   FacebookException error) {
+                                if (error == null) {
+                                    // When the story is posted, echo the success
+                                    // and the post Id.
+                                    final String postId = values.getString("post_id");
+                                    if (postId != null) {
+                                        Toast.makeText(getActivity(),
+                                                "Posted story, id: " + postId,
+                                                Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        // User clicked the Cancel button
+                                        Toast.makeText(getActivity().getApplicationContext(),
+                                                "Publish cancelled",
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+                                } else if (error instanceof FacebookOperationCanceledException) {
+                                    // User clicked the "x" button
+                                    Toast.makeText(getActivity().getApplicationContext(),
+                                            "Publish cancelled",
+                                            Toast.LENGTH_SHORT).show();
+                                } else {
+                                    // Generic, ex: network error
+                                    Toast.makeText(getActivity().getApplicationContext(),
+                                            "Error posting story",
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                        })
+                        .build();
+                feedDialog.show();
+
+            }
+        } else {
+            //not logged in to facebook
+            Toast.makeText(getActivity().getApplicationContext(), "Please go to the About page and login with your Facebook account", Toast.LENGTH_LONG).show();
+            //UserSettingsFragment userSettingsFragment= new UserSettingsFragment();
+            //TODO: make a login screen if the user wants to login right away
+            //getActivity().getSupportFragmentManager().beginTransaction().add(userSettingsFragment);
+        }
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
@@ -120,12 +260,6 @@ public class FavouritesFragment extends Fragment {
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                /*Bundle args = new Bundle();
-                args.putSerializable("movie", favouritesList.get(position));
-
-                Fragment fragment = new DetailsFragment();
-                fragment.setArguments(args);
-                switchFragment(fragment);*/
                 Intent detailsIntent = new Intent(getActivity(), DetailsActivity.class);
                 detailsIntent.putExtra("movie", favouritesList.get(position));
                 startActivity(detailsIntent);
@@ -142,50 +276,62 @@ public class FavouritesFragment extends Fragment {
             }*/
         });
 
-        final FloatingActionButton floatingActionButton = (FloatingActionButton) view.findViewById(R.id.favourites_list_fab);
-        floatingActionButton.attachToListView(gridview);
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-
+        final FloatingActionButton floatingActionButtonShare = (FloatingActionButton) view.findViewById(R.id.favourites_list_fab);
+        floatingActionButtonShare.attachToListView(gridview);
+        floatingActionButtonShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(view.getContext());
-                // set title
-                alertDialogBuilder.setTitle("Delete all from favourites?");
 
-                // set dialog message
-                AlertDialog.Builder builder = alertDialogBuilder
-                        .setIcon(R.drawable.ic_action_warning)
-                        .setCancelable(false)
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                AlertDialog dialog;
+                final List<String> favouriteListTitles = new ArrayList<String>();
+                for (Movie m : favouritesList)
+                    favouriteListTitles.add(m.title);
+                final CharSequence[] items = favouriteListTitles.toArray(new CharSequence[favouriteListTitles.size()]);
+                final ArrayList selectedItems = new ArrayList<Integer>();
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Share your favourite movies");
+                builder.setIcon(R.drawable.ic_launcher_16);
+                builder.setMultiChoiceItems(items, null, new DialogInterface.OnMultiChoiceClickListener() {
+                    // indexSelected contains the index of item (of which checkbox checked)
+                    @Override
+                    public void onClick(DialogInterface dialog, int indexSelected, boolean isChecked) {
+                        if (isChecked) {
+                            // If the user checked the item, adds it to the selected items
+                            selectedItems.add(indexSelected);
+                        } else if (selectedItems.contains(indexSelected)) {
+                            // Else, if the item is already in the array, remove it
+                            selectedItems.remove(Integer.valueOf(indexSelected));
+                        }
+                    }
+                })
+                        // Set the action buttons
+                        .setPositiveButton("Share", new DialogInterface.OnClickListener() {
+                            @Override
                             public void onClick(DialogInterface dialog, int id) {
-                                // if this button is clicked, delete all favourites
-                                preferences.edit().clear().apply();
-                                Toast.makeText(view.getContext(), "Upon next opening of the app, favourites will be cleared", Toast.LENGTH_LONG).show();
-                                Fragment frg = null;
-                                frg = getFragmentManager().findFragmentByTag("FAVOURITES");
-                                final android.support.v4.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
-                                ft.detach(frg);
-                                ft.attach(frg);
-                                ft.commit();
+                                shareToFB(favouriteListTitles, selectedItems);
                             }
                         })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
                             public void onClick(DialogInterface dialog, int id) {
-                                // if this button is clicked, just close the dialog box
                                 dialog.cancel();
                             }
+                        })
+                        .setNeutralButton("Select all", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                int i = 0;
+                                for (String s : favouriteListTitles)
+                                    selectedItems.add(i++);
+                                shareToFB(favouriteListTitles, selectedItems);
+                            }
+
                         });
-                // create alert dialog
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                // show it
-                alertDialog.show();
+
+                dialog = builder.create();//AlertDialog dialog; create like this outside onClick
+                dialog.show();
             }
-
         });
-
-
         return view;
-
     }
-
 }

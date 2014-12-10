@@ -111,10 +111,4 @@
 
     </RelativeLayout>
 
-    <com.facebook.widget.LoginButton
-        android:id="@+id/authButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/fragment_home_recent_relative"
-        android:layout_gravity="center_horizontal" />
 </RelativeLayout>
