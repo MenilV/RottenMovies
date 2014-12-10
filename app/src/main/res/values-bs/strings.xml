@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Rotten Movies</string>
+    <string name="action_about">O aplikaciji</string>
+    <string name="action_exit">Izađi</string>
+    <string name="about_msg2">Radio: Menil V.(2014)\n Zahvalnica: AtlantBH</string>
+    <string name="action_settings">Opcije</string>
+    <string name="action_share">Podijeli</string>
+    <string name="bck_img_details">Pozadinska slika detaljni pregled</string>
+    <string name="btm_img_icon">slika ikone dole</string>
+    <string name="cast_placeholder">Glumci:</string>
+    <string name="crash_dialog_comment_prompt">Dodajte vaš komentar o problemu ispod:</string>
+    <string name="crash_dialog_ok_toast">Zahvaljujem na informacijama!</string>
+    <string name="crash_dialog_text">Neočekivana greška se desila, što je uzrokovalo gašenje aplikacije. Molim vas pomozite u cilju rješavanja ove greške. Sve što trebate je kliknuti OK.</string>
+    <string name="crash_dialog_title">Rotten Movies se ugasio</string>
+    <string name="crash_toast_text">Rotten Movies se ugasio, ali je izvještaj poslan developeru u cilju rješavanja problema!</string>
+    <string name="critics_placeholder">Ocjena kritičara:</string>
+    <string name="details_img">detaljna slika</string>
+    <string name="facebook_app_id">1509735795963305</string>
+    <string name="favourites">Favoritovani filmovi</string>
+    <string name="movie_subtitle_placeholder">Podnaslov filma</string>
+    <string name="movie_title_placeholder">Naslov filma</string>
+    <string name="navigation_drawer_close">Zatvori navigacijski prozor</string>
+    <string name="navigation_drawer_open">Otvori navigacijski prozor</string>
+    <string name="no_movies_searched">Nisu nađeni filmov.\nPokušajte ponovo tražiti…</string>
+    <string name="rating_placeholder">Ocjena:</string>
+    <string name="runtime_placeholder">Dužina trajanja:</string>
+    <string name="action_search">Pretraga</string>
+    <string name="splash_subtitle">Sve informacije o filmovima na jednom mjestu\by: Menil V.</string>
+    <string name="synopsis">Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet</string>
+    <string name="synopsis_title">Sinopsis:\n</string>
+    <string name="title_section0">Početna</string>
+    <string name="title_section1">Blagajna</string>
+    <string name="title_section2">U kinima</string>
+    <string name="title_section4">Nadolazeći filmovi</string>
+    <string name="title_section3">U sljedećoj sedmici</string>
+    <string name="title_section5">Favoriti</string>
+    <string name="title_section6">O aplikaciji</string>
+    <string name="about_msg">Rotten Movies je nativna Android aplikacija za sve korisnike koji vole i prate najnovije filmove. Aplikacija pruža mogućnost kreiranja liste favorita uz vizuelno privlačan i moderan dizajn.</string>
+    <string name="title_placeholder">POSITION.TITLE(YEAR)</string>
+    <string name="header_placeholder">HEADER PLACEHOLDER</string>
+    <string name="imdb_link_description">IMDB link</string>
+    <string name="release_placeholder">RELEASE DATE:</string>
+    <string name="rtn_link_description">Rotten Tomatoes link</string>
+    <string name="runtime_placeholder2">RUNTIME:</string>
+</resources>

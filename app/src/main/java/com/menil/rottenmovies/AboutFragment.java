@@ -99,6 +99,14 @@ public class AboutFragment extends Fragment {
         super.onCreate(savedInstanceState);
         uiHelper = new UiLifecycleHelper(getActivity(), callback);
         uiHelper.onCreate(savedInstanceState);
+        /*ConfigurationBuilder cb = new ConfigurationBuilder();
+        cb.setDebugEnabled(true)
+                .setOAuthConsumerKey("WojYC8DEtQFLHxDyJxqkfNdDf")
+                .setOAuthConsumerSecret("7odnftSd9jz9cLghz8cu2XcEXdQz0QiIeaxVDUq2rfja7ej3b4")
+                .setOAuthAccessToken("634770680-R3csXX3JXgTbpaloyct65M31lVKUwqjwsA298D2H")
+                .setOAuthAccessTokenSecret("jDzfKpR1eFXhbnSZ2KHzmvdUNScbntxcp7G3H8ONozQvZ");
+        TwitterFactory tf = new TwitterFactory(cb.build());
+        Twitter twitter = tf.getInstance();*/
     }
 
     @Override
@@ -176,6 +184,7 @@ public class AboutFragment extends Fragment {
         } catch (InflateException e) {
             e.printStackTrace();
         }
+
 
         LoginButton authButton = (LoginButton) view.findViewById(R.id.authButton_about);
         authButton.setFragment(this);
