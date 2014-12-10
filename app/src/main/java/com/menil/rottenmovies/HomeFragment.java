@@ -23,6 +23,7 @@ import android.widget.SearchView;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
+import com.facebook.widget.FacebookDialog;
 import com.facebook.widget.LoginButton;
 import com.google.gson.Gson;
 
@@ -47,8 +48,8 @@ public class HomeFragment extends Fragment {
     public static final String recent_id = "recent_id";
     private static final String TAG = "HOME";
     private View view;
-    private List<Movie> movieFavs = new ArrayList<Movie>();
-    private List<Movie> movieRecents = new ArrayList<Movie>();
+    private List<Movie> movieFavs = new ArrayList<>();
+    private List<Movie> movieRecents = new ArrayList<>();
     private HorizontialListView listview_favourite;
     private HorizontialListView listview_recent;
     private UiLifecycleHelper uiHelper;
@@ -78,7 +79,17 @@ public class HomeFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        uiHelper.onActivityResult(requestCode, resultCode, data);
+        uiHelper.onActivityResult(requestCode, resultCode, data, new FacebookDialog.Callback() {
+            @Override
+            public void onError(FacebookDialog.PendingCall pendingCall, Exception error, Bundle data) {
+                Log.e("Activity", String.format("Error: %s", error.toString()));
+            }
+
+            @Override
+            public void onComplete(FacebookDialog.PendingCall pendingCall, Bundle data) {
+                Log.i("Activity", "Success!");
+            }
+        });
     }
 
     @Override
@@ -221,13 +232,14 @@ public class HomeFragment extends Fragment {
         }
         try {
             view = inflater.inflate(R.layout.fragment_home, container, false);
+            listview_favourite = (HorizontialListView) view.findViewById(R.id.listview_favourite);
+            listview_recent = (HorizontialListView) view.findViewById(R.id.listview_recent);
+            getAndDraw(recent_id, listview_recent);
+            getAndDraw(movie_id, listview_favourite);
         } catch (InflateException e) {
-
+            e.printStackTrace();
         }
-        listview_favourite = (HorizontialListView) view.findViewById(R.id.listview_favourite);
-        listview_recent = (HorizontialListView) view.findViewById(R.id.listview_recent);
-        getAndDraw(recent_id, listview_recent);
-        getAndDraw(movie_id, listview_favourite);
+
 
         listview_favourite.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -248,7 +260,9 @@ public class HomeFragment extends Fragment {
         });
 
         LoginButton authButton = (LoginButton) view.findViewById(R.id.authButton);
-        //authButton.setFragment(this);
+        authButton.setFragment(this);
+
+
         return view;
     }
 

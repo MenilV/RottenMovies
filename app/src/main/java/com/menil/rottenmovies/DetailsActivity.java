@@ -3,15 +3,19 @@ package com.menil.rottenmovies;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.UiLifecycleHelper;
+import com.facebook.widget.FacebookDialog;
 import com.google.gson.Gson;
 import com.melnykov.fab.FloatingActionButton;
 
@@ -49,13 +53,15 @@ public class DetailsActivity extends Activity {
     public SharedPreferences preferences;
     private Movie detailMovie;
     private Context mContext2;
+    private UiLifecycleHelper uiHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
         makeActionbar();
-
+        uiHelper = new UiLifecycleHelper(this, null);
+        uiHelper.onCreate(savedInstanceState);
         Bundle args = getIntent().getExtras();
         detailMovie = (Movie) args.getSerializable("movie");
 
@@ -203,8 +209,78 @@ public class DetailsActivity extends Activity {
             }
         });
 
+        FloatingActionButton floatingActionButtonShare = (FloatingActionButton) findViewById(R.id.activity_fab_share);
+        floatingActionButtonShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareToFB(detailMovie);
+            }
+        });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        uiHelper.onActivityResult(requestCode, resultCode, data, new FacebookDialog.Callback() {
+            @Override
+            public void onError(FacebookDialog.PendingCall pendingCall, Exception error, Bundle data) {
+                Log.e("Activity", String.format("Error: %s", error.toString()));
+            }
+
+            @Override
+            public void onComplete(FacebookDialog.PendingCall pendingCall, Bundle data) {
+                Log.i("Activity", "Success!");
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        uiHelper.onResume();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        uiHelper.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        uiHelper.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        uiHelper.onDestroy();
+    }
+
+    protected void shareToFB(Movie detailMovie) {
+        int x = 0;//just to ensure there are no commas after the last actor
+        List<Cast> castList = detailMovie.casts;
+        String castText = "Cast: ";
+        for (Cast c : castList) {
+            castText += c.name;
+            if (++x < castList.size())
+                castText += ", ";
+        }
+
+        if (castText.length() < 8)
+            castText = "Cast: No cast found";
+
+        FacebookDialog shareDialog = new FacebookDialog.ShareDialogBuilder(this)
+                .setLink(detailMovie.links.getAlternate())
+                .setName(detailMovie.title)
+                .setCaption(castText)
+                .setDescription(detailMovie.synopsis)
+                .setPicture(detailMovie.posters.thumbnail.replace("tmb", "det"))
+                .build();
+        uiHelper.trackPendingDialogCall(shareDialog.present());
+    }
     public void makeActionbar() {
         ActionBar actionBar = getActionBar();
         try {

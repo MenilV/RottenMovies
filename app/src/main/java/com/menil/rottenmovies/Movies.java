@@ -87,8 +87,13 @@ class IMDB implements Serializable {
 
 class Link implements Serializable {
 
+
     @SerializedName("alternate")
     public String alternate;
+
+    public String getAlternate() {
+        return alternate;
+    }
 
 }
 

@@ -8,7 +8,9 @@
     sothree:panelHeight="141dp"
     sothree:shadowHeight="4dp">
 
-    <com.menil.rottenmovies.RemoteImageView
+
+    <include layout="@layout/activity_details_img" />
+    <!--<com.menil.rottenmovies.RemoteImageView
         android:id="@+id/activity_details_img_top"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -16,7 +18,7 @@
         android:contentDescription="@string/bck_img_details"
         android:scaleType="centerCrop"
         android:src="@drawable/empty_img_big" />
-
+-->
     <include layout="@layout/activity_details_pane" />
 
 
