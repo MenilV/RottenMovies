@@ -52,10 +52,11 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class DetailsActivity extends Activity {
 
-    public static final String TAG = "Details";
+    public static final String TAG = "DETAILS";
     public static final String movie_id = "id";
     public static final String recent_id = "recent_id";
     public static final String FAVS_ARE_HERE = "favsAreHere";
+    public static final String RECENT_ARE_HERE = "recentAreHere";
     public SharedPreferences preferences;
     private Movie detailMovie;
     private Context mContext2;
@@ -373,7 +374,10 @@ public class DetailsActivity extends Activity {
     }
 
     public void addToRecent(String key, Movie movie) {
-        preferences = getSharedPreferences(FAVS_ARE_HERE, Context.MODE_PRIVATE);
+        if (key.equals("recent_id"))
+            preferences = getSharedPreferences(RECENT_ARE_HERE, Context.MODE_PRIVATE);
+
+        Toast.makeText(getApplicationContext(), "Added to recent", Toast.LENGTH_SHORT).show();
         SharedPreferences.Editor editor = preferences.edit();
 
         Gson gson = new Gson();
@@ -638,6 +642,7 @@ public class DetailsActivity extends Activity {
 
         @Override
         protected void onPostExecute(List<Review> reviewLists) {
+            if (reviewLists != null)
             createCritics(reviewLists);
         }
     }
@@ -704,6 +709,7 @@ public class DetailsActivity extends Activity {
 
         @Override
         protected void onPostExecute(List<Movie> allMovies) {
+            if (allMovies != null)
             createSimilar(allMovies);
             //  progressDialog.dismiss();
         }
@@ -771,6 +777,7 @@ public class DetailsActivity extends Activity {
 
         @Override
         protected void onPostExecute(List<Clip> allClips) {
+            if (allClips != null)
             createClips(allClips);
             //  progressDialog.dismiss();
         }
@@ -838,6 +845,7 @@ public class DetailsActivity extends Activity {
 
         @Override
         protected void onPostExecute(Movie movie) {
+            if (movie != null)
             createGenres(movie);
             //  progressDialog.dismiss();
         }

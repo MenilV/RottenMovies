@@ -28,6 +28,7 @@ import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.lucasr.twowayview.TwoWayView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,8 +50,8 @@ public class HomeFragment extends Fragment {
     private View view;
     private List<Movie> movieFavs = new ArrayList<>();
     private List<Movie> movieRecents = new ArrayList<>();
-    private HorizontialListView listview_favourite;
-    private HorizontialListView listview_recent;
+    private TwoWayView listview_favourite;
+    private TwoWayView listview_recent;
     private UiLifecycleHelper uiHelper;
     private Session.StatusCallback callback = new Session.StatusCallback() {
         @Override
@@ -150,7 +151,7 @@ public class HomeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        setRetainInstance(true);
+        //setRetainInstance(true);
         uiHelper = new UiLifecycleHelper(getActivity(), callback);
         uiHelper.onCreate(savedInstanceState);
     }
@@ -170,8 +171,8 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        getAndDraw(RECENT_ARE_HERE, listview_recent);
-        getAndDraw(FAVS_ARE_HERE, listview_favourite);
+        getAndDraw(recent_id, listview_recent);
+        getAndDraw(movie_id, listview_favourite);
         Session session = Session.getActiveSession();
         if (session != null && (session.isOpened() || session.isClosed())) {
             onSessionStateChange(session, session.getState(), null);
@@ -191,9 +192,13 @@ public class HomeFragment extends Fragment {
         uiHelper.onDestroy();
     }
 
-    public void getAndDraw(String preferenceID, HorizontialListView listview) {
+    public void getAndDraw(String preferenceID, TwoWayView listview) {
 
-        SharedPreferences preferences = getActivity().getSharedPreferences(FAVS_ARE_HERE, Context.MODE_PRIVATE);
+        SharedPreferences preferences;
+        if (preferenceID.equals("recent_id"))
+            preferences = getActivity().getSharedPreferences(RECENT_ARE_HERE, Context.MODE_PRIVATE);
+        else
+            preferences = getActivity().getSharedPreferences(FAVS_ARE_HERE, Context.MODE_PRIVATE);
 
         Gson gson = new Gson();
         String moviesJson = preferences.getString(preferenceID, "");
@@ -212,9 +217,10 @@ public class HomeFragment extends Fragment {
         if (preferenceID.equals("recent_id")) {
             Collections.reverse(movieRecents);
             listview.setAdapter(new GridAdapter(getActivity().getApplicationContext(), movieRecents, true));
-        } else
+        } else {
             Collections.reverse(movieFavs);
-        listview.setAdapter(new GridAdapter(getActivity().getApplicationContext(), movieFavs, true));
+            listview.setAdapter(new GridAdapter(getActivity().getApplicationContext(), movieFavs, true));
+        }
     }
 
     @Override
@@ -229,10 +235,13 @@ public class HomeFragment extends Fragment {
         }
         try {
             view = inflater.inflate(R.layout.fragment_home, container, false);
-            listview_favourite = (HorizontialListView) view.findViewById(R.id.listview_favourite);
-            listview_recent = (HorizontialListView) view.findViewById(R.id.listview_recent);
-            getAndDraw(recent_id, listview_recent);
+
+            listview_recent = (TwoWayView) view.findViewById(R.id.listview_recent);
+            listview_favourite = (TwoWayView) view.findViewById(R.id.listview_favourite);
+
+
             getAndDraw(movie_id, listview_favourite);
+            getAndDraw(recent_id, listview_recent);
         } catch (InflateException e) {
             e.printStackTrace();
         }

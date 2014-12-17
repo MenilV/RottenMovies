@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -133,7 +134,7 @@ public class BoxOfficeFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vy
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        setRetainInstance(true);
+        //setRetainInstance(true);
 
         Bundle args = getArguments();
 
@@ -182,12 +183,21 @@ public class BoxOfficeFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vy
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        if (view == null) {
+        if (view != null) {
+            ViewGroup parent = (ViewGroup) view.getParent();
+            if (parent != null) {
+                parent.removeView(view);
+            }
+        }
+        try {
             view = inflater.inflate(R.layout.fragment_boxoffice, container, false);
+            listView = (ListView) view.findViewById(R.id.boxoffice_list);
+        } catch (InflateException e) {
+            e.printStackTrace();
         }
 
+
         mContext = getActivity().getApplicationContext();
-        listView = (ListView) view.findViewById(R.id.boxoffice_list);
         mContext2 = view.getContext();
 
 
@@ -313,6 +323,7 @@ public class BoxOfficeFragment extends Fragment {//API KEY = pj2z7eyve6mfdtcx4vy
                 //MovieComparator mc = null;
                 Collections.sort(allMovies);
             }
+            if (listView != null)
             listView.setAdapter(new ListsAdapter(mContext, allMovies, tag));
             progressDialog.dismiss();
         }

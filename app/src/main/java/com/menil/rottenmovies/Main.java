@@ -12,6 +12,8 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Base64;
 import android.util.Log;
@@ -24,14 +26,11 @@ import com.facebook.AppEventsLogger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-//import android.app.Fragment;
-
 
 public class Main extends FragmentActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     final Context mContext = this;
     private CharSequence mTitle;
-    //private HomeFragment homeFragment;
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -41,7 +40,7 @@ public class Main extends FragmentActivity implements NavigationDrawerFragment.N
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (getSupportFragmentManager().findFragmentByTag("HOME").isVisible()) {
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                        mContext);//, R.layout.custom_dialog);
+                        mContext);
                 // set title
                 alertDialogBuilder.setTitle("Exit application?");
 
@@ -67,8 +66,11 @@ public class Main extends FragmentActivity implements NavigationDrawerFragment.N
                 alertDialog.show();
 
             } else {
-                getSupportFragmentManager().popBackStack();
+                //this is used to return the user to Home before asking him to quit the app. serves like a "double back to exit" option
+                getSupportFragmentManager().popBackStack("HOME", 0);
             }
+
+
         }
         return false;
     }
@@ -218,8 +220,8 @@ public class Main extends FragmentActivity implements NavigationDrawerFragment.N
     }
 
     public void switchContent(Fragment fragment, String TAG) {
-        android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
-        android.support.v4.app.FragmentTransaction ft = fm.beginTransaction();
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
         Boolean found = false;
         for (int i = 0; i < fm.getBackStackEntryCount(); i++) {
             if (fm.findFragmentByTag(TAG) == fm.findFragmentByTag(fm.getBackStackEntryAt(i).getName()))

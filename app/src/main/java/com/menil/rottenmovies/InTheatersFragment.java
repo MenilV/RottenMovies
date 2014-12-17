@@ -10,6 +10,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -116,7 +117,7 @@ public class InTheatersFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRetainInstance(true);
+        //setRetainInstance(true);
 
         String startURI = "http://api.rottentomatoes.com/api/public/v1.0/lists/movies/";
         String limit = "50";//max amount is 50
@@ -146,19 +147,20 @@ public class InTheatersFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 
-        if (view == null) {
-            view = inflater.inflate(R.layout.fragment_intheaters, container, false);
-        } else {
-            //((ViewGroup)container).removeView(view);
-            /**
-             * THIS IS VERY IMPORTANT
-             */
+        if (view != null) {
+            ViewGroup parent = (ViewGroup) view.getParent();
+            if (parent != null) {
+                parent.removeView(view);
+            }
         }
-        gridView = (GridView) view.findViewById(R.id.others_gridview);
+        try {
+            view = inflater.inflate(R.layout.fragment_intheaters, container, false);
+            gridView = (GridView) view.findViewById(R.id.others_gridview);
+        } catch (InflateException e) {
+            e.printStackTrace();
+        }
 
         mContext = getActivity().getApplicationContext();
-
-        //Bundle args = getArguments();
         mContext2 = view.getContext();
 
 

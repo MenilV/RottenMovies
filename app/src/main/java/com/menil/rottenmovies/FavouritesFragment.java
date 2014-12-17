@@ -3,6 +3,7 @@ package com.menil.rottenmovies;
 
 import android.app.ActionBar;
 import android.app.AlertDialog;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,11 +12,16 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.InflateException;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.facebook.FacebookException;
@@ -41,18 +47,53 @@ import java.util.List;
  */
 public class FavouritesFragment extends Fragment {
 
-    public static final String TAG = "Favourites";
+    public static final String TAG = "FAVOURITES";
     public static final String movie_id = "id";
     public SharedPreferences preferences;
     private List<Movie> favouritesList = new ArrayList<Movie>();
     private View view;
     private UiLifecycleHelper uiHelper;
+    private GridView gridview;
     private Session.StatusCallback callback = new Session.StatusCallback() {
         @Override
         public void call(Session session, SessionState state, Exception exception) {
             onSessionStateChange(session, state, exception);
         }
     };
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_favourites, menu);
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+
+        // Assumes current activity is the searchable activity
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+        searchView.setIconifiedByDefault(true); // Do not iconify the widget; expand it by default
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                break;
+            case R.id.action_about:
+                AboutFragment fragment = new AboutFragment();
+                if (view.getContext() instanceof Main) {
+                    Main main = (Main) view.getContext();
+                    main.switchContent(fragment, "ABOUT");
+                }
+                break;
+            case R.id.action_exit:
+                getActivity().finish();
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     private void onSessionStateChange(Session session, SessionState state, Exception exception) {
         if (state.isOpened()) {
@@ -67,30 +108,14 @@ public class FavouritesFragment extends Fragment {
     public void onResume() {
         super.onResume();
         uiHelper.onResume();
-
-        preferences = getActivity().getSharedPreferences("favsAreHere", Context.MODE_PRIVATE);
-        Gson gson = new Gson();
-        String moviesJson = preferences.getString(movie_id, "");
-        JSONObject jsonObject;
-
-        try {
-            jsonObject = new JSONObject(moviesJson);
-            Movies movies = gson.fromJson(jsonObject.toString(), Movies.class);
-            favouritesList = movies.getMovies();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        Fragment frg = null;
-        frg = getFragmentManager().findFragmentByTag("FAVOURITES");
-        getFragmentManager().beginTransaction().detach(frg);
-        getFragmentManager().beginTransaction().attach(frg);
-        getFragmentManager().beginTransaction().commit();
+        refreshView();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         makeActionbar();
+        refreshView();
         uiHelper = new UiLifecycleHelper(getActivity(), null);
         uiHelper.onCreate(savedInstanceState);
     }
@@ -100,8 +125,6 @@ public class FavouritesFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         // Indicate that this fragment would like to influence the set of actions in the action bar.
         setHasOptionsMenu(true);
-
-
     }
 
     @Override
@@ -138,6 +161,7 @@ public class FavouritesFragment extends Fragment {
         super.onDestroy();
         uiHelper.onDestroy();
     }
+
     public void makeActionbar() {
         ActionBar actionBar = getActivity().getActionBar();
         try {
@@ -153,6 +177,28 @@ public class FavouritesFragment extends Fragment {
         }
     }
 
+    public void refreshView() {
+        preferences = getActivity().getSharedPreferences("favsAreHere", Context.MODE_PRIVATE);
+        Gson gson = new Gson();
+        String moviesJson = preferences.getString(movie_id, "");
+        JSONObject jsonObject;
+
+        try {
+            jsonObject = new JSONObject(moviesJson);
+            Movies movies = gson.fromJson(jsonObject.toString(), Movies.class);
+            favouritesList = movies.getMovies();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Fragment frg = null;
+
+        //frg=this;
+        frg = getFragmentManager().findFragmentByTag("FAVOURITES");
+        getFragmentManager().beginTransaction().detach(frg);
+        getFragmentManager().beginTransaction().attach(frg);
+        getFragmentManager().beginTransaction().commit();
+    }
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -161,7 +207,7 @@ public class FavouritesFragment extends Fragment {
             {
                 mAlreadyLoaded = true;
 
-                onResume();
+                // refreshView();
             }
             // Do this code only first time, not after rotation or reuse fragment from backstack
         }
@@ -245,16 +291,26 @@ public class FavouritesFragment extends Fragment {
             //getActivity().getSupportFragmentManager().beginTransaction().add(userSettingsFragment);
         }
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        if (view == null)
+        if (view != null) {
+            ViewGroup parent = (ViewGroup) view.getParent();
+            if (parent != null) {
+                parent.removeView(view);
+            }
+        }
+        try {
+
             view = inflater.inflate(R.layout.fragment_favourites, container, false);
+            gridview = (GridView) view.findViewById(R.id.fragment_favourites_list);
+        } catch (InflateException e) {
+            e.printStackTrace();
+        }
 
-        onResume();
 
-        GridView gridview = (GridView) view.findViewById(R.id.fragment_favourites_list);
-        String tag = "FAVOURITES";
+        //   refreshView();
 
         gridview.setAdapter(new GridAdapter(getActivity().getApplicationContext(), favouritesList));
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -264,16 +320,6 @@ public class FavouritesFragment extends Fragment {
                 detailsIntent.putExtra("movie", favouritesList.get(position));
                 startActivity(detailsIntent);
             }
-
-            /*private void switchFragment(Fragment fragment) {
-                if (view.getContext() == null) {
-                    return;
-                }
-                if (view.getContext() instanceof Main) {
-                    Main main = (Main) view.getContext();
-                    main.switchContent(fragment, "DETAILS");
-                }
-            }*/
         });
 
         final FloatingActionButton floatingActionButtonShare = (FloatingActionButton) view.findViewById(R.id.favourites_list_fab);
