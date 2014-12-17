@@ -377,7 +377,7 @@ public class DetailsActivity extends Activity {
         if (key.equals("recent_id"))
             preferences = getSharedPreferences(RECENT_ARE_HERE, Context.MODE_PRIVATE);
 
-        Toast.makeText(getApplicationContext(), "Added to recent", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(), "Added to recent", Toast.LENGTH_SHORT).show();
         SharedPreferences.Editor editor = preferences.edit();
 
         Gson gson = new Gson();
