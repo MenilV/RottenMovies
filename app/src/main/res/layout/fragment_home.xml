@@ -27,6 +27,7 @@
                 android:id="@+id/fragment_home_favourite_card_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+
                 android:orientation="vertical">
 
                 <TextView
@@ -106,6 +107,7 @@
         <org.lucasr.twowayview.TwoWayView
             android:id="@+id/listview_recent"
             style="@style/TwoWayView"
+
             android:layout_width="wrap_content"
             android:layout_height="210dp"
             android:layout_alignParentTop="true"
