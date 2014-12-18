@@ -99,102 +99,10 @@
     </android.support.v7.widget.CardView>
 
     <android.support.v7.widget.CardView
-        android:id="@+id/activity_details_card_clips"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/activity_details_card_title">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/activity_details_clips_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="-15dp"
-                android:paddingEnd="10dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingTop="7dp"
-                android:text="Movie clips:\n"
-                android:textColor="@color/pale_black"
-                android:textSize="16sp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="7dp"
-                android:layout_marginLeft="7dp"
-                android:layout_marginRight="7dp"
-                android:background="#399322" />
-
-            <HorizontalScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="7dp"
-                android:layout_marginLeft="7dp"
-                android:layout_marginRight="7dp"
-                android:scrollbarThumbVertical="@drawable/scrollbar_color">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <com.menil.rottenmovies.RemoteImageView
-                        android:id="@+id/activity_details_clips_img1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="4dp" />
-
-                    <com.menil.rottenmovies.RemoteImageView
-                        android:id="@+id/activity_details_clips_img2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="4dp" />
-
-                    <com.menil.rottenmovies.RemoteImageView
-                        android:id="@+id/activity_details_clips_img3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="4dp" />
-
-                    <com.menil.rottenmovies.RemoteImageView
-                        android:id="@+id/activity_details_clips_img4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="4dp" />
-
-                    <com.menil.rottenmovies.RemoteImageView
-                        android:id="@+id/activity_details_clips_img5"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="4dp" />
-
-                    <com.menil.rottenmovies.RemoteImageView
-                        android:id="@+id/activity_details_clips_img6"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="4dp" />
-
-                    <com.menil.rottenmovies.RemoteImageView
-                        android:id="@+id/activity_details_clips_img7"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="4dp" />
-                </LinearLayout>
-            </HorizontalScrollView>
-        </LinearLayout>
-
-    </android.support.v7.widget.CardView>
-
-    <android.support.v7.widget.CardView
         android:id="@+id/activity_details_card_synopsis"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/activity_details_card_clips">
+        android:layout_below="@+id/activity_details_card_title">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -207,6 +115,83 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <TextView
+                    android:id="@+id/activity_details_clips_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="-15dp"
+                    android:paddingEnd="10dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="7dp"
+                    android:text="Movie clips:\n"
+                    android:textColor="@color/pale_black"
+                    android:textSize="16sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="7dp"
+                    android:layout_marginLeft="7dp"
+                    android:layout_marginRight="7dp"
+                    android:background="#399322" />
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="7dp"
+                    android:layout_marginLeft="7dp"
+                    android:layout_marginRight="7dp"
+                    android:scrollbarThumbVertical="@drawable/scrollbar_color">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <com.menil.rottenmovies.RemoteImageView
+                            android:id="@+id/activity_details_clips_img1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="4dp" />
+
+                        <com.menil.rottenmovies.RemoteImageView
+                            android:id="@+id/activity_details_clips_img2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="4dp" />
+
+                        <com.menil.rottenmovies.RemoteImageView
+                            android:id="@+id/activity_details_clips_img3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="4dp" />
+
+                        <com.menil.rottenmovies.RemoteImageView
+                            android:id="@+id/activity_details_clips_img4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="4dp" />
+
+                        <com.menil.rottenmovies.RemoteImageView
+                            android:id="@+id/activity_details_clips_img5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="4dp" />
+
+                        <com.menil.rottenmovies.RemoteImageView
+                            android:id="@+id/activity_details_clips_img6"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="4dp" />
+
+                        <com.menil.rottenmovies.RemoteImageView
+                            android:id="@+id/activity_details_clips_img7"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="4dp" />
+                    </LinearLayout>
+                </HorizontalScrollView>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

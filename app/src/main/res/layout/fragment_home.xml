@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    tools:context=".HomeFragment">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:background="#f1f1f1"
     android:orientation="vertical"
-    android:paddingTop="?android:attr/actionBarSize"
-    tools:context=".HomeFragment">
+    android:paddingTop="?android:attr/actionBarSize">
 
     <RelativeLayout
         android:id="@+id/fragment_home_favourite_relative"
@@ -27,7 +31,6 @@
                 android:id="@+id/fragment_home_favourite_card_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:orientation="vertical">
 
                 <TextView
@@ -117,3 +120,4 @@
     </RelativeLayout>
 
 </RelativeLayout>
+</ScrollView>

@@ -73,8 +73,9 @@ public class HomeFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
         makeActionbar();
+        getAndDraw(recent_id, listview_recent);
+        getAndDraw(movie_id, listview_favourite);
     }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
