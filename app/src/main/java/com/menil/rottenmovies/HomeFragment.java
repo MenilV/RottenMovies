@@ -176,8 +176,8 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        //getAndDraw(recent_id, listview_recent);
-        //getAndDraw(movie_id, listview_favourite);
+        getAndDraw(recent_id, listview_recent);
+        getAndDraw(movie_id, listview_favourite);
         Session session = Session.getActiveSession();
         if (session != null && (session.isOpened() || session.isClosed())) {
             onSessionStateChange(session, session.getState(), null);

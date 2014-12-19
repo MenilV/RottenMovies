@@ -223,7 +223,7 @@ public class SearchActivity extends FragmentActivity implements NavigationDrawer
     public void handleIntent(Intent intent) {
         setContentView(R.layout.activity_search);
 
-        noMoviesTextView = (TextView) findViewById(R.id.search_textbox);
+        //noMoviesTextView = (TextView) findViewById(R.id.search_textbox);
         listView = (ListView) findViewById(R.id.search_listview);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
