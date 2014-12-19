@@ -367,6 +367,7 @@
         android:layout_alignParentTop="true"
         android:layout_below="@id/activity_details_card_title"
         android:layout_marginTop="30dp"
+        android:layout_marginRight="10dp"
         android:src="@drawable/ic_action_favorite"
         sothree:fab_colorNormal="@color/green"
         sothree:fab_colorPressed="@color/green_500"

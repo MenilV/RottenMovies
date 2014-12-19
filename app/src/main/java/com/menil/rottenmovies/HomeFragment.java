@@ -6,10 +6,14 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -172,8 +176,8 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        getAndDraw(recent_id, listview_recent);
-        getAndDraw(movie_id, listview_favourite);
+        //getAndDraw(recent_id, listview_recent);
+        //getAndDraw(movie_id, listview_favourite);
         Session session = Session.getActiveSession();
         if (session != null && (session.isOpened() || session.isClosed())) {
             onSessionStateChange(session, session.getState(), null);
@@ -224,7 +228,7 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    @Override
+@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 
@@ -240,6 +244,13 @@ public class HomeFragment extends Fragment {
             listview_recent = (TwoWayView) view.findViewById(R.id.listview_recent);
             listview_favourite = (TwoWayView) view.findViewById(R.id.listview_favourite);
 
+            /*if(Build.VERSION.SDK_INT>Build.VERSION_CODES.LOLLIPOP)
+            {
+                Resources r = getResources();
+                float dpTopx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 3, r.getDisplayMetrics());//converts 3dp to px
+                listview_favourite.setElevation(dpTopx);
+                listview_recent.setElevation(dpTopx);
+            }*/
 
             getAndDraw(movie_id, listview_favourite);
             getAndDraw(recent_id, listview_recent);

@@ -2,8 +2,12 @@ package com.menil.rottenmovies;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
+import android.support.v7.widget.CardView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -204,6 +208,22 @@ public class ListsAdapter extends BaseAdapter {
         });
 
 
+        /*if(Build.VERSION.SDK_INT>Build.VERSION_CODES.LOLLIPOP)
+        {
+            CardView mainCardview = (CardView) view.findViewById(R.id.card_view_main);
+            CardView rtCardview = (CardView) view.findViewById(R.id.list_full_card_rotten);
+            CardView imdbCardview = (CardView) view.findViewById(R.id.list_full_card_imdb);
+            LinearLayout linksLayout = (LinearLayout) view.findViewById(R.id.list_full_card_links);
+
+            Resources r = Resources.getSystem();
+            float twoDpTopx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, r.getDisplayMetrics());//converts 2dp to px
+            float threeDpTopx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 3, r.getDisplayMetrics());//converts 3dp to px
+
+            rtCardview.setElevation(twoDpTopx);
+            imdbCardview.setElevation(twoDpTopx);
+            mainCardview.setElevation(threeDpTopx);
+            linksLayout.setElevation(threeDpTopx);
+        }*/
         return view;
     }
 }
