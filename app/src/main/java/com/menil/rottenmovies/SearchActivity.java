@@ -77,8 +77,8 @@ public class SearchActivity extends FragmentActivity implements NavigationDrawer
         // as you specify a parent activity in AndroidManifest.xml.
         //int id = item.getItemId();
         switch (item.getItemId()) {
-            case R.id.action_settings:
-                break;
+         //   case R.id.action_settings:
+         //       break;
             case R.id.action_exit:
                 finish();
                 break;

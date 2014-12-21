@@ -10,7 +10,7 @@ import android.os.Handler;
  * Created by menil on 24.10.2014.
  */
 public class SplashScreen extends Activity {
-
+/*
     private void makeActionbar() {
         ActionBar actionBar = getActionBar();
         try {
@@ -26,12 +26,12 @@ public class SplashScreen extends Activity {
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        makeActionbar();
+        //makeActionbar();
         int SPLASH_TIME_OUT = 750;
         new Handler().postDelayed(new Runnable() {
 

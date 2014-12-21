@@ -59,7 +59,6 @@ public class DetailsActivity extends Activity {
     public static final String RECENT_ARE_HERE = "recentAreHere";
     public SharedPreferences preferences;
     private Movie detailMovie;
-    private Context mContext2;
     private UiLifecycleHelper uiHelper;
     private Session.StatusCallback callback = new Session.StatusCallback() {
         @Override
@@ -155,21 +154,17 @@ public class DetailsActivity extends Activity {
         imageView.setImageURL(det_pic);
         //getting a resized image from ThumbrIo service
         final RemoteImageView imageViewTop = (RemoteImageView) findViewById(R.id.activity_details_img_top);
-        String rescaledImage = null;
+        //rescaledImage = null;
 
         try {//rescale and set picture TOP
-            rescaledImage = ThumbrIo.sign(detailMovie.posters.detailed.replace("tmb", "ori"), "510x755c");
+            String rescaledImage = ThumbrIo.sign(detailMovie.posters.detailed.replace("tmb", "ori"), "510x755c");
+
 
             imageViewTop.setImageURL(rescaledImage);
 
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
+        } catch (NoSuchAlgorithmException|InvalidKeyException|UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-
         /**
          * API CALLS COME HERE
          */

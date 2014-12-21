@@ -113,8 +113,8 @@ public class HomeFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.action_settings:
-                break;
+            //case R.id.action_settings:
+            //    break;
             case R.id.action_about:
                 AboutFragment fragment = new AboutFragment();
                 if (view.getContext() instanceof Main) {

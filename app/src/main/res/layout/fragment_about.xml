@@ -124,6 +124,7 @@
                     android:layout_height="wrap_content"
                     android:background="@color/material_blue_500"
                     android:text="tw"
+                    android:visibility="gone"
                     android:textColor="@color/white" />
 
                 <Button
@@ -131,6 +132,7 @@
                     android:layout_height="wrap_content"
                     android:background="@color/button_material_dark"
                     android:text="g+"
+                    android:visibility="gone"
                     android:textColor="@color/white" />
             </LinearLayout>
 

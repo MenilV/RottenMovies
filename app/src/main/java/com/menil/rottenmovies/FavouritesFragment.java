@@ -77,7 +77,57 @@ public class FavouritesFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.action_settings:
+           // case R.id.action_settings:
+           //     break;
+            case R.id.action_share:
+                AlertDialog dialog;
+                final List<String> favouriteListTitles = new ArrayList<String>();
+                for (Movie m : favouritesList)
+                    favouriteListTitles.add(m.title);
+                final CharSequence[] items = favouriteListTitles.toArray(new CharSequence[favouriteListTitles.size()]);
+                final ArrayList selectedItems = new ArrayList<Integer>();
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Share your favourite movies");
+                builder.setIcon(R.drawable.ic_launcher_16);
+                builder.setMultiChoiceItems(items, null, new DialogInterface.OnMultiChoiceClickListener() {
+                    // indexSelected contains the index of item (of which checkbox checked)
+                    @Override
+                    public void onClick(DialogInterface dialog, int indexSelected, boolean isChecked) {
+                        if (isChecked) {
+                            // If the user checked the item, adds it to the selected items
+                            selectedItems.add(indexSelected);
+                        } else if (selectedItems.contains(indexSelected)) {
+                            // Else, if the item is already in the array, remove it
+                            selectedItems.remove(Integer.valueOf(indexSelected));
+                        }
+                    }
+                })
+                        // Set the action buttons
+                        .setPositiveButton("Share", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                shareToFB(favouriteListTitles, selectedItems);
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        })
+                        .setNeutralButton("Select all", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                int i = 0;
+                                for (String s : favouriteListTitles)
+                                    selectedItems.add(i++);
+                                shareToFB(favouriteListTitles, selectedItems);
+                            }
+
+                        });
+
+                dialog = builder.create();//AlertDialog dialog; create like this outside onClick
+                dialog.show();
                 break;
             case R.id.action_about:
                 AboutFragment fragment = new AboutFragment();
