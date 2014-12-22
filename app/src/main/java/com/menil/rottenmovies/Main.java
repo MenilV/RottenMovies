@@ -123,10 +123,8 @@ public class Main extends FragmentActivity implements NavigationDrawerFragment.N
                 Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
 
             }
-        } catch (PackageManager.NameNotFoundException e) {
-
-        } catch (NoSuchAlgorithmException e) {
-
+        } catch (PackageManager.NameNotFoundException|NoSuchAlgorithmException e) {
+            e.printStackTrace();
         }
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));

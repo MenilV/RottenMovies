@@ -34,8 +34,8 @@ public class GridAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        if (isHome && listMovies.size() > 5)
-            return 5;
+        if (isHome && listMovies.size() > 10)
+            return 10;
         else
             return listMovies.size();
     }

@@ -276,11 +276,11 @@ public class FavouritesFragment extends Fragment {
             if (FacebookDialog.canPresentShareDialog(getActivity().getApplicationContext())) {
 
                 FacebookDialog shareDialog = new FacebookDialog.ShareDialogBuilder(getActivity())
-                        .setLink("http://i.imgur.com/xNzJGq1.png")//this is 512x512, replace with link to app
+                        .setLink("https://imgur.com/OHxpbca")//this is 128x128, replace with link to app
                         .setName("My favourite movies:")
                         .setCaption("Shared with: Rotten Movies")
                         .setDescription(list)
-                        .setPicture("http://i.imgur.com/OHxpbca.png")//this is 128x128
+                        .setPicture("https://i.imgur.com/xNzJGq1.png")//this is 512x512
                         .build();
                 uiHelper.trackPendingDialogCall(shareDialog.present());
             } else {
@@ -289,8 +289,8 @@ public class FavouritesFragment extends Fragment {
                 params.putString("name", "My favourite movies:");
                 params.putString("caption", "Shared with: Rotten Movies");
                 params.putString("description", list);
-                params.putString("link", "http://i.imgur.com/xNzJGq1.png");//this is 512x512, replace with link to app
-                params.putString("picture", "http://i.imgur.com/OHxpbca.png");//this is 128x128
+                params.putString("link", "https://imgur.com/OHxpbca");// this is 128x128, replace with link to app
+                params.putString("picture", "https://i.imgur.com/xNzJGq1.png");//this is 512x512
 
                 WebDialog feedDialog = (
                         new WebDialog.FeedDialogBuilder(getActivity(),

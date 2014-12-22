@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -75,6 +77,20 @@ public class DetailsActivity extends Activity {
         }
     }
 
+
+        public boolean isConnectedToInternet() {
+            ConnectivityManager connectivity = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (connectivity != null) {
+                NetworkInfo[] info = connectivity.getAllNetworkInfo();
+                if (info != null)
+                    for (int i = 0; i < info.length; i++)
+                        if (info[i].getState() == NetworkInfo.State.CONNECTED) {
+                            return true;
+                        }
+            }
+            return false;
+        }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +102,13 @@ public class DetailsActivity extends Activity {
         detailMovie = (Movie) args.getSerializable("movie");
 
         addToRecent(recent_id, detailMovie);
+        if(!isConnectedToInternet())
+        {
+            Intent mainIntent = new Intent(this, Main.class);
+            startActivity(mainIntent);
+            this.finish();
+        }
+
 
         /**
          * TEXT STUFF COMES HERE
