@@ -9,6 +9,7 @@
 
 
         <TextView
+            android:id="@+id/splash_subtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/splash_title"
@@ -30,6 +31,7 @@
 
 
     <ImageView
+        android:layout_below="@id/splash_subtitle"
         android:id="@+id/imgLogo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

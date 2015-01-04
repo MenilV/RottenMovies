@@ -40,7 +40,7 @@
     <string name="title_placeholder">POSITION.TITLE(YEAR)</string>
     <string name="header_placeholder">HEADER PLACEHOLDER</string>
     <string name="imdb_link_description">IMDB link</string>
-    <string name="release_placeholder">RELEASE DATE:</string>
+    <string name="release_placeholder">DATE:</string>
     <string name="rtn_link_description">Rotten Tomatoes link</string>
     <string name="runtime_placeholder2">RUNTIME:</string>
 </resources>

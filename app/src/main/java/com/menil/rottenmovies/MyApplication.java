@@ -12,7 +12,7 @@ import org.acra.annotation.ReportsCrashes;
  */
 @ReportsCrashes(
         formKey = "",
-        mailTo = "menil.vukovic@gmail.com, igor.trncic@atlantbh.com, jasmin@atlantbh.com",
+        mailTo = "menil.vukovic@gmail.com",
         //resDialogEmailPrompt = 1,
         mode = ReportingInteractionMode.DIALOG,
         customReportContent = {

@@ -22,6 +22,7 @@ import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.FacebookDialog;
+import com.facebook.widget.LoginButton;
 import com.facebook.widget.WebDialog;
 import com.google.gson.Gson;
 import com.melnykov.fab.FloatingActionButton;
@@ -33,6 +34,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -313,7 +315,7 @@ public class DetailsActivity extends Activity {
 
         if (Session.getActiveSession().isOpened())
         //user is logged to facebook proceed
-        {
+       {
             if (FacebookDialog.canPresentShareDialog(this)) {
                 FacebookDialog shareDialog = new FacebookDialog.ShareDialogBuilder(this)
                         .setLink(detailMovie.links.getAlternate())
@@ -374,7 +376,11 @@ public class DetailsActivity extends Activity {
             }
         } else {
             //not logged in. try to login
-            Toast.makeText(this, "Please go to the About page and login with your Facebook account", Toast.LENGTH_LONG).show();
+            LoginButton authButton = (LoginButton) findViewById(R.id.authButton_details);
+            //authButton.setFragment(this);
+
+            authButton.performClick();
+            //Toast.makeText(this, "Please go to the About page and login with your Facebook account", Toast.LENGTH_LONG).show();
         }
 
     }
@@ -519,70 +525,95 @@ public class DetailsActivity extends Activity {
         ImageView genresImg2 = (ImageView) findViewById(R.id.activity_details_genres_img2);
         ImageView genresImg3 = (ImageView) findViewById(R.id.activity_details_genres_img3);
         ImageView genresImg4 = (ImageView) findViewById(R.id.activity_details_genres_img4);
-        ImageView[] imageViews = {genresImg1, genresImg2, genresImg3, genresImg4};
+        ImageView genresImg5 = (ImageView) findViewById(R.id.activity_details_genres_img5);
+        ImageView[] imageViews = {genresImg1, genresImg2, genresImg3, genresImg4, genresImg5};
+
+        TextView genresTxt1 = (TextView) findViewById(R.id.activity_details_genres_txt1);
+        TextView genresTxt2 = (TextView) findViewById(R.id.activity_details_genres_txt2);
+        TextView genresTxt3 = (TextView) findViewById(R.id.activity_details_genres_txt3);
+        TextView genresTxt4 = (TextView) findViewById(R.id.activity_details_genres_txt4);
+        TextView genresTxt5 = (TextView) findViewById(R.id.activity_details_genres_txt5);
+        TextView[] textViews = {genresTxt1, genresTxt2, genresTxt3, genresTxt4, genresTxt5};
+
         int x = 0;
         for (String s : genereList) {
             if (x == imageViews.length)
                 break;
             if (genreMovie.genres.contains(s)) {
+
                 switch (s) {
                     case "Action & Adventure": {
+                        textViews[x].setText("Action");
                         imageViews[x++].setImageResource(R.drawable.action);
                         break;
                     }
                     case "Animation": {
+                        textViews[x].setText("Animation");
                         imageViews[x++].setImageResource(R.drawable.animation);
                         break;
                     }
                     case "Art House & International": {
+                        textViews[x].setText("Art");
                         imageViews[x++].setImageResource(R.drawable.art);
                         break;
                     }
                     case "Classics": {
+                        textViews[x].setText("Classic");
                         imageViews[x++].setImageResource(R.drawable.classics);
                         break;
                     }
                     case "Comedy": {
+                        textViews[x].setText("Comedy");
                         imageViews[x++].setImageResource(R.drawable.comedy);
                         break;
                     }
                     case "Documentary": {
+                        textViews[x].setText("Documentary");
                         imageViews[x++].setImageResource(R.drawable.documentary);
                         break;
                     }
                     case "Drama": {
+                        textViews[x].setText("Drama");
                         imageViews[x++].setImageResource(R.drawable.drama);
                         break;
                     }
                     case "Horror": {
+                        textViews[x].setText("Horror");
                         imageViews[x++].setImageResource(R.drawable.horror);
                         break;
                     }
                     case "Kids & Family": {
+                        textViews[x].setText("Kids");
                         imageViews[x++].setImageResource(R.drawable.kids);
                         break;
                     }
                     case "Mistery & Suspense": {
+                        textViews[x].setText("Mistery");
                         imageViews[x++].setImageResource(R.drawable.mistery);
                         break;
                     }
-                    case "Musical & Performing Arts": {
+                    case "Musical & Performing Arts":
+                        textViews[x].setText("Musical");{
                         imageViews[x++].setImageResource(R.drawable.musical);
                         break;
                     }
                     case "Romance": {
+                        textViews[x].setText("Romance");
                         imageViews[x++].setImageResource(R.drawable.romance);
                         break;
                     }
                     case "Science Fiction & Fantasy": {
+                        textViews[x].setText("Sci-fi");
                         imageViews[x++].setImageResource(R.drawable.scifi);
                         break;
                     }
                     case "Sports & Fitness": {
+                        textViews[x].setText("Sports");
                         imageViews[x++].setImageResource(R.drawable.sports);
                         break;
                     }
                     case "Special Interest": {
+                        textViews[x].setText("Special");
                         imageViews[x++].setImageResource(R.drawable.special);
                         break;
                     }

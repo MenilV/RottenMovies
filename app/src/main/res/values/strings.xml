@@ -43,7 +43,7 @@
     <string name="about_msg2">Made by: Menil V.(2014)\n Thanks to: AtlantBH</string>
     <string name="title_placeholder">POSITION. TITLE (YEAR)</string>
     <string name="runtime_placeholder2">RUNTIME:</string>
-    <string name="release_placeholder">RELEASE DATE:</string>
+    <string name="release_placeholder">DATE:</string>
     <string name="critics_placeholder">Critics Score:</string>
     <string name="rtn_link_description">Rotten Tomatoes link</string>
     <string name="imdb_link_description">IMDB link</string>

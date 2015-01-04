@@ -31,7 +31,7 @@ import com.facebook.widget.LoginButton;
  */
 public class AboutFragment extends Fragment {
 
-    public static final String TAG = "Home";
+    public static final String TAG = "ABOUT";
     private View view;
     private UiLifecycleHelper uiHelper;
     private Session.StatusCallback callback = new Session.StatusCallback() {

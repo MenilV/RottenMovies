@@ -9,4 +9,5 @@
     android:duplicateParentState="true"
     android:paddingTop="?android:attr/actionBarSize"
     android:textColor="@color/pale_black"
+    android:background="@drawable/actionbar_background2"
     tools:context=".NavigationDrawerFragment" />

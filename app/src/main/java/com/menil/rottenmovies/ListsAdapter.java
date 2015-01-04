@@ -149,7 +149,7 @@ public class ListsAdapter extends BaseAdapter {
             new_date = "No date";
         else {
             release_date = listMovies.get(position).release_dates.theater;
-            new_date = release_date.substring(8, 10) + "/" + release_date.substring(5, 7) + "/" + release_date.substring(0, 4);
+            new_date = release_date.substring(8, 10) + "/" + release_date.substring(5, 7) + "/" + release_date.substring(2, 4);
         }
         releaseView.setText("Release date: " + new_date);
 
